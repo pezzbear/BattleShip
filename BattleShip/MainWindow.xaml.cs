@@ -21,5 +21,14 @@ namespace BattleShip {
         public MainWindow() {
             InitializeComponent();
         }
+
+        /// <summary>
+        /// Opens Up Set Up Screen
+        /// </summary>
+        private void SetUpBtnScreen_Click(object sender, RoutedEventArgs e)
+        {
+            SetUpScreen win2 = new SetUpScreen();
+            win2.Show();
+        }
     }
 }

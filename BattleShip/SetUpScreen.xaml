@@ -1,0 +1,378 @@
+﻿<Window x:Name="SetUpWindow" x:Class="BattleShip.SetUpScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BattleShip"
+        mc:Ignorable="d"
+        Title="SetUpScreen" Height="810" Width="1440" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}">
+    <Window.Background>
+        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.GradientActiveCaptionColorKey}}"/>
+    </Window.Background>
+    <Canvas HorizontalAlignment="Left" Height="790" Margin="10,10,0,0" VerticalAlignment="Top" Width="455">
+        <Canvas Height="780" Canvas.Left="455" Width="972">
+            <Grid x:Name="SetUpGrid" Height="780" Width="972">
+
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="#FF265752" Offset="1"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="0" Grid.Row="0">
+                    <Button x:Name="A1Btn" Content="A,1" IsEnabled="False" Click="A1Btn_Click" Opacity="0.01"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="0" Grid.Row="1">
+                    <Button x:Name="B1Btn" Content="B,1" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="0" Grid.Row="2">
+                    <Button x:Name="C1Btn" Content="C,1" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="0" Grid.Row="3">
+                    <Button x:Name="D1Btn" Content="D,1" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="0" Grid.Row="4">
+                    <Button x:Name="E1Btn" Content="E,1" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="0" Grid.Row="5">
+                    <Button x:Name="F1Btn" Content="F,1" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="0" Grid.Row="6">
+                    <Button x:Name="G1Btn" Content="G,1" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="0" Grid.Row="7">
+                    <Button x:Name="H1Btn" Content="H,1" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="0" Grid.Row="8">
+                    <Button x:Name="I1Btn" Content="I,1" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="0" Grid.Row="9">
+                    <Button x:Name="J1Btn" Content="J,1" IsEnabled="False"/>
+                </Border>
+
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="1" Grid.Row="0">
+                    <Button x:Name="A2Btn" Content="A,2" IsEnabled="False" Opacity="0.01"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="1" Grid.Row="1">
+                    <Button x:Name="B2Btn" Content="B,2" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="1" Grid.Row="2">
+                    <Button x:Name="C2Btn" Content="C,2" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="1" Grid.Row="3">
+                    <Button x:Name="D2Btn" Content="D,2" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="1" Grid.Row="4">
+                    <Button x:Name="E2Btn" Content="E,2" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="1" Grid.Row="5">
+                    <Button x:Name="F2Btn" Content="F,2" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="1" Grid.Row="6">
+                    <Button x:Name="G2Btn" Content="G,2" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="1" Grid.Row="7">
+                    <Button x:Name="H2Btn" Content="H,2" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="1" Grid.Row="8">
+                    <Button x:Name="I2Btn" Content="I,2" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="1" Grid.Row="9">
+                    <Button x:Name="J2Btn" Content="J,2" IsEnabled="False"/>
+                </Border>
+
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="2" Grid.Row="0">
+                    <Button x:Name="A3Btn" Content="A,3" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="2" Grid.Row="1">
+                    <Button x:Name="B3Btn" Content="B,3" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="2" Grid.Row="2">
+                    <Button x:Name="C3Btn" Content="C,3" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="2" Grid.Row="3">
+                    <Button x:Name="D3Btn" Content="D,3" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="2" Grid.Row="4">
+                    <Button x:Name="E3Btn" Content="E,3" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="2" Grid.Row="5">
+                    <Button x:Name="F3Btn" Content="F,3" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="2" Grid.Row="6">
+                    <Button x:Name="G3Btn" Content="G,3" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="2" Grid.Row="7">
+                    <Button x:Name="H3Btn" Content="H,3" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="2" Grid.Row="8">
+                    <Button x:Name="I3Btn" Content="I,3" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="2" Grid.Row="9">
+                    <Button x:Name="J3Btn" Content="J,3" IsEnabled="False"/>
+                </Border>
+
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="3" Grid.Row="0">
+                    <Button x:Name="A4Btn" Content="A,4" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="3" Grid.Row="1">
+                    <Button x:Name="B4Btn" Content="B,4" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="3" Grid.Row="2">
+                    <Button x:Name="C4Btn" Content="C,4" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="3" Grid.Row="3">
+                    <Button x:Name="D4Btn" Content="D,4" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="3" Grid.Row="4">
+                    <Button x:Name="E4Btn" Content="E,4" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="3" Grid.Row="5">
+                    <Button x:Name="F4Btn" Content="F,4" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="3" Grid.Row="6">
+                    <Button x:Name="G4Btn" Content="G,4" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="3" Grid.Row="7">
+                    <Button x:Name="H4Btn" Content="H,4" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="3" Grid.Row="8">
+                    <Button x:Name="I4Btn" Content="I,4" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="3" Grid.Row="9">
+                    <Button x:Name="J4Btn" Content="J,4" IsEnabled="False"/>
+                </Border>
+
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="4" Grid.Row="0">
+                    <Button x:Name="A5Btn" Content="A,5" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="4" Grid.Row="1">
+                    <Button x:Name="B5Btn" Content="B,5" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="4" Grid.Row="2">
+                    <Button x:Name="C5Btn" Content="C,5" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="4" Grid.Row="3">
+                    <Button x:Name="D5Btn" Content="D,5" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="4" Grid.Row="4">
+                    <Button x:Name="E5Btn" Content="E,5" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="4" Grid.Row="5">
+                    <Button x:Name="F5Btn" Content="F,5" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="4" Grid.Row="6">
+                    <Button x:Name="G5Btn" Content="G,5" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="4" Grid.Row="7">
+                    <Button x:Name="H5Btn" Content="H,5" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="4" Grid.Row="8">
+                    <Button x:Name="I5Btn" Content="I,5" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="4" Grid.Row="9">
+                    <Button x:Name="J5Btn" Content="J,5" IsEnabled="False"/>
+                </Border>
+
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="5" Grid.Row="0">
+                    <Button x:Name="A6Btn" Content="A,6" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="5" Grid.Row="1">
+                    <Button x:Name="B6Btn" Content="B,6" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="5" Grid.Row="2">
+                    <Button x:Name="C6Btn" Content="C,6" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="5" Grid.Row="3">
+                    <Button x:Name="D6Btn" Content="D,6" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="5" Grid.Row="4">
+                    <Button x:Name="E6Btn" Content="E,6" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="5" Grid.Row="5">
+                    <Button x:Name="F6Btn" Content="F,6" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="5" Grid.Row="6">
+                    <Button x:Name="G6Btn" Content="G,6" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="5" Grid.Row="7">
+                    <Button x:Name="H6Btn" Content="H,6" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="5" Grid.Row="8">
+                    <Button x:Name="I6Btn" Content="I,6" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="5" Grid.Row="9">
+                    <Button x:Name="J6Btn" Content="J,6" IsEnabled="False"/>
+                </Border>
+
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="6" Grid.Row="0">
+                    <Button x:Name="A7Btn" Content="A,7" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="6" Grid.Row="1">
+                    <Button x:Name="B7Btn" Content="B,7" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="6" Grid.Row="2">
+                    <Button x:Name="C7Btn" Content="C,7" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="6" Grid.Row="3">
+                    <Button x:Name="D7Btn" Content="D,7" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="6" Grid.Row="4">
+                    <Button x:Name="E7Btn" Content="E,7" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="6" Grid.Row="5">
+                    <Button x:Name="F7Btn" Content="F,7" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="6" Grid.Row="6">
+                    <Button x:Name="G7Btn" Content="G,7" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="6" Grid.Row="7">
+                    <Button x:Name="H7Btn" Content="H,7" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="6" Grid.Row="8">
+                    <Button x:Name="I7Btn" Content="I,7" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="6" Grid.Row="9">
+                    <Button x:Name="J7Btn" Content="J,7" IsEnabled="False"/>
+                </Border>
+
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="7" Grid.Row="0">
+                    <Button x:Name="A8Btn" Content="A,8" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="7" Grid.Row="1">
+                    <Button x:Name="B8Btn" Content="B,8" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="7" Grid.Row="2">
+                    <Button x:Name="C8Btn" Content="C,8" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="7" Grid.Row="3">
+                    <Button x:Name="D8Btn" Content="D,8" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="7" Grid.Row="4">
+                    <Button x:Name="E8Btn" Content="E,8" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="7" Grid.Row="5">
+                    <Button x:Name="F8Btn" Content="F,8" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="7" Grid.Row="6">
+                    <Button x:Name="G8Btn" Content="G,8" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="7" Grid.Row="7">
+                    <Button x:Name="H8Btn" Content="H,8" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="7" Grid.Row="8">
+                    <Button x:Name="I8Btn" Content="I,8" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="7" Grid.Row="9">
+                    <Button x:Name="J8Btn" Content="J,8" IsEnabled="False"/>
+                </Border>
+
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="8" Grid.Row="0">
+                    <Button x:Name="A9Btn" Content="A,9" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="8" Grid.Row="1">
+                    <Button x:Name="B9Btn" Content="B,9" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="8" Grid.Row="2">
+                    <Button x:Name="C9Btn" Content="C,9" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="8" Grid.Row="3">
+                    <Button x:Name="D9Btn" Content="D,9" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="8" Grid.Row="4">
+                    <Button x:Name="E9Btn" Content="E,9" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="8" Grid.Row="5">
+                    <Button x:Name="F9Btn" Content="F,9" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="8" Grid.Row="6">
+                    <Button x:Name="G9Btn" Content="G,9" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="8" Grid.Row="7">
+                    <Button x:Name="H9Btn" Content="H,9" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="8" Grid.Row="8">
+                    <Button x:Name="I9Btn" Content="I,9" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="8" Grid.Row="9">
+                    <Button x:Name="J9Btn" Content="J,9" IsEnabled="False"/>
+                </Border>
+
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="9" Grid.Row="0">
+                    <Button x:Name="A10Btn" Content="A,10" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="9" Grid.Row="1">
+                    <Button x:Name="B10Btn" Content="B,10" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="9" Grid.Row="2">
+                    <Button x:Name="C10Btn" Content="C,10" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="9" Grid.Row="3">
+                    <Button x:Name="D10Btn" Content="D,10" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="9" Grid.Row="4">
+                    <Button x:Name="E10Btn" Content="E,10" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="9" Grid.Row="5">
+                    <Button x:Name="F10Btn" Content="F,10" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="9" Grid.Row="6">
+                    <Button x:Name="G10Btn" Content="G,10" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="9" Grid.Row="7">
+                    <Button x:Name="H10Btn" Content="H,10" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="9" Grid.Row="8">
+                    <Button x:Name="I10Btn" Content="I,10" IsEnabled="False"/>
+                </Border>
+                <Border BorderBrush="Yellow" BorderThickness="2" Grid.Column="9" Grid.Row="9">
+                    <Button x:Name="J10Btn" Content="J,10" IsEnabled="False"/>
+                </Border>
+
+            </Grid>
+        </Canvas>
+        <Button x:Name="SetUpBckBtn" Content="Go Back" Height="66" Canvas.Left="10" Width="122"/>
+        <Button x:Name="SetUpUndoBtn" Content="Undo" Height="54" Canvas.Left="88" Canvas.Top="336" Width="278"/>
+        <Button x:Name="SetUpResetBtn" Content="Reset All" Height="50" Canvas.Left="88" Canvas.Top="426" Width="278"/>
+        <Button x:Name="button" Content="Deploy Ships!" Height="154" Canvas.Left="88" Canvas.Top="560" Width="278"/>
+        <ListBox x:Name="ShipListBx" Height="110" Canvas.Left="88" Canvas.Top="92" Width="278">
+            <ListBoxItem x:Name="CarrierShipItem" Content="Carrier"/>
+            <ListBoxItem x:Name="BattleShipItem" Content="BattleShip"/>
+            <ListBoxItem x:Name="CruiserShipItem" Content="Cruiser"/>
+            <ListBoxItem x:Name="SubShipItem" Content="Submarine"/>
+            <ListBoxItem x:Name="DestroyerShipItem" Content="Destroyer" Selected="DestroyerShipItem_Selected"/>
+        </ListBox>
+        <Button x:Name="SetShipBtn" Content="Set Ship" Height="53" Canvas.Left="184" Canvas.Top="220" Width="90"/>
+    </Canvas>
+
+
+
+
+</Window>
