@@ -18,16 +18,16 @@ namespace BattleShip
         /// <summary>
         /// Keeps track of the current turn. 
         /// </summary>
-        /// public Player CurrentTurn;
-        /// 
+        public Player CurrentTurn;
+        
         /// <summary>
         /// Keeps track of player one.
         /// </summary>
-        /// public Player PlayerOne;
-        /// 
+        public Player PlayerOne;
+        
         /// <summary>
         /// Keeps track of player two. 
         /// </summary>
-        /// public Player PlayerTwo;
+        public Player PlayerTwo;
     }
 }

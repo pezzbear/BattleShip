@@ -28,7 +28,7 @@ namespace BattleShip
         /// <summary>
         /// Size of the battlefield grid
         /// </summary>
-        /// public Ship[] ShipGrid; <--- ***UNCOMMENT THIS WHEN MERGED***
+        public Ship[] ShipGrid; 
 
         /// <summary>
         /// Data entered in the battlefield grids.
