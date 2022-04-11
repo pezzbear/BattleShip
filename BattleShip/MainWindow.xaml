@@ -6,5 +6,7 @@
         xmlns:local="clr-namespace:BattleShip"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Button x:Name="SetUpBtnScreen" Content="Button" HorizontalAlignment="Left" Height="42" Margin="240,183,0,0" VerticalAlignment="Top" Width="95" Click="SetUpBtnScreen_Click"/>
+    <Grid>
+        <Button Content="Button" HorizontalAlignment="Left" Height="67" Margin="264,178,0,0" VerticalAlignment="Top" Width="204" Click="Button_Click"/>
+    </Grid>
 </Window>

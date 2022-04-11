@@ -22,13 +22,10 @@ namespace BattleShip {
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Opens Up Set Up Screen
-        /// </summary>
-        private void SetUpBtnScreen_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            SetUpScreen win2 = new SetUpScreen();
-            win2.Show();
+            StartScreen objStartScreen = new StartScreen();
+            objStartScreen.Show();
         }
     }
 }
