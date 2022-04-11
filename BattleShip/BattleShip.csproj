@@ -6,4 +6,8 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <!--<ItemGroup>
+    <Compile Include="C:\Users\LTUser\Desktop\NWTC Homework\C# Part 2\Team Game Assignment\BattleShip\PlayerSelect.xaml" Link="PlayerSelect.xaml" />
+  </ItemGroup>-->
+
 </Project>
