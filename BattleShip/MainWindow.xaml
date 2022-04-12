@@ -1,12 +1,70 @@
-﻿<Window x:Class="BattleShip.MainWindow"
+﻿<Window x:Name="MainCanvas" x:Class="BattleShip.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BattleShip"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Button Content="Button" HorizontalAlignment="Left" Height="67" Margin="264,178,0,0" VerticalAlignment="Top" Width="204" Click="Button_Click"/>
-    </Grid>
+        Title="MainWindow" Height="810" Width="1440" Loaded="MainCanvas_OnLoad">
+    <Canvas Background="#FFC0CBFF">
+        <Button x:Name="btn_RulesButton" Content="?" Height="90" Width="90" FontFamily="Bahnschrift Light" FontSize="72" Click="Rules_Click" Canvas.Top="694" Canvas.Left="10"/>
+        <Canvas x:Name="canStartScreen" Visibility="Collapsed">
+            <Button x:Name="btn_Start" Content="Start" HorizontalAlignment="Left" Height="95" Margin="120,520,0,0" VerticalAlignment="Top" Width="500" FontSize="48" FontFamily="Bahnschrift Light" Click="StartButton_Click"/>
+            <Button x:Name="btn_Credits" Content="Credits" HorizontalAlignment="Left" Height="95" Margin="806,520,0,0" VerticalAlignment="Top" Width="500" FontSize="48" FontFamily="Bahnschrift Light" Click="CreditsButton_Click"/>
+
+            <Button x:Name="btn_Exit" Content="Exit" Height="95" Width="500" FontSize="48" FontFamily="Bahnschrift Light" Click="ExitButton_Click" Canvas.Left="470" Canvas.Top="657"/>
+            <Label x:Name="lb_BattleshipTitle" Content="Battleship" Height="191" Width="692" FontSize="150" FontFamily="Bahnschrift SemiBold" Canvas.Left="374" Canvas.Top="118"/>
+        </Canvas>
+
+        <Canvas x:Name="canPlayerSelect" Visibility="Collapsed">
+            <Button x:Name="btn_StartPvP" Content="Start Pvp" Height="80" Width="350" FontSize="40" FontFamily="Bahnschrift Light" Click="StartPvp_Click" Canvas.Left="100" Canvas.Top="528"/>
+            <Button x:Name="btn_StartPvCPU" Content="Start PvCPU" Height="80" Width="350" FontSize="40" FontFamily="Bahnschrift Light" Click="StartPvpVsCPU_Click" Canvas.Left="950" Canvas.Top="528"/>
+            <Button x:Name="btn_BackToStart" Content="Back" HorizontalAlignment="Left" Height="50" Margin="10,12,0,0" VerticalAlignment="Top" Width="200" FontSize="30" FontFamily="Bahnschrift Light" Click="BackButton_Click"/>
+            <Button x:Name="btn_Settings" Content="⚙" Height="90" Width="90" FontSize="40" FontFamily="Bahnschrift Light" Click="Settings_Click" Canvas.Left="121" Canvas.Top="694"/>
+            <TextBox x:Name="txtPlayerOneName" Text="Enter name." TextWrapping="Wrap" Width="350" Height="74" FontFamily="Bahnschrift Light" FontSize="35" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Canvas.Left="100" Canvas.Top="268"/>
+            <TextBox x:Name="txtPlayerTwoName" Text="Enter name." TextWrapping="Wrap" Width="350" Height="75" FontFamily="Bahnschrift Light" FontSize="35" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Canvas.Left="100" Canvas.Top="402"/>
+            <TextBox x:Name="txtPlayerOneName_Vs_AI" Text="Enter name." TextWrapping="Wrap" Width="350" Height="75" FontFamily="Bahnschrift Light" FontSize="35" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Canvas.Left="950" Canvas.Top="273"/>
+            <Label x:Name="lb_PvPTitle" Content="Player Vs Player" FontFamily="Bahnschrift SemiBold SemiCondensed" FontSize="70" Canvas.Left="100" Canvas.Top="106"/>
+            <Label x:Name="lb_PvCPUTilte" Content="Player Vs CPU" FontFamily="Bahnschrift SemiBold SemiCondensed" FontSize="70" Canvas.Left="950" Canvas.Top="106"/>
+            <Label x:Name="lb_P1_PVP" Content="Player1" FontFamily="Bahnschrift Light" FontSize="36" Canvas.Left="100" Canvas.Top="204" RenderTransformOrigin="0.344,0.565"/>
+            <Label x:Name="lb_PvCPU_P1" Content="Player1" FontFamily="Bahnschrift Light" FontSize="36" Canvas.Left="950" Canvas.Top="215"/>
+            <Label x:Name="lb_PVP_P2" Content="Player2" FontFamily="Bahnschrift Light" FontSize="36" Canvas.Left="100" Canvas.Top="355"/>
+            <Label x:Name="lb_CPUDifficultyTitle" Content="CPU Difficulty" FontFamily="Bahnschrift SemiBold" FontSize="48" Canvas.Left="950" Canvas.Top="358"/>
+            <RadioButton x:Name="EasyDiffButton" Content="Easy" FontSize="16" FontFamily="Bahnschrift Light"  Canvas.Left="950" Canvas.Top="453">
+                <RadioButton.LayoutTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="2" ScaleY="2"/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </RadioButton.LayoutTransform>
+            </RadioButton>
+        </Canvas>
+
+        <Canvas x:Name="canShipSetup" Visibility="Collapsed" IsVisibleChanged="canShipSetup_IsVisibleChanged">
+            <Label x:Name="lb_CurrentPlayerSetup" Content="Current Turn: Player 1" Canvas.Left="17" Canvas.Top="87" Width="273" Height="41" FontSize="22"/>
+            <Label x:Name="lb_ShipsNotPlaced" Content="Ships not placed: " Canvas.Left="22" Canvas.Top="482" Width="273" Height="41" FontSize="16"/>
+            <Button x:Name="SetUpBckBtn" Content="Go Back" Height="66" Canvas.Left="12" Width="122" Canvas.Top="8" FontSize="22" Click="SetUpBckBtn_Click"/>
+            <Button x:Name="SetUpUndoBtn" Content="Undo" Height="50" Canvas.Left="17" Canvas.Top="372" Width="278" FontSize="22" Click="SetUpUndoBtn_Click"/>
+            <Button x:Name="SetUpResetBtn" Content="Reset All" Height="50" Canvas.Left="17" Canvas.Top="427" Width="278" FontSize="22" Click="SetUpResetBtn_Click"/>
+            <Button x:Name="btn_deployShips" Content="Deploy Ships!" Height="124" Canvas.Left="14" Canvas.Top="554" Width="278" FontSize="36" Click="btn_deployShips_Click"/>
+            <Button x:Name="btn_RotateShip" Content="Rotate Ship" Height="50" Canvas.Left="17" Canvas.Top="317" Width="278" FontSize="22" Click="btn_RotateShip_Click"/>
+            <ListBox x:Name="ShipSetupListBox" Height="176" Canvas.Left="16" Canvas.Top="136" Width="278" FontSize="22" SelectionChanged="ShipSetupListBox_Selected">
+                <ListBoxItem x:Name="CarrierShipItem" Content="Carrier" />
+                <ListBoxItem x:Name="BattleShipItem" Content="BattleShip"/>
+                <ListBoxItem x:Name="CruiserShipItem" Content="Cruiser"/>
+                <ListBoxItem x:Name="SubShipItem" Content="Submarine"/>
+            </ListBox>
+
+            <Grid x:Name="grid_ShipSetup" Canvas.Left="380" Canvas.Top="136" Height="610" Width="1000">
+
+            </Grid>
+        </Canvas>
+
+        <Canvas x:Name="canBattleScreen">
+
+        </Canvas>
+
+    </Canvas>
 </Window>

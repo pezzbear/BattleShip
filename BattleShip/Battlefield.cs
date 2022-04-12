@@ -15,6 +15,13 @@ namespace BattleShip
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Encapsulation not yet taught.")]
     public class Battlefield 
     {
+        public Battlefield(int _size) 
+        {
+            Size = _size;
+            DataGrid = new GridData[Size, Size];
+            ShipGrid = new Ship[Size, Size];
+        }
+
         /// <summary>
         /// Size of the battlefield grid
         /// </summary>
@@ -28,7 +35,7 @@ namespace BattleShip
         /// <summary>
         /// Size of the battlefield grid
         /// </summary>
-        public Ship[] ShipGrid; 
+        public Ship[,] ShipGrid; 
 
         /// <summary>
         /// Data entered in the battlefield grids.
