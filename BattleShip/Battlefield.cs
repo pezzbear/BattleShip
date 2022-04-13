@@ -17,9 +17,9 @@ namespace BattleShip
     {
         public Battlefield(int _size) 
         {
-            Size = _size;
-            DataGrid = new GridData[Size, Size];
-            ShipGrid = new Ship[Size, Size];
+            this.Size = _size;
+            this.DataGrid = new GridData[this.Size, this.Size];
+            this.ShipGrid = new Ship[this.Size, this.Size];
         }
 
         /// <summary>

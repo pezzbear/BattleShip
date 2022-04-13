@@ -3,9 +3,11 @@
 //     Company copyright tag.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace BattleShip {
+namespace BattleShip 
+{
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -18,8 +20,7 @@ namespace BattleShip {
     using System.Windows.Media.Imaging;
     using System.Windows.Navigation;
     using System.Windows.Shapes;
-    using System.Diagnostics;
-
+    
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -28,14 +29,17 @@ namespace BattleShip {
     {
         public MainWindow() 
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         /// <summary>
-        /// Current "Gamestate", basically what window we are on.
+        /// Current "Game state", basically what window we are on.
         /// </summary>
         private gState GameState = gState.Start;
 
+        /// <summary>
+        /// Current "Game state", basically what window we are on.
+        /// </summary>
         private enum gState 
         {
             Start,
@@ -55,20 +59,38 @@ namespace BattleShip {
         private int battlefieldSize = 10;
 
         /// <summary>
-        /// Array used to keep track of highlighing the grid when placing a ship
+        /// Array used to keep track of highlighting the grid when placing a ship
         /// </summary>
         private Rectangle[,] setupGridArray;
 
+        /// <summary>
+        /// Player 1
+        /// </summary>
         private Player player1 = new Player();
 
+        /// <summary>
+        /// Player 2
+        /// </summary>
         private Player player2 = new Player();
 
+        /// <summary>
+        /// Starting ship
+        /// </summary>
         private Ship[] startingShips = new Ship[5];
 
+        /// <summary>
+        /// Current Player Turn
+        /// </summary>
         private Player CurrentTurn;
 
+        /// <summary>
+        /// Selected BattleShip
+        /// </summary>
         private Ship SelectedShip;
 
+        /// <summary>
+        /// If it's possible to place ship where they position
+        /// </summary>
         private bool canPlaceShip = true;
 
         private List<Ship> lastShipPlacedList = new List<Ship>();
@@ -77,13 +99,16 @@ namespace BattleShip {
         {
             Color color = (Color)ColorConverter.ConvertFromString(colorHex);
             return color;
-         }
+        }
+
+        /// <summary>
+        /// The Method to Change the Game State To show Start, Player, Select Ship, Placement, and Battle Screens
+        /// </summary>
         private void ChangeGameState(gState state) 
         {
+            this.GameState = state;
 
-            GameState = state;
-
-            switch (GameState) 
+            switch (this.GameState) 
             {
                 case gState.Start:
                     canStartScreen.Visibility = Visibility.Visible;
@@ -114,20 +139,22 @@ namespace BattleShip {
 
         private void LoadShips() 
         {
-            /// <summary>
-            /// This is temporary and will be changed when we implement the settings screen
-            /// </summary>
-
-            for (int i = 0; i < startingShips.Length; i++) 
+            // <summary>
+            // This is temporary and will be changed when we implement the settings screen
+            // </summary>
+            for (int i = 0; i < this.startingShips.Length; i++) 
             {
                 Ship newShip = new Ship();
                 newShip.type = (Ship.shipType)i;
                 newShip.SetLenght();
-                startingShips[i] = newShip;
+                this.startingShips[i] = newShip;
             }
 
         }
 
+        // <summary>
+        // This method will set up the grid. 
+        // </summary>
         private void SetupGrid(Grid grid) 
         {
             grid.Children.Clear();
@@ -138,7 +165,7 @@ namespace BattleShip {
             double cellSize = 55;
             GridLength gSize = new GridLength(cellSize);
 
-            for(int i = 0; i < battlefieldSize; i++) 
+            for(int i = 0; i < this.battlefieldSize; i++) 
             { 
                 ColumnDefinition colDef = new ColumnDefinition();
                 colDef.Width = gSize;
@@ -149,27 +176,27 @@ namespace BattleShip {
                 grid.RowDefinitions.Add(rowDef);
             }
 
-            grid.Height = cellSize * battlefieldSize;
-            grid.Width = cellSize * battlefieldSize;
+            grid.Height = cellSize * this.battlefieldSize;
+            grid.Width = cellSize * this.battlefieldSize;
 
-            if(grid == grid_ShipSetup) 
+            if(grid == this.grid_ShipSetup) 
             { 
-                for (int x = 0; x < battlefieldSize; x++) 
+                for (int x = 0; x < this.battlefieldSize; x++) 
                 {
-                    for (int y = 0; y < battlefieldSize; y++) 
+                    for (int y = 0; y < this.battlefieldSize; y++) 
                     {
                         Rectangle Rect = new Rectangle();
-                        Rect.Name = AlphArray[x] + y.ToString();
+                        Rect.Name = this.AlphArray[x] + y.ToString();
                         SolidColorBrush mySolidColorBrush = new SolidColorBrush();
-                        mySolidColorBrush.Color = GetColor("#79dced");
+                        mySolidColorBrush.Color = this.GetColor("#79dced");
                         Rect.Fill = mySolidColorBrush;
                         Grid.SetRow(Rect, x);
                         Grid.SetColumn(Rect, y);
                         grid.Children.Add(Rect);
-                        Rect.MouseDown += SetUpGrid_MouseDown;
-                        Rect.MouseEnter += SetUpGrid_MouseEnteredSquare;
-                        Rect.MouseLeave += SetUpGrid_MouseLeftSquare;
-                        setupGridArray[x, y] = Rect;
+                        Rect.MouseDown += this.SetUpGrid_MouseDown;
+                        Rect.MouseEnter += this.SetUpGrid_MouseEnteredSquare;
+                        Rect.MouseLeave += this.SetUpGrid_MouseLeftSquare;
+                        this.setupGridArray[x, y] = Rect;
                     }
                 }
             } 
@@ -178,28 +205,31 @@ namespace BattleShip {
 
         private void UpdateBattlefieldColors()
         {
-            for(int x = 0; x < battlefieldSize; x++)
+            for (int x = 0; x < this.battlefieldSize; x++)
             {
-                for(int y = 0; y < battlefieldSize; y++)
+                for (int y = 0; y < this.battlefieldSize; y++)
                 {
-                    Ship getShip = CurrentTurn.Board.ShipGrid[x, y];
-                    if(getShip != null)
+                    Ship getShip = this.CurrentTurn.Board.ShipGrid[x, y];
+                    if (getShip != null)
                     {
-                        setupGridArray[x, y].Fill = getShip.ShipColor;
+                        this.setupGridArray[x, y].Fill = getShip.ShipColor;
                     }
                 }
             }
         }
 
+        // <summary>
+        // This method will Reset the Player Ships 
+        // </summary>
         private void ResetPlayerShips()
         {
-            foreach (Ship p1Ship in player1.CurrentShips)
+            foreach (Ship p1Ship in this.player1.CurrentShips)
             {
                 p1Ship.isPlaced = false;
                 p1Ship.isSunk = false;
             }
 
-            foreach (Ship p2Ship in player1.CurrentShips)
+            foreach (Ship p2Ship in this.player1.CurrentShips)
             {
                 p2Ship.isPlaced = false;
                 p2Ship.isSunk = false;
@@ -208,15 +238,15 @@ namespace BattleShip {
 
         private void MainCanvas_OnLoad(object sender, RoutedEventArgs e) 
         {
-            ChangeGameState(gState.Start);
-            LoadShips();
-            setupGridArray = new Rectangle[battlefieldSize, battlefieldSize];
+            this.ChangeGameState(gState.Start);
+            this.LoadShips();
+            this.setupGridArray = new Rectangle[this.battlefieldSize, this.battlefieldSize];
         }
 
         #region Start Screen Buttons [[-----------------------------------------------------------------------------------------------------------------]]
         private void StartButton_Click(object sender, RoutedEventArgs e) 
         {
-            ChangeGameState(gState.PlayerSelect);
+            this.ChangeGameState(gState.PlayerSelect);
         }
 
         private void CreditsButton_Click(object sender, RoutedEventArgs e) 
@@ -226,7 +256,7 @@ namespace BattleShip {
 
         private void ExitButton_Click(object sender, RoutedEventArgs e) 
         {
-            Close();
+            this.Close();
         }
 
         private void Rules_Click(object sender, RoutedEventArgs e) 
@@ -239,63 +269,62 @@ namespace BattleShip {
         #region Player Select Screen Buttons [[-----------------------------------------------------------------------------------------------------------------]]
         private void BackButton_Click(object sender, RoutedEventArgs e) 
         {
-            ChangeGameState(gState.Start);
+            this.ChangeGameState(gState.Start);
         }
 
         private void StartPvp_Click(object sender, RoutedEventArgs e) 
         {
-            if (txtPlayerOneName.Text == "") 
+            if (txtPlayerOneName.Text == string.Empty) 
             {
                 MessageBox.Show("Please enter a name for Player 1");
                 return;
             }
-            player1.Name = txtPlayerOneName.Text;
-            player1.Type = "Player";
-            player1.CurrentShips = startingShips.ToList();
-            player1.Board = new Battlefield(battlefieldSize);
+            this.player1.Name = txtPlayerOneName.Text;
+            this.player1.Type = "Player";
+            this.player1.CurrentShips = this.startingShips.ToList();
+            this.player1.Board = new Battlefield(this.battlefieldSize);
 
 
-            if (txtPlayerTwoName.Text == "") 
+            if (txtPlayerTwoName.Text == string.Empty) 
             {
                 MessageBox.Show("Please enter a name for Player 2");
                 return;
             }
-            player2.Name = txtPlayerTwoName.Text;
-            player2.Type = "Player";
-            player2.CurrentShips = startingShips.ToList();
-            player2.Board = new Battlefield(battlefieldSize);
+            this.player2.Name = txtPlayerTwoName.Text;
+            this.player2.Type = "Player";
+            this.player2.CurrentShips = this.startingShips.ToList();
+            this.player2.Board = new Battlefield(this.battlefieldSize);
             
-            CurrentTurn = player1;
-            ChangeGameState(gState.ShipPlacement);
+            this.CurrentTurn = this.player1;
+            this.ChangeGameState(gState.ShipPlacement);
         }
 
         private void StartPvpVsCPU_Click(object sender, RoutedEventArgs e) 
         {
-            if (txtPlayerOneName_Vs_AI.Text == "") 
+            if (txtPlayerOneName_Vs_AI.Text == string.Empty) 
             {
                 MessageBox.Show("Please enter a name for Player 1");
                 return;
             }
-            player1.Name = txtPlayerOneName_Vs_AI.Text;
-            player1.Type = "Player";
-            player1.CurrentShips = startingShips.ToList();
-            player1.Board = new Battlefield(battlefieldSize);
+            this.player1.Name = txtPlayerOneName_Vs_AI.Text;
+            this.player1.Type = "Player";
+            this.player1.CurrentShips = this.startingShips.ToList();
+            this.player1.Board = new Battlefield(this.battlefieldSize);
 
 
-            player2.Name = "BATTLEFIELD_BOT_V2.0";
-            player2.Type = "CPU";
-            player2.CurrentShips = startingShips.ToList();
-            player2.Board = new Battlefield(battlefieldSize);
+            this.player2.Name = "BATTLEFIELD_BOT_V2.0";
+            this.player2.Type = "CPU";
+            this.player2.CurrentShips = this.startingShips.ToList();
+            this.player2.Board = new Battlefield(this.battlefieldSize);
 
-            CurrentTurn = player1;
-            ChangeGameState(gState.ShipPlacement);
+            this.CurrentTurn = this.player1;
+            this.ChangeGameState(gState.ShipPlacement);
         }
 
         private void Settings_Click(object sender, RoutedEventArgs e) 
         {
 
         }
-
 
         #endregion
 
@@ -304,79 +333,86 @@ namespace BattleShip {
         private void canShipSetup_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e) 
         {
             ShipSetupListBox.Items.Clear();
-            foreach (Ship getShip in player1.CurrentShips) 
+            foreach (Ship getShip in this.player1.CurrentShips) 
             {
                 ShipSetupListBox.Items.Add(getShip.GetName());
-                
             }
-            SetupGrid(grid_ShipSetup);
-            SelectedShip = null;
-            Array.Clear(CurrentTurn.Board.ShipGrid, 0, setupGridArray.Length);
-            ResetPlayerShips();
+
+            this.SetupGrid(this.grid_ShipSetup);
+            this.SelectedShip = null;
+            Array.Clear(this.CurrentTurn.Board.ShipGrid, 0, this.setupGridArray.Length);
+            this.ResetPlayerShips();
         }
 
         private void ShipSetupListBox_Selected(object sender, SelectionChangedEventArgs e) 
         {
-            foreach (Ship getShip in player1.CurrentShips) 
+            foreach (Ship getShip in this.player1.CurrentShips) 
             {
                 if (ShipSetupListBox.SelectedItem != null) 
                 { 
                     if (ShipSetupListBox.SelectedItem.ToString() == getShip.GetName()) 
                     {
-                        SelectedShip = getShip;
+                        this.SelectedShip = getShip;
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Goes Back to Player Select Screen
+        /// </summary>
         private void SetUpBckBtn_Click(object sender, RoutedEventArgs e) 
         {
-            ChangeGameState(gState.PlayerSelect);
+            this.ChangeGameState(gState.PlayerSelect);
         }
 
+        /// <summary>
+        /// Method to Rotate Ship placement 
+        /// </summary>
         private void btn_RotateShip_Click(object sender, RoutedEventArgs e) 
         {
-            if (SelectedShip != null && !SelectedShip.isPlaced) 
+            if (this.SelectedShip != null && !this.SelectedShip.isPlaced) 
             {
-                if(SelectedShip.rotation == "Horizontal") 
+                if (this.SelectedShip.rotation == "Horizontal") 
                 {
-                    SelectedShip.rotation = "Vertical";
-                } else 
+                    this.SelectedShip.rotation = "Vertical";
+                } 
+                else 
                 {
-                    SelectedShip.rotation = "Horizontal";
+                    this.SelectedShip.rotation = "Horizontal";
                 }
             }
         }
 
         private void SetUpUndoBtn_Click(object sender, RoutedEventArgs e) 
         {
-            if(lastShipPlacedList.Count > 0)
+            if (this.lastShipPlacedList.Count > 0)
             {
-                Ship lastShip = lastShipPlacedList.Last();
+                Ship lastShip = this.lastShipPlacedList.Last();
                 lastShip.isPlaced = false;
                 int x = lastShip.origin[0];
                 int y = lastShip.origin[1];
                 SolidColorBrush Brush = new SolidColorBrush();
-                Brush.Color = GetColor("#79dced");
+                Brush.Color = this.GetColor("#79dced");
                 if (lastShip.rotation == "Horizontal")
                 {
                     for (int j = 0; j < lastShip.length; j++)
                     {
-                        CurrentTurn.Board.ShipGrid[x, y + j] = null;
-                        setupGridArray[x, y + j].Fill = Brush;
+                        this.CurrentTurn.Board.ShipGrid[x, y + j] = null;
+                        this.setupGridArray[x, y + j].Fill = Brush;
                     }
                 }
                 else if (lastShip.rotation == "Vertical")
                 {
                     for (int j = 0; j < lastShip.length; j++)
                     {
-                        CurrentTurn.Board.ShipGrid[x + j, y] = null;
-                        setupGridArray[x + j, y].Fill = Brush;
+                        this.CurrentTurn.Board.ShipGrid[x + j, y] = null;
+                        this.setupGridArray[x + j, y].Fill = Brush;
                     }
                 }
                 Array.Clear(lastShip.origin, 0, lastShip.origin.Length);
-                UpdateBattlefieldColors();
-                lastShipPlacedList.RemoveAt(lastShipPlacedList.Count-1);
+                this.UpdateBattlefieldColors();
+                this.lastShipPlacedList.RemoveAt(this.lastShipPlacedList.Count -1);
 
                 
             }
@@ -384,21 +420,21 @@ namespace BattleShip {
 
         private void SetUpResetBtn_Click(object sender, RoutedEventArgs e) 
         {
-            Array.Clear(CurrentTurn.Board.ShipGrid, 0, CurrentTurn.Board.ShipGrid.Length);
-            foreach (Ship getShip in CurrentTurn.CurrentShips)
+            Array.Clear(this.CurrentTurn.Board.ShipGrid, 0, this.CurrentTurn.Board.ShipGrid.Length);
+            foreach (Ship getShip in this.CurrentTurn.CurrentShips)
             {
                 getShip.isPlaced = false;
                 getShip.isSunk = false;
             }
-            lastShipPlacedList.Clear();
+            this.lastShipPlacedList.Clear();
 
             SolidColorBrush Brush = new SolidColorBrush();
-            Brush.Color = GetColor("#79dced");
-            for (int x = 0; x < battlefieldSize; x++)
+            Brush.Color = this.GetColor("#79dced");
+            for (int x = 0; x < this.battlefieldSize; x++)
             {
-                for (int y = 0; y < battlefieldSize; y++)
+                for (int y = 0; y < this.battlefieldSize; y++)
                 {
-                    setupGridArray[x, y].Fill = Brush;
+                    this.setupGridArray[x, y].Fill = Brush;
                 }
             }
         }
@@ -425,13 +461,13 @@ namespace BattleShip {
 
         private void SetUpGrid_MouseLeftSquare(object sender, MouseEventArgs e) 
         {
-            if (SelectedShip == null) 
+            if (this.SelectedShip == null) 
             {
                 Debug.WriteLine("NO SHIP SELECTED");
                 return;
             }
             SolidColorBrush Brush = new SolidColorBrush();
-            Brush.Color = GetColor("#79dced");
+            Brush.Color = this.GetColor("#79dced");
             Rectangle rect = (Rectangle)e.Source;
             rect.Fill = Brush;
 
@@ -440,7 +476,7 @@ namespace BattleShip {
             int y = 0;
 
             int i = 0;
-            foreach (string letter in AlphArray) 
+            foreach (string letter in this.AlphArray) 
             {
                 if (rect.Name[0] == letter[0]) 
                 {
@@ -454,48 +490,48 @@ namespace BattleShip {
 
 
 
-            if (SelectedShip.rotation == "Horizontal") 
+            if (this.SelectedShip.rotation == "Horizontal") 
             {
-                for (int j = 1; j < SelectedShip.length; j++) 
+                for (int j = 1; j < this.SelectedShip.length; j++) 
                 {
-                    if ((y + j) < battlefieldSize) 
+                    if ((y + j) < this.battlefieldSize) 
                     {
-                        Rectangle shipRect = setupGridArray[x, y + j];
+                        Rectangle shipRect = this.setupGridArray[x, y + j];
                         shipRect.Fill = Brush;
                     }
                 }
             }
 
-            if (SelectedShip.rotation == "Vertical") 
+            if (this.SelectedShip.rotation == "Vertical") 
             {
-                for (int j = 1; j < SelectedShip.length; j++) 
+                for (int j = 1; j < this.SelectedShip.length; j++) 
                 {
-                    if ((x + j) < battlefieldSize) {
-                        Rectangle shipRect = setupGridArray[x + j, y];
+                    if ((x + j) < this.battlefieldSize) {
+                        Rectangle shipRect = this.setupGridArray[x + j, y];
                         shipRect.Fill = Brush;
                     }
                 }
             }
 
-            UpdateBattlefieldColors();
+            this.UpdateBattlefieldColors();
         }
 
         private void SetUpGrid_MouseEnteredSquare(object sender, MouseEventArgs e) 
         {
-            if (SelectedShip == null) 
+            if (this.SelectedShip == null) 
             {
                 Debug.WriteLine("NO SHIP SELECTED");
                 return;
             }
 
-            UpdateBattlefieldColors();
+            this.UpdateBattlefieldColors();
 
             SolidColorBrush Brush = new SolidColorBrush();
-            if(SelectedShip.isPlaced) 
+            if (this.SelectedShip.isPlaced) 
             {
-                Brush.Color = GetColor("#ff0800");
+                Brush.Color = this.GetColor("#ff0800");
             } else {
-                Brush.Color = GetColor("#edffef");
+                Brush.Color = this.GetColor("#edffef");
             }
             
             Rectangle rect = (Rectangle)e.Source;
@@ -519,52 +555,52 @@ namespace BattleShip {
 
 
 
-            if (SelectedShip.rotation == "Horizontal") 
+            if (this.SelectedShip.rotation == "Horizontal") 
             {
-                for (int j = 0; j < SelectedShip.length; j++) 
+                for (int j = 0; j < this.SelectedShip.length; j++) 
                 {
                     int newY = 0;
-                    if ((y + j) >= battlefieldSize) 
+                    if ((y + j) >= this.battlefieldSize) 
                     {
-                        Brush.Color = GetColor("#ff0800");
-                        newY = battlefieldSize - 1;
-                        canPlaceShip = false;
+                        Brush.Color = this.GetColor("#ff0800");
+                        newY = this.battlefieldSize - 1;
+                        this.canPlaceShip = false;
                     }
                     else {
                         newY = y + j;
-                        canPlaceShip = true;
+                        this.canPlaceShip = true;
                     }
-                    if(!CheckForOtherShips(x, newY))
+                    if(!this.CheckForOtherShips(x, newY))
                     {
-                        Brush.Color = GetColor("#ff0800");
-                        canPlaceShip = false;
+                        Brush.Color = this.GetColor("#ff0800");
+                        this.canPlaceShip = false;
                     }
                     Rectangle shipRect = setupGridArray[x, newY];
                     shipRect.Fill = Brush;
                 }
             }
-            else if (SelectedShip.rotation == "Vertical") 
+            else if (this.SelectedShip.rotation == "Vertical") 
             {
-                for (int j = 0; j < SelectedShip.length; j++) 
+                for (int j = 0; j < this.SelectedShip.length; j++) 
                 {
                     int newX = 0;
-                    if ((x + j) >= battlefieldSize) 
+                    if ((x + j) >= this.battlefieldSize) 
                     {
-                        Brush.Color = GetColor("#ff0800");
-                        newX = battlefieldSize - 1;
-                        canPlaceShip = false;
+                        Brush.Color = this.GetColor("#ff0800");
+                        newX = this.battlefieldSize - 1;
+                        this.canPlaceShip = false;
                     }
                     else {
                         newX = x + j;
-                        canPlaceShip = true;
+                        this.canPlaceShip = true;
                     }
-                    if (!CheckForOtherShips(newX, y))
+                    if (!this.CheckForOtherShips(newX, y))
                     {
-                        Brush.Color = GetColor("#ff0800");
-                        canPlaceShip = false;
+                        Brush.Color = this.GetColor("#ff0800");
+                        this.canPlaceShip = false;
                     }
 
-                    Rectangle shipRect = setupGridArray[newX, y];
+                    Rectangle shipRect = this.setupGridArray[newX, y];
                     shipRect.Fill = Brush;
                 }
             }
@@ -576,12 +612,12 @@ namespace BattleShip {
 
         private void SetUpGrid_MouseDown(object sender, MouseButtonEventArgs e) 
         {
-            if (SelectedShip == null) 
+            if (this.SelectedShip == null) 
             {
                 return;
             }
 
-            if(!SelectedShip.isPlaced && canPlaceShip) 
+            if(!this.SelectedShip.isPlaced && this.canPlaceShip) 
             {
                 //setting the origin of the ship being placed
                 Rectangle rect = (Rectangle)e.Source;
@@ -590,7 +626,7 @@ namespace BattleShip {
                 int y = 0;
 
                 int i = 0;
-                foreach (string letter in AlphArray)
+                foreach (string letter in this.AlphArray)
                 {
                     if (rect.Name[0] == letter[0])
                     {
@@ -602,31 +638,31 @@ namespace BattleShip {
 
                 y = rect.Name[1] - '0';
 
-                SelectedShip.origin[0] = x;
-                SelectedShip.origin[1] = y;
-                SelectedShip.isPlaced = true;
+                this.SelectedShip.origin[0] = x;
+                this.SelectedShip.origin[1] = y;
+                this.SelectedShip.isPlaced = true;
 
-                if (SelectedShip.rotation == "Horizontal")
+                if (this.SelectedShip.rotation == "Horizontal")
                 {
-                    for (int j = 0; j < SelectedShip.length; j++)
+                    for (int j = 0; j < this.SelectedShip.length; j++)
                     {
-                        CurrentTurn.Board.ShipGrid[x, y + j] = SelectedShip;
+                        this.CurrentTurn.Board.ShipGrid[x, y + j] = this.SelectedShip;
                     }
                 }
-                else if (SelectedShip.rotation == "Vertical")
+                else if (this.SelectedShip.rotation == "Vertical")
                 {
-                    for (int j = 0; j < SelectedShip.length; j++)
+                    for (int j = 0; j < this.SelectedShip.length; j++)
                     {
-                        CurrentTurn.Board.ShipGrid[x + j, y] = SelectedShip;
+                        this.CurrentTurn.Board.ShipGrid[x + j, y] = this.SelectedShip;
                     }
                 }
 
             }
 
-            lastShipPlacedList.Add(SelectedShip);
+            this.lastShipPlacedList.Add(this.SelectedShip);
 
             //updates the colors on the battlefield from the grid data
-            UpdateBattlefieldColors();
+            this.UpdateBattlefieldColors();
         }
 
         #endregion

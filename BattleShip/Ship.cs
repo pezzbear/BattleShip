@@ -58,36 +58,42 @@ namespace BattleShip
             destroyer
         }
 
-        public void SetLenght() 
+        /// <summary>
+        /// Sets the Length of the Ship returns the highlight and amount of tiles it brings up 
+        /// </summary>
+        public void SetLenght()
         {
-            switch(type) 
+            switch (type)
             {
                 case shipType.carrier:
-                    length = 5;
-                    ShipColor.Color = Color.FromRgb(237, 99, 255);
+                    this.length = 5;
+                    this.ShipColor.Color = Color.FromRgb(237, 99, 255);
                     break;
                 case shipType.battleship:
-                    length = 4;
-                    ShipColor.Color = Color.FromRgb(245, 255, 102);
+                    this.length = 4;
+                    this.ShipColor.Color = Color.FromRgb(245, 255, 102);
                     break;
                 case shipType.curiser:
-                    length = 3;
-                    ShipColor.Color = Color.FromRgb(255, 204, 64);
+                    this.length = 3;
+                    this.ShipColor.Color = Color.FromRgb(255, 204, 64);
                     break;
                 case shipType.submarine:
-                    length = 3;
-                    ShipColor.Color = Color.FromRgb(66, 255, 107);
+                    this.length = 3;
+                    this.ShipColor.Color = Color.FromRgb(66, 255, 107);
                     break;
                 case shipType.destroyer:
-                    length = 2;
-                    ShipColor.Color = Color.FromRgb(3, 1, 112);
+                    this.length = 2;
+                    this.ShipColor.Color = Color.FromRgb(3, 1, 112);
                     break;
             }
         }
 
+        /// <summary>
+        /// Grabs the Ship Name and returns it
+        /// </summary>
         public string GetName() 
         {
-            switch (type) 
+            switch (this.type) 
             {
                 case shipType.carrier:
                     return "Carrier";
