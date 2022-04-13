@@ -20,22 +20,22 @@ namespace BattleShip
         /// <summary>
         /// The following String is known as the Type string. This will contain the name of what type of ship we have on our hands.
         /// </summary>
-        public shipType type;
+        public ShipType Type;
 
         /// <summary>
         ///  Here we have our Length integer, which will keep track of how many grid spaces our ships will take up on our board.
         /// </summary>
-        public int length;
+        public int Length;
 
         /// <summary>
         ///  Here we have the isSunk which will be used to see if a boat is sunk during the match, having it be eliminated.
         /// </summary>
-        public bool isSunk = false;
+        public bool IsSunk = false;
 
         /// <summary>
         ///  Here we have our Origin of our ship, which will contain all the different grid positions the ship is taking up.
         /// </summary>
-        public int[] origin = new int[2];
+        public int[] Origin = new int[2];
 
         /// <summary>
         ///  Color used to show what ship it is
@@ -45,16 +45,41 @@ namespace BattleShip
         /// <summary>
         ///  The following will be used during the setup screen, when placing down your boats you will have the option to rotate said ship before placing them.
         /// </summary>
-        public string rotation = "Horizontal";
+        public string Rotation = "Horizontal";
 
-        public bool isPlaced = false;
+        /// <summary>
+        /// The following will be used during the setup screen, when placing a boat this will detect if the boat was actually placed down on the board.
+        /// </summary>
+        public bool IsPlaced = false;
 
-        public enum shipType 
+        /// <summary>
+        /// The following will be used during the setup screen, this keeps track of what type of ship the selected ship classifies as.
+        /// </summary>
+        public enum ShipType 
         {
+            /// <summary>
+            /// holds the type known as "Carrier"
+            /// </summary>
             carrier,
+
+            /// <summary>
+            /// holds the ship type known as "Battleship".
+            /// </summary>
             battleship,
+
+            /// <summary>
+            /// holds the ship type known as "Curiser"
+            /// </summary>
             curiser,
+
+            /// <summary>
+            /// holds the ship type known as "Submarine"
+            /// </summary>
             submarine,
+
+            /// <summary>
+            /// holds the ship type known as "Destroyer"
+            /// </summary>
             destroyer
         }
 
@@ -63,26 +88,26 @@ namespace BattleShip
         /// </summary>
         public void SetLenght()
         {
-            switch (type)
+            switch (Type)
             {
-                case shipType.carrier:
-                    this.length = 5;
+                case ShipType.carrier:
+                    this.Length = 5;
                     this.ShipColor.Color = Color.FromRgb(237, 99, 255);
                     break;
-                case shipType.battleship:
-                    this.length = 4;
+                case ShipType.battleship:
+                    this.Length = 4;
                     this.ShipColor.Color = Color.FromRgb(245, 255, 102);
                     break;
-                case shipType.curiser:
-                    this.length = 3;
+                case ShipType.curiser:
+                    this.Length = 3;
                     this.ShipColor.Color = Color.FromRgb(255, 204, 64);
                     break;
-                case shipType.submarine:
-                    this.length = 3;
+                case ShipType.submarine:
+                    this.Length = 3;
                     this.ShipColor.Color = Color.FromRgb(66, 255, 107);
                     break;
-                case shipType.destroyer:
-                    this.length = 2;
+                case ShipType.destroyer:
+                    this.Length = 2;
                     this.ShipColor.Color = Color.FromRgb(3, 1, 112);
                     break;
             }
@@ -93,17 +118,17 @@ namespace BattleShip
         /// </summary>
         public string GetName() 
         {
-            switch (this.type) 
+            switch (this.Type) 
             {
-                case shipType.carrier:
+                case ShipType.carrier:
                     return "Carrier";
-                case shipType.battleship:
+                case ShipType.battleship:
                     return "Battleship";
-                case shipType.curiser:
+                case ShipType.curiser:
                     return "Curiser";
-                case shipType.submarine:
+                case ShipType.submarine:
                     return "Submarine";
-                case shipType.destroyer:
+                case ShipType.destroyer:
                     return "Destroyer";
                 default:
                     return "ERROR";

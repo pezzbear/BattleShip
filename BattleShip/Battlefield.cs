@@ -15,9 +15,12 @@ namespace BattleShip
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Encapsulation not yet taught.")]
     public class Battlefield 
     {
-        public Battlefield(int _size) 
+        /// <summary>
+        /// this holds the grid data for the Battlefield using the int size_
+        /// </summary>
+        public Battlefield(int size_) 
         {
-            this.Size = _size;
+            this.Size = size_;
             this.DataGrid = new GridData[this.Size, this.Size];
             this.ShipGrid = new Ship[this.Size, this.Size];
         }
