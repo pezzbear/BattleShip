@@ -16,16 +16,6 @@ namespace BattleShip
     public class Battlefield 
     {
         /// <summary>
-        /// this holds the grid data for the Battlefield using the int size_
-        /// </summary>
-        public Battlefield(int size_) 
-        {
-            this.Size = size_;
-            this.DataGrid = new GridData[this.Size, this.Size];
-            this.ShipGrid = new Ship[this.Size, this.Size];
-        }
-
-        /// <summary>
         /// Size of the battlefield grid
         /// </summary>
         public int Size;
@@ -41,9 +31,20 @@ namespace BattleShip
         public Ship[,] ShipGrid; 
 
         /// <summary>
+        /// Initializes a new instance of the Battlefield class.
+        /// </summary>
+        /// <param name="size_">Size of the Battlefield</param>
+        public Battlefield(int size_)
+        {
+            this.Size = size_;
+            this.DataGrid = new GridData[this.Size, this.Size];
+            this.ShipGrid = new Ship[this.Size, this.Size];
+        }
+
+        /// <summary>
         /// Data entered in the battlefield grids.
         /// </summary>
-        public enum GridData 
+        public enum GridData
         {
             /// <summary>
             /// Empty space on the board

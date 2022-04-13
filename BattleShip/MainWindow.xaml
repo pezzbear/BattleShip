@@ -42,14 +42,14 @@
             </RadioButton>
         </Canvas>
 
-        <Canvas x:Name="canShipSetup" Visibility="Collapsed" IsVisibleChanged="canShipSetup_IsVisibleChanged">
+        <Canvas x:Name="canShipSetup" Visibility="Collapsed" IsVisibleChanged="CanShipSetup_IsVisibleChanged">
             <Label x:Name="lb_CurrentPlayerSetup" Content="Current Turn: Player 1" Canvas.Left="17" Canvas.Top="87" Width="273" Height="41" FontSize="22"/>
             <Label x:Name="lb_ShipsNotPlaced" Content="Ships not placed: " Canvas.Left="22" Canvas.Top="482" Width="273" Height="41" FontSize="16"/>
             <Button x:Name="SetUpBckBtn" Content="Go Back" Height="66" Canvas.Left="12" Width="122" Canvas.Top="8" FontSize="22" Click="SetUpBckBtn_Click"/>
             <Button x:Name="SetUpUndoBtn" Content="Undo" Height="50" Canvas.Left="17" Canvas.Top="372" Width="278" FontSize="22" Click="SetUpUndoBtn_Click"/>
             <Button x:Name="SetUpResetBtn" Content="Reset All" Height="50" Canvas.Left="17" Canvas.Top="427" Width="278" FontSize="22" Click="SetUpResetBtn_Click"/>
-            <Button x:Name="btn_deployShips" Content="Deploy Ships!" Height="124" Canvas.Left="14" Canvas.Top="554" Width="278" FontSize="36" Click="btn_deployShips_Click"/>
-            <Button x:Name="btn_RotateShip" Content="Rotate Ship" Height="50" Canvas.Left="17" Canvas.Top="317" Width="278" FontSize="22" Click="btn_RotateShip_Click"/>
+            <Button x:Name="btn_deployShips" Content="Deploy Ships!" Height="124" Canvas.Left="14" Canvas.Top="554" Width="278" FontSize="36" Click="Btn_deployShips_Click"/>
+            <Button x:Name="btn_RotateShip" Content="Rotate Ship" Height="50" Canvas.Left="17" Canvas.Top="317" Width="278" FontSize="22" Click="Btn_RotateShip_Click"/>
             <ListBox x:Name="ShipSetupListBox" Height="176" Canvas.Left="16" Canvas.Top="136" Width="278" FontSize="22" SelectionChanged="ShipSetupListBox_Selected">
                 <ListBoxItem x:Name="CarrierShipItem" Content="Carrier" />
                 <ListBoxItem x:Name="BattleShipItem" Content="BattleShip"/>

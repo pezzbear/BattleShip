@@ -68,9 +68,9 @@ namespace BattleShip
             battleship,
 
             /// <summary>
-            /// holds the ship type known as "Curiser"
+            /// holds the ship type known as "Cruiser"
             /// </summary>
-            curiser,
+            cruiser,
 
             /// <summary>
             /// holds the ship type known as "Submarine"
@@ -88,7 +88,7 @@ namespace BattleShip
         /// </summary>
         public void SetLenght()
         {
-            switch (Type)
+            switch (this.Type)
             {
                 case ShipType.carrier:
                     this.Length = 5;
@@ -98,7 +98,7 @@ namespace BattleShip
                     this.Length = 4;
                     this.ShipColor.Color = Color.FromRgb(245, 255, 102);
                     break;
-                case ShipType.curiser:
+                case ShipType.cruiser:
                     this.Length = 3;
                     this.ShipColor.Color = Color.FromRgb(255, 204, 64);
                     break;
@@ -116,6 +116,7 @@ namespace BattleShip
         /// <summary>
         /// Grabs the Ship Name and returns it
         /// </summary>
+        /// <returns>Ship Type.</returns>
         public string GetName() 
         {
             switch (this.Type) 
@@ -124,7 +125,7 @@ namespace BattleShip
                     return "Carrier";
                 case ShipType.battleship:
                     return "Battleship";
-                case ShipType.curiser:
+                case ShipType.cruiser:
                     return "Curiser";
                 case ShipType.submarine:
                     return "Submarine";
