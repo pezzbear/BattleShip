@@ -60,6 +60,7 @@
             <Grid x:Name="grid_ShipSetup" Canvas.Left="380" Canvas.Top="136" Height="610" Width="1000">
 
             </Grid>
+            <Rectangle Name="BlackoutScreen" Visibility ="Collapsed" Height="810" Width="1440" Fill = "Black"/>
         </Canvas>
 
         <Canvas x:Name="canBattleScreen">

@@ -458,7 +458,56 @@ namespace BattleShip
         /// <param name="e">Routed event</param>
         private void SetUpBckBtn_Click(object sender, RoutedEventArgs e) 
         {
-            this.ChangeGameState(GState.PlayerSelect);
+            if (this.currentTurn == player2)
+            {
+                Array.Clear(this.currentTurn.Board.ShipGrid, 0, this.currentTurn.Board.ShipGrid.Length);
+                foreach (Ship getShip in this.currentTurn.CurrentShips)
+                {
+                    getShip.IsPlaced = false;
+                    getShip.IsSunk = false;
+                }
+
+                this.lastShipPlacedList.Clear();
+
+                SolidColorBrush brush = new SolidColorBrush();
+                brush.Color = this.GetColor("#79dced");
+
+                for (int x = 0; x < this.battlefieldSize; x++)
+                {
+                    for (int y = 0; y < this.battlefieldSize; y++)
+                    {
+                        this.battleFieldGridArray[x, y].Fill = brush;
+                    }
+                }
+
+                this.currentTurn = player1;
+
+                Array.Clear(this.currentTurn.Board.ShipGrid, 0, this.currentTurn.Board.ShipGrid.Length);
+                foreach (Ship getShip in this.currentTurn.CurrentShips)
+                {
+                    getShip.IsPlaced = false;
+                    getShip.IsSunk = false;
+                }
+
+                this.lastShipPlacedList.Clear();
+
+                brush.Color = this.GetColor("#79dced");
+
+                for (int x = 0; x < this.battlefieldSize; x++)
+                {
+                    for (int y = 0; y < this.battlefieldSize; y++)
+                    {
+                        this.battleFieldGridArray[x, y].Fill = brush;
+                    }
+                }
+
+                lb_CurrentPlayerSetup.Content = "Current Turn: Player 1";
+            }
+            else
+            {
+                this.ChangeGameState(GState.PlayerSelect);
+            }
+            
         }
 
         /// <summary>
@@ -554,6 +603,47 @@ namespace BattleShip
         /// <param name="e">Routed event</param>
         private void Btn_deployShips_Click(object sender, RoutedEventArgs e)
         {
+            if (this.currentTurn == player1)
+            {
+                BlackoutScreen.Visibility = Visibility.Visible;
+
+                var playerConfirmation = MessageBox.Show("Player 2, Press Ok When Ready", "Player Switch Initiated",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+
+                if (playerConfirmation == MessageBoxResult.OK)
+                {
+                    this.currentTurn = player2;
+
+                    BlackoutScreen.Visibility = Visibility.Collapsed;
+
+                    Array.Clear(this.currentTurn.Board.ShipGrid, 0, this.currentTurn.Board.ShipGrid.Length);
+                    foreach (Ship getShip in this.currentTurn.CurrentShips)
+                    {
+                        getShip.IsPlaced = false;
+                        getShip.IsSunk = false;
+                    }
+
+                    this.lastShipPlacedList.Clear();
+
+                    SolidColorBrush brush = new SolidColorBrush();
+                    brush.Color = this.GetColor("#79dced");
+
+                    for (int x = 0; x < this.battlefieldSize; x++)
+                    {
+                        for (int y = 0; y < this.battlefieldSize; y++)
+                        {
+                            this.battleFieldGridArray[x, y].Fill = brush;
+                        }
+                    }
+
+                    lb_CurrentPlayerSetup.Content = "Current Turn: Player 2";
+
+                }
+            }
+            else
+            {
+                this.ChangeGameState(GState.Battle);
+            }
         }
 
         #endregion
