@@ -45,7 +45,7 @@ namespace BattleShip
         /// <summary>
         /// Array used to keep track of highlighting the grid when placing a ship
         /// </summary>
-        private Rectangle[,] setupGridArray;
+        private Rectangle[,] battleFieldGridArray;
 
         /// <summary>
         /// Player 1
@@ -227,7 +227,7 @@ namespace BattleShip
                         rect.MouseDown += this.SetUpGrid_MouseDown;
                         rect.MouseEnter += this.SetUpGrid_MouseEnteredSquare;
                         rect.MouseLeave += this.SetUpGrid_MouseLeftSquare;
-                        this.setupGridArray[x, y] = rect;
+                        this.battleFieldGridArray[x, y] = rect;
                     }
                 }
             }
@@ -245,7 +245,7 @@ namespace BattleShip
                     Ship getShip = this.currentTurn.Board.ShipGrid[x, y];
                     if (getShip != null)
                     {
-                        this.setupGridArray[x, y].Fill = getShip.ShipColor;
+                        this.battleFieldGridArray[x, y].Fill = getShip.ShipColor;
                     }
                 }
             }
@@ -278,7 +278,7 @@ namespace BattleShip
         {
             this.ChangeGameState(GState.Start);
             this.LoadShips();
-            this.setupGridArray = new Rectangle[this.battlefieldSize, this.battlefieldSize];
+            this.battleFieldGridArray = new Rectangle[this.battlefieldSize, this.battlefieldSize];
         }
 
         #region Start Screen Buttons [[-----------------------------------------------------------------------------------------------------------------]]
@@ -428,7 +428,7 @@ namespace BattleShip
 
             this.SetupGrid(this.grid_ShipSetup);
             this.selectedShip = null;
-            Array.Clear(this.currentTurn.Board.ShipGrid, 0, this.setupGridArray.Length);
+            Array.Clear(this.currentTurn.Board.ShipGrid, 0, this.battleFieldGridArray.Length);
             this.ResetPlayerShips();
         }
 
@@ -501,7 +501,7 @@ namespace BattleShip
                     for (int j = 0; j < lastShip.Length; j++)
                     {
                         this.currentTurn.Board.ShipGrid[x, y + j] = null;
-                        this.setupGridArray[x, y + j].Fill = brush;
+                        this.battleFieldGridArray[x, y + j].Fill = brush;
                     }
                 }
                 else if (lastShip.Rotation == "Vertical")
@@ -509,7 +509,7 @@ namespace BattleShip
                     for (int j = 0; j < lastShip.Length; j++)
                     {
                         this.currentTurn.Board.ShipGrid[x + j, y] = null;
-                        this.setupGridArray[x + j, y].Fill = brush;
+                        this.battleFieldGridArray[x + j, y].Fill = brush;
                     }
                 }
 
@@ -542,7 +542,7 @@ namespace BattleShip
             {
                 for (int y = 0; y < this.battlefieldSize; y++)
                 {
-                    this.setupGridArray[x, y].Fill = brush;
+                    this.battleFieldGridArray[x, y].Fill = brush;
                 }
             }
         }
@@ -620,7 +620,7 @@ namespace BattleShip
                 {
                     if ((y + j) < this.battlefieldSize) 
                     {
-                        Rectangle shipRect = this.setupGridArray[x, y + j];
+                        Rectangle shipRect = this.battleFieldGridArray[x, y + j];
                         shipRect.Fill = brush;
                     }
                 }
@@ -632,7 +632,7 @@ namespace BattleShip
                 {
                     if ((x + j) < this.battlefieldSize) 
                     {
-                        Rectangle shipRect = this.setupGridArray[x + j, y];
+                        Rectangle shipRect = this.battleFieldGridArray[x + j, y];
                         shipRect.Fill = brush;
                     }
                 }
@@ -711,7 +711,7 @@ namespace BattleShip
                         this.canPlaceShip = false;
                     }
 
-                    Rectangle shipRect = this.setupGridArray[x, newY];
+                    Rectangle shipRect = this.battleFieldGridArray[x, newY];
                     shipRect.Fill = brush;
                 }
             }
@@ -738,7 +738,7 @@ namespace BattleShip
                         this.canPlaceShip = false;
                     }
 
-                    Rectangle shipRect = this.setupGridArray[newX, y];
+                    Rectangle shipRect = this.battleFieldGridArray[newX, y];
                     shipRect.Fill = brush;
                 }
             }
