@@ -28,6 +28,11 @@ namespace BattleShip
         public int Length;
 
         /// <summary>
+        /// Health of the ships. How many hits it has left until its sunk
+        /// </summary>
+        public int Health;
+
+        /// <summary>
         ///  Here we have the isSunk which will be used to see if a boat is sunk during the match, having it be eliminated.
         /// </summary>
         public bool IsSunk = false;
@@ -111,6 +116,7 @@ namespace BattleShip
                     this.ShipColor.Color = Color.FromRgb(3, 1, 112);
                     break;
             }
+            this.Health = this.Length;
         }
 
         /// <summary>

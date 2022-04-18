@@ -23,7 +23,7 @@ namespace BattleShip
         /// <summary>
         /// Here we is our currentShips which uses the Ship class. The array contains all the ships the player has to their disposal.
         /// </summary>
-        public List<Ship> CurrentShips;
+        public List<Ship> CurrentShips = new List<Ship>();
 
         /// <summary>
         /// Here we have our board which uses the Battlefield class, this will contain all the information of the board the player has control of.
