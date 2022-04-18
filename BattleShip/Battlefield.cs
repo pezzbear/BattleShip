@@ -28,7 +28,7 @@ namespace BattleShip
         /// <summary>
         /// Size of the battlefield grid
         /// </summary>
-        public Ship[,] ShipGrid; 
+        public Ship[,] ShipGrid;
 
         /// <summary>
         /// Initializes a new instance of the Battlefield class.
@@ -61,5 +61,10 @@ namespace BattleShip
             /// </summary>
             Hit
         }
+
+        //public Player CurrentEnemy
+        //{
+        // look at current enemy holds opposite loop through
+        //}
     }
 }

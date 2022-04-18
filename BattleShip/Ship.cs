@@ -86,7 +86,7 @@ namespace BattleShip
         /// <summary>
         /// Sets the Length of the Ship returns the highlight and amount of tiles it brings up 
         /// </summary>
-        public void SetLenght()
+        public void SetLength()
         {
             switch (this.Type)
             {

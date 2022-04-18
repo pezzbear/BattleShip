@@ -63,8 +63,21 @@
             <Rectangle Name="BlackoutScreen" Visibility ="Collapsed" Height="810" Width="1440" Fill = "Black"/>
         </Canvas>
 
-        <Canvas x:Name="canBattleScreen">
+        <Canvas x:Name="canBattleScreen" Visibility="Collapsed" IsVisibleChanged="CanBattleScreen_IsVisibleChanged">
+            <Label x:Name="lb_CurrentPlayer" Content="Current Turn: Player 1" Canvas.Left="17" Canvas.Top="87" Width="273" Height="41" FontSize="22"/>
+            <Button x:Name="BattleExitBtn" Content="Exit" Height="66" Canvas.Left="12" Width="122" Canvas.Top="8" FontSize="22" Click="BattleExitBtn_Click"/>
+            <Button x:Name="BattleFire" Content="Fire" Height="50" Canvas.Left="17" Canvas.Top="372" Width="278" FontSize="22" Click="BattleFire_Click"/>
+            <Button x:Name="BattleEndturn" Content="End Turn" Height="50" Canvas.Left="17" Canvas.Top="427" Width="278" FontSize="22" Click="BattleEndTurn_Click"/>
+            <ListBox x:Name="BattleHPListBox" Height="176" Canvas.Left="16" Canvas.Top="136" Width="278" FontSize="22" SelectionChanged="BattleHPListBox_Selected">
+                <ListBoxItem x:Name="CarrierHPItem" Content="Carrier" />
+                <ListBoxItem x:Name="BattleHPItem" Content="BattleShip"/>
+                <ListBoxItem x:Name="CruiserHPItem" Content="Cruiser"/>
+                <ListBoxItem x:Name="SubHPItem" Content="Submarine"/>
+            </ListBox>
 
+            <Grid x:Name="grid_Battlefield" Canvas.Left="380" Canvas.Top="136" Height="610" Width="1000">
+
+            </Grid>
         </Canvas>
 
     </Canvas>
