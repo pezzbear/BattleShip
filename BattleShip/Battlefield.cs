@@ -40,7 +40,5 @@ namespace BattleShip
             this.DataGrid = new GridData[this.Size, this.Size];
             this.ShipGrid = new Ship[this.Size, this.Size];
         }
-
-        
     }
 }

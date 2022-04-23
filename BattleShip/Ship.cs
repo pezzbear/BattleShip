@@ -115,7 +115,8 @@ namespace BattleShip
                     this.Length = 2;
                     this.ShipColor.Color = Color.FromRgb(3, 1, 112);
                     break;
-            }
+            } 
+
             this.Health = this.Length;
         }
 
