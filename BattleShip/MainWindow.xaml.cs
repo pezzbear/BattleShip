@@ -4,11 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.ComponentModel;
+
 namespace BattleShip
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
@@ -22,7 +23,7 @@ namespace BattleShip
     using System.Windows.Media.Imaging;
     using System.Windows.Navigation;
     using System.Windows.Shapes;
-    
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -30,21 +31,6 @@ namespace BattleShip
         "SA1401:FieldsMustBePrivate", Justification = "Encapsulation not yet taught.")]
     public partial class MainWindow : Window
     {
-        /// <summary>
-        /// Stores the grid coordinates where the players wants to fire their shot
-        /// </summary>
-        public int[] CellToShoot = new int[2];
-
-        /// <summary>
-        /// This is where the player wants to fire
-        /// </summary>
-        public bool IsCellSelected = false;
-
-        /// <summary>
-        /// If the player has shot this turn.
-        /// </summary>
-        public bool HasPlayerShot = false;
-
         /// <summary>
         /// Current "Game state", basically what window we are on.
         /// </summary>
@@ -65,9 +51,24 @@ namespace BattleShip
         private int battlefieldSize = 10;
 
         /// <summary>
-        /// Array used to keep track of highlighting the grid when placing a ship
+        /// Array of Rectangles used to change the colors of the xmal Grid (Setup ship grid and the battlefield grid)
         /// </summary>
         private Rectangle[,] battleFieldGridArray;
+
+        ///<summary>
+        /// Stores the grid coordinates where the players wants to fire their shot
+        ///</summary>
+        public int[] cellToShoot = new int[2];
+
+        ///<summary>
+        /// This is where the player wants to fire
+        ///</summary>
+        public bool isCellSelected = false;
+
+        ///<summary>
+        /// If the player has shot this turn.
+        ///</summary>
+        public bool hasPlayerShot = false;
 
         /// <summary>
         /// Player 1
@@ -215,6 +216,8 @@ namespace BattleShip
                 newShip.SetLength();
                 this.player2.CurrentShips.Add(newShip);
             }
+
+
         }
 
         /// <summary>
@@ -253,8 +256,8 @@ namespace BattleShip
                     {
                         Rectangle rect = new Rectangle();
                         rect.Name = this.alphArray[x] + y.ToString();
-                        
-                        rect.Fill = this.GetColor("#79dced");
+
+                        rect.Fill = GetColor("#79dced");
                         Grid.SetRow(rect, x);
                         Grid.SetColumn(rect, y);
                         grid.Children.Add(rect);
@@ -273,7 +276,7 @@ namespace BattleShip
                     {
                         Rectangle rect = new Rectangle();
                         rect.Name = this.alphArray[x] + y.ToString();
-                        rect.Fill = this.GetColor("#79dced");
+                        rect.Fill = GetColor("#79dced");
                         Grid.SetRow(rect, x);
                         Grid.SetColumn(rect, y);
                         grid.Children.Add(rect);
@@ -292,7 +295,7 @@ namespace BattleShip
         private void UpdateBattlefieldColors()
         {
             if (canShipSetup.Visibility == Visibility.Visible)
-            { 
+            {
                 for (int x = 0; x < this.battlefieldSize; x++)
                 {
                     for (int y = 0; y < this.battlefieldSize; y++)
@@ -315,24 +318,24 @@ namespace BattleShip
                         switch (getData)
                         {
                             case GridData.Empty:
-                                this.battleFieldGridArray[x, y].Fill = this.GetColor("#79dced");
+                                this.battleFieldGridArray[x, y].Fill = GetColor("#79dced");
                                 break;
                             case GridData.Miss:
-                                this.battleFieldGridArray[x, y].Fill = this.GetColor("#f5ff30");
+                                this.battleFieldGridArray[x, y].Fill = GetColor("#f5ff30");
                                 break;
                             case GridData.Hit:
-                                this.battleFieldGridArray[x, y].Fill = this.GetColor("#ff1c1c");
+                                this.battleFieldGridArray[x, y].Fill = GetColor("#ff1c1c");
                                 break;
                         }
                     }
-                } 
-
-                if (this.IsCellSelected)
+                }
+                if (isCellSelected)
                 {
-                    this.battleFieldGridArray[this.CellToShoot[0], this.CellToShoot[1]].Fill = this.GetColor("#cc66ff");
+                    this.battleFieldGridArray[cellToShoot[0], cellToShoot[1]].Fill = GetColor("#cc66ff");
                 }
             }
         }
+
 
         /// <summary>
         /// This method will Reset the Player Ships 
@@ -384,7 +387,8 @@ namespace BattleShip
         private void CreditsButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(
-                messageBoxText: "Names: Trik Heath, Edan Deno, Robert Jaklin, Alberto Ortiz Aguilar." + "\n" + "Version: 0.1" + "\n" + "Class: #22547 It:Program:Part 2 (C#)", "Credits");
+                messageBoxText: "Names: Trik Heath, Edan Deno, Robert Jaklin, Alberto Ortiz Aguilar." + "\n" +
+                                "Version: 0.1" + "\n" + "Class: #22547 It:Program:Part 2 (C#)", "Credits");
         }
 
         /// <summary>
@@ -472,12 +476,10 @@ namespace BattleShip
             this.player1.Name = txtPlayerOneName_Vs_AI.Text;
 
             this.player1.Type = "Player";
-            this.player1.CurrentShips = this.startingShips.ToList();
             this.player1.Board = new Battlefield(this.battlefieldSize);
 
             this.player2.Name = "BATTLEFIELD_BOT_V2.0";
             this.player2.Type = "CPU";
-            this.player2.CurrentShips = this.startingShips.ToList();
             this.player2.Board = new Battlefield(this.battlefieldSize);
 
             this.currentTurn = this.player1;
@@ -542,7 +544,7 @@ namespace BattleShip
         /// <param name="e">Routed event</param>
         private void SetUpBckBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (this.currentTurn == this.player2)
+            if (this.currentTurn == player2)
             {
                 Array.Clear(this.currentTurn.Board.ShipGrid, 0, this.currentTurn.Board.ShipGrid.Length);
                 foreach (Ship getShip in this.currentTurn.CurrentShips)
@@ -553,7 +555,7 @@ namespace BattleShip
 
                 this.lastShipPlacedList.Clear();
 
-                this.selectedShip = null;
+                selectedShip = null;
 
                 ShipSetupListBox.Items.Clear();
                 foreach (Ship getShip in this.player1.CurrentShips)
@@ -565,11 +567,11 @@ namespace BattleShip
                 {
                     for (int y = 0; y < this.battlefieldSize; y++)
                     {
-                        this.battleFieldGridArray[x, y].Fill = this.GetColor("#79dced");
+                        this.battleFieldGridArray[x, y].Fill = GetColor("#79dced");
                     }
                 }
 
-                this.currentTurn = this.player1;
+                this.currentTurn = player1;
 
                 Array.Clear(this.currentTurn.Board.ShipGrid, 0, this.battleFieldGridArray.Length);
                 this.ResetPlayerShips();
@@ -585,7 +587,7 @@ namespace BattleShip
                 {
                     for (int y = 0; y < this.battlefieldSize; y++)
                     {
-                        this.battleFieldGridArray[x, y].Fill = this.GetColor("#79dced");
+                        this.battleFieldGridArray[x, y].Fill = GetColor("#79dced");
                     }
                 }
 
@@ -595,6 +597,7 @@ namespace BattleShip
             {
                 this.ChangeGameState(GState.PlayerSelect);
             }
+
         }
 
         /// <summary>
@@ -635,7 +638,7 @@ namespace BattleShip
                     for (int j = 0; j < lastShip.Length; j++)
                     {
                         this.currentTurn.Board.ShipGrid[x, y + j] = null;
-                        this.battleFieldGridArray[x, y + j].Fill = this.GetColor("#79dced");
+                        this.battleFieldGridArray[x, y + j].Fill = GetColor("#79dced");
                     }
                 }
                 else if (lastShip.Rotation == "Vertical")
@@ -643,7 +646,7 @@ namespace BattleShip
                     for (int j = 0; j < lastShip.Length; j++)
                     {
                         this.currentTurn.Board.ShipGrid[x + j, y] = null;
-                        this.battleFieldGridArray[x + j, y].Fill = this.GetColor("#79dced");
+                        this.battleFieldGridArray[x + j, y].Fill = GetColor("#79dced");
                     }
                 }
 
@@ -673,7 +676,7 @@ namespace BattleShip
             {
                 for (int y = 0; y < this.battlefieldSize; y++)
                 {
-                    this.battleFieldGridArray[x, y].Fill = this.GetColor("#79dced");
+                    this.battleFieldGridArray[x, y].Fill = GetColor("#79dced");
                 }
             }
         }
@@ -685,15 +688,16 @@ namespace BattleShip
         /// <param name="e">Routed event</param>
         private void Btn_deployShips_Click(object sender, RoutedEventArgs e)
         {
-            if (this.currentTurn == this.player1)
+            if (this.currentTurn == player1)
             {
                 BlackoutScreen.Visibility = Visibility.Visible;
 
-                var playerConfirmation = MessageBox.Show("Player 2, Press Ok When Ready", "Player Switch Initiated", MessageBoxButton.OK, MessageBoxImage.Information);
+                var playerConfirmation = MessageBox.Show("Player 2, Press Ok When Ready", "Player Switch Initiated",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
 
                 if (playerConfirmation == MessageBoxResult.OK)
                 {
-                    this.currentTurn = this.player2;
+                    this.currentTurn = player2;
 
                     BlackoutScreen.Visibility = Visibility.Collapsed;
 
@@ -706,7 +710,7 @@ namespace BattleShip
 
                     this.lastShipPlacedList.Clear();
 
-                    this.selectedShip = null;
+                    selectedShip = null;
 
                     ShipSetupListBox.Items.Clear();
                     foreach (Ship getShip in this.player2.CurrentShips)
@@ -718,11 +722,18 @@ namespace BattleShip
                     {
                         for (int y = 0; y < this.battlefieldSize; y++)
                         {
-                            this.battleFieldGridArray[x, y].Fill = this.GetColor("#79dced");
+                            this.battleFieldGridArray[x, y].Fill = GetColor("#79dced");
                         }
                     }
 
                     lb_CurrentPlayerSetup.Content = "Current Turn: Player 2";
+
+                    ////Runs the CPU Ship placement code
+                    if (currentTurn.Type == "CPU")
+                    {
+                        Debug.WriteLine("FUGMA");
+                        DoCPUShipSetup();
+                    }
 
                 }
             }
@@ -768,7 +779,7 @@ namespace BattleShip
             }
 
             Rectangle rect = (Rectangle)e.Source;
-            rect.Fill = this.GetColor("#79dced");
+            rect.Fill = GetColor("#79dced");
 
             ////fill the others
             int x = 0;
@@ -795,7 +806,7 @@ namespace BattleShip
                     if ((y + j) < this.battlefieldSize)
                     {
                         Rectangle shipRect = this.battleFieldGridArray[x, y + j];
-                        shipRect.Fill = this.GetColor("#79dced");
+                        shipRect.Fill = GetColor("#79dced");
                     }
                 }
             }
@@ -807,7 +818,7 @@ namespace BattleShip
                     if ((x + j) < this.battlefieldSize)
                     {
                         Rectangle shipRect = this.battleFieldGridArray[x + j, y];
-                        shipRect.Fill = this.GetColor("#79dced");
+                        shipRect.Fill = GetColor("#79dced");
                     }
                 }
             }
@@ -868,7 +879,7 @@ namespace BattleShip
                     int newY = 0;
                     if ((y + j) >= this.battlefieldSize)
                     {
-                        brush = this.GetColor("#ff0800");
+                        brush = GetColor("#ff0800");
                         newY = this.battlefieldSize - 1;
                         this.canPlaceShip = false;
                     }
@@ -880,7 +891,7 @@ namespace BattleShip
 
                     if (!this.CheckForOtherShips(x, newY))
                     {
-                        brush = this.GetColor("#ff0800");
+                        brush = GetColor("#ff0800");
 
                         this.canPlaceShip = false;
                     }
@@ -896,7 +907,7 @@ namespace BattleShip
                     int newX = 0;
                     if ((x + j) >= this.battlefieldSize)
                     {
-                        brush = this.GetColor("#ff0800");
+                        brush = GetColor("#ff0800");
                         newX = this.battlefieldSize - 1;
                         this.canPlaceShip = false;
                     }
@@ -983,10 +994,6 @@ namespace BattleShip
 
         #region Battle Screen Buttons[[-----------------------------------------------------------------------------------------------------------------]]
 
-        /// <summary>
-        /// Method to update UpdateShipHealthListBox for the boat's HP
-        /// </summary>
-        /// <param name="p">Player event</param>
         private void UpdateShipHealthListBox(Player p)
         {
             BattleHPListBox.Items.Clear();
@@ -994,13 +1001,13 @@ namespace BattleShip
             {
                 if (!s.IsSunk)
                 {
-                    string msg = string.Empty;
+                    string msg = "";
                     msg += s.GetName() + ": " + s.Health.ToString();
                     BattleHPListBox.Items.Add(msg);
                 }
             }
         }
-        
+
         /// <summary>
         /// Method to make BattleScreen Visible
         /// </summary>
@@ -1010,11 +1017,11 @@ namespace BattleShip
         {
             this.SetupGrid(this.grid_Battlefield);
 
-            this.currentTurn = this.player1;
-            this.currentEnemy = this.player2;
+            currentTurn = player1;
+            currentEnemy = player2;
 
-            this.UpdateShipHealthListBox(this.player2);
-            this.UpdateBattlefieldColors();
+            UpdateShipHealthListBox(player2);
+            UpdateBattlefieldColors();
         }
 
         /// <summary>
@@ -1028,9 +1035,9 @@ namespace BattleShip
 
             if (playerConfirmation == MessageBoxResult.Yes)
             {
-                this.player1.CurrentShips.Clear();
-                this.player2.CurrentShips.Clear();
-                this.ChangeGameState(GState.Start);
+                player1.CurrentShips.Clear();
+                player2.CurrentShips.Clear();
+                ChangeGameState(GState.Start);
             }
         }
 
@@ -1042,13 +1049,12 @@ namespace BattleShip
         private void BattleFireBtn_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("FIRED!");
-            if (this.HasPlayerShot == true)
+            if (hasPlayerShot == true)
             {
                 MessageBox.Show("You have already shot this turn!");
                 return;
-            } 
-
-            if (this.IsCellSelected == false)
+            }
+            if (isCellSelected == false)
             {
                 MessageBox.Show("You need to choose a cell to shoot!");
                 return;
@@ -1056,26 +1062,25 @@ namespace BattleShip
 
             //// Look at the enemie's ship grid and see if there is a ship at the fired slot. 
 
-            Ship getShip = this.currentEnemy.Board.ShipGrid[this.CellToShoot[0], this.CellToShoot[1]];
+            Ship getShip = currentEnemy.Board.ShipGrid[cellToShoot[0], cellToShoot[1]];
 
             if (getShip != null)
             {
-                this.currentTurn.Board.DataGrid[this.CellToShoot[0], this.CellToShoot[1]] = GridData.Hit;
+                currentTurn.Board.DataGrid[cellToShoot[0], cellToShoot[1]] = GridData.Hit;
                 getShip.Health -= 1;
                 MessageBox.Show("HIT!");
-                this.UpdateShipsIsSunk(getShip);
+                UpdateShipsIsSunk(getShip);
             }
             else
             {
-                this.currentTurn.Board.DataGrid[this.CellToShoot[0], this.CellToShoot[1]] = GridData.Miss;
+                currentTurn.Board.DataGrid[cellToShoot[0], cellToShoot[1]] = GridData.Miss;
                 MessageBox.Show("MISS!");
-            } 
-
-            this.HasPlayerShot = true;
-            Array.Clear(this.CellToShoot, 0, this.CellToShoot.Length);
-            this.IsCellSelected = false;
-            this.UpdateBattlefieldColors();
-            this.CheckWinCondition();
+            }
+            hasPlayerShot = true;
+            Array.Clear(cellToShoot, 0, cellToShoot.Length);
+            isCellSelected = false;
+            UpdateBattlefieldColors();
+            CheckWinCondition();
         }
 
         /// <summary>
@@ -1085,36 +1090,36 @@ namespace BattleShip
         /// <param name="e">Routed event</param>
         private void BattleEndTurn_Click(object sender, RoutedEventArgs e)
         {
-            if (this.HasPlayerShot == false)
+            if (hasPlayerShot == false)
             {
                 MessageBox.Show("You need to fire a shot!");
                 return;
-            } 
-
+            }
             BattlefieldBlackoutScreen.Visibility = Visibility.Visible;
 
             ////Used for the message box telling who's turn it's about to be.
             string player = "Player 1";
-            if (this.currentEnemy == this.player2)
+            if (currentEnemy == player2)
             {
                 player = "Player 2";
-            } 
+            }
 
-            var playerConfirmation = MessageBox.Show(player + ", Press Ok When Ready", "Player Switch Initiated", MessageBoxButton.OK, MessageBoxImage.Information);
+            var playerConfirmation = MessageBox.Show(player + ", Press Ok When Ready", "Player Switch Initiated",
+                MessageBoxButton.OK, MessageBoxImage.Information);
 
             if (playerConfirmation == MessageBoxResult.OK)
             {
-                if (this.currentTurn == this.player1)
+                if (currentTurn == player1)
                 {
-                    this.currentEnemy = this.player1;
-                    this.currentTurn = this.player2;
-                    this.UpdateShipHealthListBox(this.player1);
-                } 
+                    currentEnemy = player1;
+                    currentTurn = player2;
+                    UpdateShipHealthListBox(player1);
+                }
                 else
                 {
-                    this.currentEnemy = this.player2;
-                    this.currentTurn = this.player1;
-                    this.UpdateShipHealthListBox(this.player2);
+                    currentEnemy = player2;
+                    currentTurn = player1;
+                    UpdateShipHealthListBox(player2);
                 }
 
                 BattlefieldBlackoutScreen.Visibility = Visibility.Collapsed;
@@ -1124,54 +1129,52 @@ namespace BattleShip
                 Array.Clear(cellToShoot, 0, cellToShoot.Length);
 
                 UpdateBattlefieldColors();
-                
+
+                if (currentTurn.Type == "CPU")
+                {
+                    DoCPUTurn();
+                }
+
             }
         }
 
-        /// <summary>
-        /// Method to switch between grids 
-        /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="e">Routed event</param>
         private void BattleSwitchGrids_Click(object sender, RoutedEventArgs e)
         {
+
         }
 
-        /// <summary>
-        /// Method to check for a win condition 
-        /// </summary>
         private void CheckWinCondition()
         {
-            foreach (Ship s in this.currentEnemy.CurrentShips)
+            foreach (Ship s in currentEnemy.CurrentShips)
             {
                 if (s.IsSunk == false)
                 {
                     return;
-                } 
+                }
             }
-            
-            var playerConfirmation = MessageBox.Show(this.currentTurn.Name + " Won!", "Someone Won!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            var playerConfirmation = MessageBox.Show(currentTurn.Name + " Won!", "Someone Won!", MessageBoxButton.OK, MessageBoxImage.Information);
 
             if (playerConfirmation == MessageBoxResult.OK)
             {
-                this.player1.CurrentShips.Clear();
-                this.player2.CurrentShips.Clear();
-                this.ChangeGameState(GState.Start);
+                player1.CurrentShips.Clear();
+                player2.CurrentShips.Clear();
+                ChangeGameState(GState.Start);
             }
         }
 
-        /// <summary>
-        /// Method to update the boat status to sunk if conditions are met
-        /// </summary>
-        /// <param name="s">Ship Object</param>
         private void UpdateShipsIsSunk(Ship s)
-        { 
-            if (s.Health == 0) 
+        {
+            if (s.Health == 0)
             {
                 s.IsSunk = true;
                 MessageBox.Show(s.GetName() + " has been sunk!");
-            } 
+            }
         }
+
+
+
+
 
         #endregion
 
@@ -1184,13 +1187,12 @@ namespace BattleShip
         /// <param name="e">Routed event</param>
         private void BattlefieldGrid_MouseEnteredSquare(object sender, MouseEventArgs e)
         {
-            if (this.HasPlayerShot == true)
+            if (hasPlayerShot == true)
             {
                 return;
-            } 
-
+            }
             Rectangle rect = (Rectangle)e.Source;
-            rect.Fill = this.GetColor("#e1a6ff");
+            rect.Fill = GetColor("#e1a6ff");
 
             ////If the player mouses over a square that has already been checked change the color to a deep red
             int x = 0;
@@ -1210,10 +1212,11 @@ namespace BattleShip
 
             y = rect.Name[1] - '0';
 
-            if (this.currentTurn.Board.DataGrid[x, y] != GridData.Empty)
+            if (currentTurn.Board.DataGrid[x, y] != GridData.Empty)
             {
-                rect.Fill = this.GetColor("#4d0000");
+                rect.Fill = GetColor("#4d0000");
             }
+
         }
 
         /// <summary>
@@ -1224,9 +1227,9 @@ namespace BattleShip
         private void BattlefieldGrid_MouseLeftSquare(object sender, MouseEventArgs e)
         {
             Rectangle rect = (Rectangle)e.Source;
-            rect.Fill = this.GetColor("#79dced");
+            rect.Fill = GetColor("#79dced");
 
-            this.UpdateBattlefieldColors();
+            UpdateBattlefieldColors();
         }
 
         /// <summary>
@@ -1236,7 +1239,7 @@ namespace BattleShip
         /// <param name="e">Routed event</param>
         private void BattlefieldGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (this.HasPlayerShot == true)
+            if (hasPlayerShot == true)
             {
                 return;
             }
@@ -1246,7 +1249,7 @@ namespace BattleShip
             int y = 0;
 
             //// gets the x and y of where the player clicked
-            int i = 0; 
+            int i = 0;
             foreach (string letter in this.alphArray)
             {
                 if (rect.Name[0] == letter[0])
@@ -1260,22 +1263,271 @@ namespace BattleShip
 
             y = rect.Name[1] - '0';
 
-            if (this.currentTurn.Board.DataGrid[x, y] != GridData.Empty)
+            if (currentTurn.Board.DataGrid[x, y] != GridData.Empty)
             {
                 return;
             }
 
-            rect.Fill = this.GetColor("#cc66ff");
+            rect.Fill = GetColor("#cc66ff");
 
-            this.CellToShoot[0] = x;
-            this.CellToShoot[1] = y;
-            this.IsCellSelected = true;
+            this.cellToShoot[0] = x;
+            this.cellToShoot[1] = y;
+            isCellSelected = true;
             this.UpdateBattlefieldColors();
-            Debug.WriteLine("SHOT PLACED AT: " + this.CellToShoot[0].ToString() + ", " + this.CellToShoot[1].ToString());
+            Debug.WriteLine("SHOT PLACED AT: " + cellToShoot[0].ToString() + ", " + cellToShoot[1].ToString());
         }
 
         #endregion
 
+        #region CPU Functionality 
+        private void DoCPUTurn()
+        {
+            //randomly choose a cell x and y within the specified grid size (battlefieldSize)
+            //if the CPU has already fired at that spot, run the same code again, and choose another spot. 
+            bool cellIsEmpty = false;
+            while (!cellIsEmpty)
+            {
+                cellIsEmpty = GetRandomCell();
+            }
 
+            Ship getShip = currentEnemy.Board.ShipGrid[cellToShoot[0], cellToShoot[1]];
+
+            if (getShip != null)
+            {
+                currentTurn.Board.DataGrid[cellToShoot[0], cellToShoot[1]] = GridData.Hit;
+                getShip.Health -= 1;
+                MessageBox.Show("HIT!");
+                UpdateShipsIsSunk(getShip);
+            }
+            else
+            {
+                currentTurn.Board.DataGrid[cellToShoot[0], cellToShoot[1]] = GridData.Miss;
+                MessageBox.Show("MISS!");
+            }
+            hasPlayerShot = true;
+            Array.Clear(cellToShoot, 0, cellToShoot.Length);
+            isCellSelected = false;
+            UpdateBattlefieldColors();
+            CheckWinCondition();
+        }
+
+        private bool GetRandomCell()
+        {
+            //get random x and y coord to look at and set them to cellToShoot[0] and [1]
+            //loop through the currentTurn's dataGrid, If the cell IS NOT EMPTY, return false. If it is empty you return true.
+            Random Rand = new Random();
+            //choose a random cell x and y to check, loop through the dataGrid and make sure the cells are empty
+
+            cellToShoot[0] = Rand.Next(0, battlefieldSize - 1);
+            cellToShoot[1] = Rand.Next(0, battlefieldSize - 1);
+            if (currentTurn.Board.DataGrid[cellToShoot[0], cellToShoot[1]] == GridData.Empty)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void DoCPUShipSetup()
+        {
+            foreach (Ship s in currentTurn.CurrentShips)
+            {
+                selectedShip = s;
+
+                if (this.selectedShip == null)
+                {
+                    return;
+                }
+
+                if (!this.selectedShip.IsPlaced && this.canPlaceShip)
+                {
+                    int[] cellToCheck = new int[2];
+
+                    bool cellIsEmpty = false;
+
+                    List<int[]> cellsChecked = new List<int[]>();
+
+                    //brute force and find an acceptable cell to place the ship in.
+                    while (!cellIsEmpty)
+                    {
+                        bool IsNotInList = false;
+
+                        Random Rand = new Random();
+                        //choose a random cell x and y to check, loop through the cellsChecked list and make sure the cells havent already been checked.
+                        while (!IsNotInList)
+                        {
+                            cellToCheck[0] = Rand.Next(0, battlefieldSize - 1);
+                            cellToCheck[1] = Rand.Next(0, battlefieldSize - 1);
+                            Debug.WriteLine(cellToCheck[0].ToString() + " - " + cellToCheck[1]);
+                            if (cellsChecked.Count != 0)
+                            {
+                                foreach (int[] c in cellsChecked)
+                                {
+                                    if (cellToCheck[0] == c[0] && cellToCheck[1] == c[1])
+                                    {
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        IsNotInList = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            IsNotInList = true;
+                        }
+
+
+                        //randomly choose a ship rotation
+                        int getRand = Rand.Next(0, 100);
+                        if (getRand < 50)
+                        {
+                            this.selectedShip.Rotation = "Horizontal";
+                        }
+                        else if (getRand >= 50)
+                        {
+                            this.selectedShip.Rotation = "Vertical";
+                        }
+
+                        Debug.WriteLine(selectedShip.Length);
+
+                        if (this.selectedShip.Rotation == "Horizontal")
+                        {
+                            for (int j = 0; j < this.selectedShip.Length; j++)
+                            {
+                                if ((cellToCheck[1] + j) >= this.battlefieldSize)
+                                {
+                                    //if the ship goes outside of the battlefield size, check the vertical rotation
+                                    for (int k = 0; k < this.selectedShip.Length; k++)
+                                    {
+                                        if ((cellToCheck[0] + k) >= this.battlefieldSize)
+                                        {
+                                            //if the vertical rotaion is ALSO outside of the battlefield size, add the cell to the cellsChecked List.
+                                            cellsChecked.Add(cellToCheck);
+                                            break;
+                                        }
+                                        if (!this.CheckForOtherShips(cellToCheck[0], cellToCheck[1] + k))
+                                        {
+                                            //if a ship is in the cells we are checking add the cell we checked to the list
+                                            cellsChecked.Add(cellToCheck);
+                                            break;
+                                        }
+                                    }
+                                    cellIsEmpty = true;
+                                    this.selectedShip.Rotation = "Vertical";
+                                    break;
+                                }
+                                if (!this.CheckForOtherShips(cellToCheck[0], cellToCheck[1] + j))
+                                {
+                                    //if the ship goes outside of the battlefield size, check the vertical rotation
+                                    for (int k = 0; k < this.selectedShip.Length; k++)
+                                    {
+                                        if ((cellToCheck[0] + k) >= this.battlefieldSize)
+                                        {
+                                            //if the vertical rotaion is ALSO outside of the battlefield size, add the cell to the cellsChecked List.
+                                            cellsChecked.Add(cellToCheck);
+                                            break;
+                                        }
+                                        if (!this.CheckForOtherShips(cellToCheck[0], cellToCheck[1] + k))
+                                        {
+                                            //if a ship is in the cells we are checking add the cell we checked to the list
+                                            cellsChecked.Add(cellToCheck);
+                                            break;
+                                        }
+                                    }
+                                    cellIsEmpty = true;
+                                    this.selectedShip.Rotation = "Vertical";
+                                    break;
+                                }
+
+                            }
+                            cellIsEmpty = true;
+                            break;
+                        }
+                        else if (this.selectedShip.Rotation == "Vertical")
+                        {
+                            for (int j = 0; j < this.selectedShip.Length; j++)
+                            {
+                                if ((cellToCheck[0] + j) >= this.battlefieldSize)
+                                {
+                                    //if the ship goes outside of the battlefield size, check the Horizontal rotation
+                                    for (int k = 0; k < this.selectedShip.Length; k++)
+                                    {
+                                        if ((cellToCheck[1] + k) >= this.battlefieldSize)
+                                        {
+                                            //if the vertical rotaion is ALSO outside of the battlefield size, add the cell to the cellsChecked List.
+                                            cellsChecked.Add(cellToCheck);
+                                            break;
+                                        }
+                                        if (!this.CheckForOtherShips(cellToCheck[0] + k, cellToCheck[1]))
+                                        {
+                                            //if a ship is in the cells we are checking add the cell we checked to the list
+                                            cellsChecked.Add(cellToCheck);
+                                            break;
+                                        }
+                                    }
+                                    cellIsEmpty = true;
+                                    this.selectedShip.Rotation = "Horizontal";
+                                    break;
+                                }
+                                if (!this.CheckForOtherShips(cellToCheck[0] + j, cellToCheck[1]))
+                                {
+                                    //if the ship goes outside of the battlefield size, check the Horizontal rotation
+                                    for (int k = 0; k < this.selectedShip.Length; k++)
+                                    {
+                                        if ((cellToCheck[1] + k) >= this.battlefieldSize)
+                                        {
+                                            //if the vertical rotaion is ALSO outside of the battlefield size, add the cell to the cellsChecked List.
+                                            cellsChecked.Add(cellToCheck);
+                                            break;
+                                        }
+                                        if (!this.CheckForOtherShips(cellToCheck[0] + k, cellToCheck[1]))
+                                        {
+                                            //if a ship is in the cells we are checking add the cell we checked to the list
+                                            cellsChecked.Add(cellToCheck);
+                                            break;
+                                        }
+                                    }
+                                    cellIsEmpty = true;
+                                    this.selectedShip.Rotation = "Horizontal";
+                                    break;
+                                }
+
+                            }
+                            cellIsEmpty = true;
+                            break;
+                        }
+                    }
+
+                    this.selectedShip.Origin[0] = cellToCheck[0];
+                    this.selectedShip.Origin[1] = cellToCheck[1];
+                    this.selectedShip.IsPlaced = true;
+
+                    Debug.WriteLine(selectedShip.Rotation);
+
+                    if (this.selectedShip.Rotation == "Horizontal")
+                    {
+                        for (int j = 0; j < this.selectedShip.Length; j++)
+                        {
+                            this.currentTurn.Board.ShipGrid[cellToCheck[0], cellToCheck[1] + j] = this.selectedShip;
+                        }
+                    }
+                    else if (this.selectedShip.Rotation == "Vertical")
+                    {
+                        for (int j = 0; j < this.selectedShip.Length; j++)
+                        {
+                            this.currentTurn.Board.ShipGrid[cellToCheck[0] + j, cellToCheck[1]] = this.selectedShip;
+                        }
+                    }
+                }
+
+                //// the colors on the battlefield from the grid data
+                this.UpdateBattlefieldColors();
+            }
+        }
+
+        #endregion
     }
 }
