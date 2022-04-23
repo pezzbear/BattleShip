@@ -63,7 +63,7 @@
             <Rectangle Name="BlackoutScreen" Visibility ="Collapsed" Height="810" Width="1440" Fill = "Black"/>
         </Canvas>
 
-        <Canvas x:Name="canBattleScreen" Visibility="Collapsed" IsVisibleChanged="CanBattleScreen_IsVisibleChanged">
+        <Canvas x:Name="canBattleScreen" Visibility="Visible" IsVisibleChanged="CanBattleScreen_IsVisibleChanged">
             <Label x:Name="lb_CurrentPlayer" Content="Current Turn: Player 1" Canvas.Left="17" Canvas.Top="87" Width="273" Height="41" FontSize="22"/>
             <Label x:Name="lb_ShipsToSink" Content="Enemy Ships Left:" Canvas.Left="18" Canvas.Top="141" Width="274" Height="41" FontSize="22"/>
             <Button x:Name="BattleExitBtn" Content="Exit" Height="66" Canvas.Left="12" Width="122" Canvas.Top="8" FontSize="22" Click="BattleExitBtn_Click"/>

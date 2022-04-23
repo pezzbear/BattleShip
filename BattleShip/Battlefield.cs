@@ -26,7 +26,7 @@ namespace BattleShip
         public GridData[,] DataGrid;
 
         /// <summary>
-        /// Keeps track of where this player's ships are placed. Ex: [ship1][ship1][ship1]
+        /// Size of the battlefield grid
         /// </summary>
         public Ship[,] ShipGrid;
 

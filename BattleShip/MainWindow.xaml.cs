@@ -65,7 +65,7 @@ namespace BattleShip
         private int battlefieldSize = 10;
 
         /// <summary>
-        /// Array of Rectangles used to change the colors of the xmal Grid (Setup ship grid and the battlefield grid)
+        /// Array used to keep track of highlighting the grid when placing a ship
         /// </summary>
         private Rectangle[,] battleFieldGridArray;
 
@@ -472,10 +472,12 @@ namespace BattleShip
             this.player1.Name = txtPlayerOneName_Vs_AI.Text;
 
             this.player1.Type = "Player";
+            this.player1.CurrentShips = this.startingShips.ToList();
             this.player1.Board = new Battlefield(this.battlefieldSize);
 
             this.player2.Name = "BATTLEFIELD_BOT_V2.0";
             this.player2.Type = "CPU";
+            this.player2.CurrentShips = this.startingShips.ToList();
             this.player2.Board = new Battlefield(this.battlefieldSize);
 
             this.currentTurn = this.player1;
@@ -1170,10 +1172,6 @@ namespace BattleShip
                 MessageBox.Show(s.GetName() + " has been sunk!");
             } 
         }
-
-
-
-        
 
         #endregion
 
