@@ -1279,7 +1279,7 @@ namespace BattleShip
 
         #endregion
 
-        #region CPU Functionality 
+        #region CPU Functionality [[-----------------------------------------------------------------------------------------------------------------]]
         private void DoCPUTurn()
         {
             //randomly choose a cell x and y within the specified grid size (battlefieldSize)
