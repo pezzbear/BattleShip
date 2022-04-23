@@ -34,5 +34,6 @@ namespace BattleShip
         /// Here we will store the player's name once they enter it in the setup screen.
         /// </summary>
         public string Name;
+
     }
 }
