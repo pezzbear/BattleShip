@@ -20,6 +20,10 @@ namespace BattleShip
         /// </summary>
         public string Type;
 
+        public bool isAdvanced = true;
+
+        public CPUShootingMode ShootingMode = CPUShootingMode.FirstShot;
+
         /// <summary>
         /// Here we is our currentShips which uses the Ship class. The array contains all the ships the player has to their disposal.
         /// </summary>

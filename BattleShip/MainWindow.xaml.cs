@@ -109,6 +109,12 @@ namespace BattleShip
         /// </summary>
         private List<Ship> lastShipPlacedList = new List<Ship>();
 
+        private int[] LastCellShot = new int[2];
+
+        private List<int[]> PossibleShots = new List<int[]>();
+
+        private string ChosenCPUDirection;
+
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
@@ -301,7 +307,8 @@ namespace BattleShip
                         if (getShip != null)
                         {
                             this.battleFieldGridArray[x, y].Fill = getShip.ShipColor;
-                        }
+                        } 
+                        
                     }
                 }
             }
@@ -864,6 +871,8 @@ namespace BattleShip
 
             y = rect.Name[1] - '0';
 
+            Debug.WriteLine("X: " + x.ToString() + ", Y: " + y.ToString());
+
             if (this.selectedShip.Rotation == "Horizontal")
             {
                 for (int j = 0; j < this.selectedShip.Length; j++)
@@ -956,6 +965,12 @@ namespace BattleShip
                 }
 
                 y = rect.Name[1] - '0';
+
+                if (!this.CheckForOtherShips(x, y))
+                {
+                    return;
+                }
+
                 this.selectedShip.Origin[0] = x;
                 this.selectedShip.Origin[1] = y;
                 this.selectedShip.IsPlaced = true;
@@ -1130,7 +1145,14 @@ namespace BattleShip
 
                 if (this.currentTurn.Type == "CPU")
                 {
-                    this.DoCPUTurn();
+                    if(currentTurn.isAdvanced)
+                    {
+                        this.DoAdvanceCPUTurn();
+                    } else
+                    {
+                        this.DoCPUTurn();
+                    }
+                    
                 }
             }
         }
@@ -1284,6 +1306,14 @@ namespace BattleShip
         #endregion
 
         #region CPU Functionality [[-----------------------------------------------------------------------------------------------------------------]]
+        
+        private int[] PassNewArray(int[] array)
+        {
+            int[] a;
+            a = new int[] { array[0], array[1] };
+            return a;
+        }
+        
         /// <summary>
         /// Will do a CPU turn in action
         /// </summary>
@@ -1356,11 +1386,13 @@ namespace BattleShip
                     return;
                 }
 
-                if (!this.selectedShip.IsPlaced && this.canPlaceShip)
+                if (!this.selectedShip.IsPlaced)
                 {
                     int[] cellToCheck = new int[2];
 
                     bool cellIsEmpty = false;
+
+                    bool cannotPlaceShip = false;
 
                     List<int[]> cellsChecked = new List<int[]>();
 
@@ -1368,18 +1400,20 @@ namespace BattleShip
                     while (!cellIsEmpty)
                     {
                         bool isNotInList = false;
+                        cannotPlaceShip = false;
 
                         Random rand = new Random();
                         ////choose a random cell x and y to check, loop through the cellsChecked list and make sure the cells havent already been checked.
                         while (!isNotInList)
                         {
-                            cellToCheck[0] = rand.Next(0, this.battlefieldSize - 1);
-                            cellToCheck[1] = rand.Next(0, this.battlefieldSize - 1);
+                            cellToCheck[0] = rand.Next(0, this.battlefieldSize);
+                            cellToCheck[1] = rand.Next(0, this.battlefieldSize);
                             Debug.WriteLine(cellToCheck[0].ToString() + " - " + cellToCheck[1]);
                             if (cellsChecked.Count != 0)
                             {
                                 foreach (int[] c in cellsChecked)
                                 {
+                                    Debug.WriteLine("CELLS CHECKED X: " + c[0] + ", Y: " + c[1]);
                                     if (cellToCheck[0] == c[0] && cellToCheck[1] == c[1])
                                     {
                                         break;
@@ -1393,6 +1427,7 @@ namespace BattleShip
                             }
 
                             isNotInList = true;
+
                         }
 
                         ////randomly choose a ship rotation
@@ -1406,7 +1441,7 @@ namespace BattleShip
                             this.selectedShip.Rotation = "Vertical";
                         }
 
-                        Debug.WriteLine(this.selectedShip.Length);
+                        Debug.WriteLine("Length: " + this.selectedShip.Length.ToString());
 
                         if (this.selectedShip.Rotation == "Horizontal")
                         {
@@ -1420,21 +1455,28 @@ namespace BattleShip
                                         if ((cellToCheck[0] + k) >= this.battlefieldSize)
                                         {
                                             ////if the vertical rotaion is ALSO outside of the battlefield size, add the cell to the cellsChecked List.
-                                            cellsChecked.Add(cellToCheck);
+                                            
+                                            cellsChecked.Add(PassNewArray(cellToCheck));
+                                            cannotPlaceShip = true;
                                             break;
                                         }
-
-                                        if (!this.CheckForOtherShips(cellToCheck[0], cellToCheck[1] + k))
+                                        if (!this.CheckForOtherShips(cellToCheck[0] + k, cellToCheck[1]))
                                         {
                                             ////if a ship is in the cells we are checking add the cell we checked to the list
-                                            cellsChecked.Add(cellToCheck);
+                                            cellsChecked.Add(PassNewArray(cellToCheck));
+                                            cannotPlaceShip = true;
                                             break;
                                         }
                                     }
-
-                                    cellIsEmpty = true;
-                                    this.selectedShip.Rotation = "Vertical";
-                                    break;
+                                    if(!cannotPlaceShip)
+                                    {
+                                        cellIsEmpty = true;
+                                        this.selectedShip.Rotation = "Vertical";
+                                        break;
+                                    } else
+                                    {
+                                        break;
+                                    }
                                 }
 
                                 if (!this.CheckForOtherShips(cellToCheck[0], cellToCheck[1] + j))
@@ -1445,26 +1487,36 @@ namespace BattleShip
                                         if ((cellToCheck[0] + k) >= this.battlefieldSize)
                                         {
                                             ////if the vertical rotaion is ALSO outside of the battlefield size, add the cell to the cellsChecked List.
-                                            cellsChecked.Add(cellToCheck);
+                                            cellsChecked.Add(PassNewArray(cellToCheck));
+                                            cannotPlaceShip = true;
                                             break;
                                         }
 
-                                        if (!this.CheckForOtherShips(cellToCheck[0], cellToCheck[1] + k))
+                                        if (!this.CheckForOtherShips(cellToCheck[0] + k, cellToCheck[1]))
                                         {
                                             ////if a ship is in the cells we are checking add the cell we checked to the list
-                                            cellsChecked.Add(cellToCheck);
+                                            cellsChecked.Add(PassNewArray(cellToCheck));
+                                            cannotPlaceShip = true;
                                             break;
                                         }
                                     }
-
-                                    cellIsEmpty = true;
-                                    this.selectedShip.Rotation = "Vertical";
-                                    break;
+                                    if (!cannotPlaceShip)
+                                    {
+                                        cellIsEmpty = true;
+                                        this.selectedShip.Rotation = "Vertical";
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
                                 }
                             }
-
-                            cellIsEmpty = true;
-                            break;
+                            if (!cannotPlaceShip)
+                            {
+                                cellIsEmpty = true;
+                                break;
+                            }
                         }
                         else if (this.selectedShip.Rotation == "Vertical")
                         {
@@ -1478,21 +1530,29 @@ namespace BattleShip
                                         if ((cellToCheck[1] + k) >= this.battlefieldSize)
                                         {
                                             ////if the vertical rotaion is ALSO outside of the battlefield size, add the cell to the cellsChecked List.
-                                            cellsChecked.Add(cellToCheck);
+                                            cellsChecked.Add(PassNewArray(cellToCheck));
+                                            cannotPlaceShip = true;
                                             break;
                                         }
 
-                                        if (!this.CheckForOtherShips(cellToCheck[0] + k, cellToCheck[1]))
+                                        if (!this.CheckForOtherShips(cellToCheck[0], cellToCheck[1] + k))
                                         {
                                             ////if a ship is in the cells we are checking add the cell we checked to the list
-                                            cellsChecked.Add(cellToCheck);
+                                            cellsChecked.Add(PassNewArray(cellToCheck));
+                                            cannotPlaceShip = true;
                                             break;
                                         }
                                     }
-
-                                    cellIsEmpty = true;
-                                    this.selectedShip.Rotation = "Horizontal";
-                                    break;
+                                    if (!cannotPlaceShip)
+                                    {
+                                        cellIsEmpty = true;
+                                        this.selectedShip.Rotation = "Horizontal";
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
                                 }
 
                                 if (!this.CheckForOtherShips(cellToCheck[0] + j, cellToCheck[1]))
@@ -1503,26 +1563,35 @@ namespace BattleShip
                                         if ((cellToCheck[1] + k) >= this.battlefieldSize)
                                         {
                                             ////if the vertical rotaion is ALSO outside of the battlefield size, add the cell to the cellsChecked List.
-                                            cellsChecked.Add(cellToCheck);
+                                            cellsChecked.Add(PassNewArray(cellToCheck));
+                                            cannotPlaceShip = true;
                                             break;
                                         }
 
-                                        if (!this.CheckForOtherShips(cellToCheck[0] + k, cellToCheck[1]))
+                                        if (!this.CheckForOtherShips(cellToCheck[0], cellToCheck[1] + k))
                                         {
                                             ////if a ship is in the cells we are checking add the cell we checked to the list
-                                            cellsChecked.Add(cellToCheck);
+                                            cellsChecked.Add(PassNewArray(cellToCheck));
+                                            cannotPlaceShip = true;
+                                            break;
+                                        }
+                                        else
+                                        {
                                             break;
                                         }
                                     }
-
-                                    cellIsEmpty = true;
-                                    this.selectedShip.Rotation = "Horizontal";
-                                    break;
+                                    if (!cannotPlaceShip)
+                                    {
+                                        cellIsEmpty = true;
+                                        this.selectedShip.Rotation = "Horizontal";
+                                    }
                                 }
                             }
-
-                            cellIsEmpty = true;
-                            break;
+                            if (!cannotPlaceShip)
+                            {
+                                cellIsEmpty = true;
+                                break;
+                            }
                         }
                     }
 
@@ -1553,6 +1622,478 @@ namespace BattleShip
             }
         }
 
+        #endregion
+
+        #region Advance CPU Functionality [[-----------------------------------------------------------------------------------------------------------------]]
+        public void DoAdvanceCPUTurn()
+        {
+            Debug.WriteLine(currentTurn.ShootingMode);
+            //Determing the cell that we are shooting at 
+            switch (currentTurn.ShootingMode)
+            {
+                case CPUShootingMode.FirstShot:
+                    bool cellIsEmpty = false;
+                    while (!cellIsEmpty)
+                    {
+                        cellIsEmpty = this.GetRandomCell();
+                    }
+
+                    break;
+
+                case CPUShootingMode.LookingForShip:
+                    GetCheckerboardCell();
+                    break;
+
+                case CPUShootingMode.RandomAttack:
+                    GetCellNextToHit();
+                    break;
+
+                case CPUShootingMode.HorizontalAttack:
+                    GetCellFromHorizontalAttack();
+                    break;
+
+                case CPUShootingMode.VerticalAttack:
+                    GetCellFromVerticalAttack();
+                    break;
+
+            }
+
+            Ship getShip = this.currentEnemy.Board.ShipGrid[this.CellToShoot[0], this.CellToShoot[1]];
+
+            LastCellShot[0] = this.CellToShoot[0];
+            LastCellShot[1] = this.CellToShoot[1];
+
+            if (getShip != null)
+            {
+                this.currentTurn.Board.DataGrid[this.CellToShoot[0], this.CellToShoot[1]] = GridData.Hit;
+                getShip.Health -= 1;
+                MessageBox.Show("HIT!");
+                this.UpdateShipsIsSunk(getShip);
+                //Update our shooting mode
+                switch (currentTurn.ShootingMode)
+                {
+                    case CPUShootingMode.FirstShot:
+                        currentTurn.ShootingMode = CPUShootingMode.RandomAttack;
+                        break;
+
+                    case CPUShootingMode.LookingForShip:
+                        currentTurn.ShootingMode = CPUShootingMode.RandomAttack;
+                        break;
+
+                    case CPUShootingMode.RandomAttack:
+                        //Determin direction
+                        if (currentEnemy.Board.ShipGrid[this.CellToShoot[0], this.CellToShoot[1]].Health == 0)
+                        {
+                            DetermineShootingModeAfterSunk();
+                        }
+                        else
+                        {
+
+                            if (ChosenCPUDirection == "Horizontal")
+                            {
+                                currentTurn.ShootingMode = CPUShootingMode.HorizontalAttack;
+                            }
+                            else if (ChosenCPUDirection == "Vertical")
+                            {
+                                currentTurn.ShootingMode = CPUShootingMode.VerticalAttack;
+                            }
+                        }
+                        break;
+
+                    case CPUShootingMode.HorizontalAttack:
+                        if (currentEnemy.Board.ShipGrid[this.CellToShoot[0], this.CellToShoot[1]].Health == 0)
+                        {
+                            DetermineShootingModeAfterSunk();
+                        }
+                        break;
+
+                    case CPUShootingMode.VerticalAttack:
+                        //Fire in vertical direciton until Sunk
+                        if (currentEnemy.Board.ShipGrid[this.CellToShoot[0], this.CellToShoot[1]].Health == 0)
+                        {
+                            DetermineShootingModeAfterSunk();
+                        }
+                        break;
+
+                }
+            }
+            else
+            {
+                this.currentTurn.Board.DataGrid[this.CellToShoot[0], this.CellToShoot[1]] = GridData.Miss;
+                MessageBox.Show("MISS!");
+                //if we are on CPUShootingMode.FirstShot update to RandomAttack.
+                if (currentTurn.ShootingMode == CPUShootingMode.FirstShot)
+                {
+                    currentTurn.ShootingMode = CPUShootingMode.LookingForShip;
+                }
+            }
+
+            this.HasPlayerShot = true;
+            Array.Clear(this.CellToShoot, 0, this.CellToShoot.Length);
+            this.IsCellSelected = false;
+            this.UpdateBattlefieldColors();
+            this.CheckWinCondition();
+        }
+
+        public void GetCheckerboardCell()
+        {
+            PossibleShots.Clear();
+            int[] Cell;
+            //Find the possible shots we can choose from
+            //Add the Top Left 
+            if ((LastCellShot[0] - 1) != -1 && (LastCellShot[1] - 1) != -1)
+            {
+                Cell = new int[2];
+                Cell[0] = LastCellShot[0] - 1;
+                Cell[1] = LastCellShot[1] - 1;
+                if (this.currentTurn.Board.DataGrid[Cell[0], Cell[1]] == GridData.Empty)
+                {
+                    PossibleShots.Add(Cell);
+                }
+            }
+
+            //Add the Top Right
+            if ((LastCellShot[0] - 1) != -1 && (LastCellShot[1] + 1) != battlefieldSize)
+            {
+                Cell = new int[2];
+                Cell[0] = LastCellShot[0] - 1;
+                Cell[1] = LastCellShot[1] + 1;
+                if (this.currentTurn.Board.DataGrid[Cell[0], Cell[1]] == GridData.Empty)
+                {
+                    PossibleShots.Add(Cell);
+                }
+            }
+
+            //Add the Bottom Left
+            if ((LastCellShot[0] + 1) != battlefieldSize && (LastCellShot[1] - 1) != -1)
+            {
+                Cell = new int[2];
+                Cell[0] = LastCellShot[0] + 1;
+                Cell[1] = LastCellShot[1] - 1;
+                if (this.currentTurn.Board.DataGrid[Cell[0], Cell[1]] == GridData.Empty)
+                {
+                    PossibleShots.Add(Cell);
+                }
+            }
+
+            //Add the Bottom Right
+            if ((LastCellShot[0] + 1) != battlefieldSize && (LastCellShot[1] + 1) != battlefieldSize)
+            {
+                Cell = new int[2];
+                Cell[0] = LastCellShot[0] + 1;
+                Cell[1] = LastCellShot[1] + 1;
+                if (this.currentTurn.Board.DataGrid[Cell[0], Cell[1]] == GridData.Empty)
+                {
+                    PossibleShots.Add(Cell);
+                }
+            }
+
+            //Randomly Choose One Of The Shots
+            if (PossibleShots.Count == 0)
+            {
+                //if there are no acceptable spots to shoot at randomly choose a new spot.
+                bool cellIsEmpty = false;
+                while (!cellIsEmpty)
+                {
+                    cellIsEmpty = this.GetRandomCell();
+                    return;
+                }
+            } else
+            {
+                foreach(int[] s in PossibleShots)
+                {
+                    Debug.WriteLine("Checkerboard X: " + s[0].ToString() + ", Y: " + s[1].ToString());
+                }
+
+                //Choose one of the random spots to shoot at and set CellToShoot.
+                Cell = new int[2];
+                Random Rand = new Random();
+                int choose = Rand.Next(0, PossibleShots.Count-1);
+                Array.Clear(Cell, 0, Cell.Length);
+                Cell = PossibleShots[choose];
+                CellToShoot[0] = Cell[0];
+                CellToShoot[1] = Cell[1];
+                return;
+            }
+        }
+
+        public void GetCellNextToHit()
+        {
+            PossibleShots.Clear();
+            int[] Cell = new int[2];
+
+            for (int x = 0; x < battlefieldSize; x++)
+            {
+                for (int y = 0; y < battlefieldSize; y++)
+                {
+                    if (currentTurn.Board.DataGrid[x, y] == GridData.Hit)
+                    {
+                        Debug.WriteLine("HIT CELL FOUND AT: " + x.ToString() + ", " + y.ToString());
+                        if(!currentEnemy.Board.ShipGrid[x, y].IsSunk)
+                        {
+                            Cell[0] = x;
+                            Cell[1] = y;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            Debug.WriteLine("Cell_X: " + Cell[0].ToString() + ", Cell_Y: " + Cell[1]);
+
+            // | p a i n | 
+            // V         V
+            int[] NewCell1 = new int[2];
+            int[] NewCell2 = new int[2];
+            int[] NewCell3 = new int[2];
+            int[] NewCell4 = new int[2];
+
+            //Find the possible shots we can choose from
+            //Add the Right
+            if ( (Cell[1] + 1) != battlefieldSize)
+            {
+                Array.Clear(NewCell1, 0, NewCell1.Length);
+                NewCell1[0] = Cell[0];
+                NewCell1[1] = Cell[1] + 1;
+                if (this.currentTurn.Board.DataGrid[NewCell1[0], NewCell1[1]] == GridData.Empty)
+                {
+                    PossibleShots.Add(NewCell1);
+                    Debug.WriteLine("RIGHT ADDED: " + NewCell1[0].ToString() + ", " + NewCell1[1].ToString());
+                }
+            }
+
+            //Add the Top
+            if ( (Cell[0] - 1) > -1)
+            {
+                Array.Clear(NewCell2, 0, NewCell2.Length);
+                NewCell2[0] = Cell[0] - 1;
+                NewCell2[1] = Cell[1];
+                if (this.currentTurn.Board.DataGrid[NewCell2[0], NewCell2[1]] == GridData.Empty)
+                {
+                    PossibleShots.Add(NewCell2);
+                    Debug.WriteLine("TOP ADDED: " + NewCell2[0].ToString() + ", " + NewCell2[1].ToString());
+                }
+            }
+
+            //Add the Left
+            if ( (Cell[1] - 1) > -1)
+            {
+                Array.Clear(NewCell3, 0, NewCell3.Length);
+                NewCell3[0] = Cell[0];
+                NewCell3[1] = Cell[1] - 1;
+                if (this.currentTurn.Board.DataGrid[NewCell3[0], NewCell3[1]] == GridData.Empty)
+                {
+                    PossibleShots.Add(NewCell3);
+                    Debug.WriteLine("LEFT ADDED: " + NewCell3[0].ToString() + ", " + NewCell3[1].ToString());
+                }
+            }
+
+            //Add the Bottom
+            if ( (Cell[0] + 1) != battlefieldSize)
+            {
+                Array.Clear(NewCell4, 0, NewCell4.Length);
+                NewCell4[0] = Cell[0] + 1;
+                NewCell4[1] = Cell[1];
+                if (this.currentTurn.Board.DataGrid[NewCell4[0], NewCell4[1]] == GridData.Empty)
+                {
+                    PossibleShots.Add(NewCell4);
+                    Debug.WriteLine("BOTTOM ADDED: " + NewCell4[0].ToString() + ", " + NewCell4[1].ToString());
+                }
+            }
+
+
+            //Choose one of the random spots to shoot at and set CellToShoot.
+            foreach(int[] fuck in PossibleShots)
+            {
+                Debug.WriteLine("POSSIBLE SHOTS X: " + fuck[0].ToString() + ", Y: " + fuck[1].ToString());
+            }
+            Random Rand = new Random();
+            int choose = Rand.Next(0, PossibleShots.Count);
+            Array.Clear(Cell, 0, Cell.Length);
+            Cell = PossibleShots[choose];
+            CellToShoot[0] = Cell[0];
+            CellToShoot[1] = Cell[1];
+            Debug.WriteLine("CHOSE: " + choose.ToString());
+            Debug.WriteLine("SHOT AT X: " + Cell[0].ToString() + ", Y: " + Cell[1].ToString());
+
+            //Get Direction
+            int xx = CellToShoot[0] - LastCellShot[0];
+            int yy = CellToShoot[1] - LastCellShot[0];
+
+            if (xx != 0)
+            {
+                ChosenCPUDirection = "Vertical";
+            }
+            if (yy != 0)
+            {
+                ChosenCPUDirection = "Horizontal";
+            }
+
+            Debug.WriteLine("CHOSEN DIRECTON: " + ChosenCPUDirection);
+            return;
+
+        }
+
+        public void GetCellFromHorizontalAttack()
+        {
+            PossibleShots.Clear();
+            int[] Cell = new int[2];
+
+            for (int x = 0; x < battlefieldSize; x++)
+            {
+                for (int y = 0; y < battlefieldSize; y++)
+                {
+                    if (currentTurn.Board.DataGrid[x, y] == GridData.Hit)
+                    {
+                        if (!currentEnemy.Board.ShipGrid[x, y].IsSunk)
+                        {
+                            Debug.WriteLine("HIT CELL FOUND AT: " + x.ToString() + ", " + y.ToString());
+                            Cell[0] = x;
+                            Cell[1] = y;
+
+                            int[] NewCell1 = new int[2];
+                            int[] NewCell2 = new int[2];
+
+                            //Find the possible shots we can choose from
+                            //Add the Right
+                            if (Cell[1] + 1 != battlefieldSize)
+                            {
+                                NewCell1[0] = Cell[0];
+                                NewCell1[1] = Cell[1] + 1;
+                                if (this.currentTurn.Board.DataGrid[NewCell1[0], NewCell1[1]] == GridData.Empty)
+                                {
+                                    PossibleShots.Add(NewCell1);
+                                }
+                            }
+
+                            //Add the Left
+                            if (Cell[1] - 1 > -1)
+                            {
+                                NewCell2[0] = Cell[0];
+                                NewCell2[1] = Cell[1] - 1;
+                                if (this.currentTurn.Board.DataGrid[NewCell2[0], NewCell2[1]] == GridData.Empty)
+                                {
+                                    PossibleShots.Add(NewCell2);
+                                }
+                            }
+
+                            if(PossibleShots.Count != 0)
+                            {
+                                break;
+                            } else
+                            {
+                                continue;
+                            }
+                            
+                        }
+                    }
+                }
+                if (PossibleShots.Count != 0)
+                {
+                    break;
+                }
+            }
+
+            //Choose one of the random spots to shoot at and set CellToShoot.
+            Random Rand = new Random();
+            int choose = Rand.Next(0, PossibleShots.Count);
+            Array.Clear(Cell, 0, Cell.Length);
+            Cell = PossibleShots[choose];
+            CellToShoot[0] = Cell[0];
+            CellToShoot[1] = Cell[1];
+        }
+
+        public void GetCellFromVerticalAttack()
+        {
+            PossibleShots.Clear();
+            int[] Cell = new int[2];
+
+            for (int x = 0; x < battlefieldSize; x++)
+            {
+                for (int y = 0; y < battlefieldSize; y++)
+                {
+                    if (currentTurn.Board.DataGrid[x, y] == GridData.Hit)
+                    {
+                        if (!currentEnemy.Board.ShipGrid[x, y].IsSunk)
+                        {
+                            Debug.WriteLine("HIT CELL FOUND AT: " + x.ToString() + ", " + y.ToString());
+                            Cell[0] = x;
+                            Cell[1] = y;
+
+                            int[] NewCell1 = new int[2];
+                            int[] NewCell2 = new int[2];
+
+                            //Find the possible shots we can choose from
+                            //Add the Top
+                            if (Cell[0] - 1 > -1)
+                            {
+                                NewCell1[0] = Cell[0] - 1;
+                                NewCell1[1] = Cell[1];
+                                if (this.currentTurn.Board.DataGrid[NewCell1[0], NewCell1[1]] == GridData.Empty)
+                                {
+                                    PossibleShots.Add(NewCell1);
+                                }
+                            }
+
+                            //Add the Bottom
+                            if (Cell[0] + 1 != battlefieldSize)
+                            {
+                                NewCell2[0] = Cell[0] + 1;
+                                NewCell2[1] = Cell[1];
+                                if (this.currentTurn.Board.DataGrid[NewCell2[0], NewCell2[1]] == GridData.Empty)
+                                {
+                                    PossibleShots.Add(NewCell2);
+                                }
+                            }
+
+                            if (PossibleShots.Count != 0)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
+                        }
+                    }
+                }
+                if (PossibleShots.Count != 0)
+                {
+                    break;
+                }
+            }
+
+            //Choose one of the random spots to shoot at and set CellToShoot.
+            Random Rand = new Random();
+            int choose = Rand.Next(0, PossibleShots.Count);
+            Array.Clear(Cell, 0, Cell.Length);
+            Cell = PossibleShots[choose];
+            CellToShoot[0] = Cell[0];
+            CellToShoot[1] = Cell[1];
+        }
+
+        public void DetermineShootingModeAfterSunk()
+        {
+            for(int x = 0; x < battlefieldSize; x++)
+            {
+                for(int y = 0; y < battlefieldSize; y++)
+                {
+                    if(currentTurn.Board.DataGrid[x, y] == GridData.Hit)
+                    {
+                        if(!currentEnemy.Board.ShipGrid[x, y].IsSunk)
+                        {
+                            currentTurn.ShootingMode = CPUShootingMode.RandomAttack;
+                            Debug.WriteLine("KEEP RANDOMLY ATTACKINg");
+                            return;
+                        }
+                    }
+                }
+            }
+            currentTurn.ShootingMode = CPUShootingMode.LookingForShip;
+            Debug.WriteLine("ALL SHIPS ARE SUNK!!");
+            return;
+        }
         #endregion
     }
 }
