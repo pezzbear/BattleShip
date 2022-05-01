@@ -1347,6 +1347,7 @@ namespace BattleShip
             this.IsCellSelected = false;
             this.UpdateBattlefieldColors();
             this.CheckWinCondition();
+            BattleEndTurn_Click(new object(), new RoutedEventArgs());
         }
 
         /// <summary>
@@ -1620,6 +1621,7 @@ namespace BattleShip
                 //// the colors on the battlefield from the grid data
                 this.UpdateBattlefieldColors();
             }
+            this.ChangeGameState(GState.Battle);
         }
 
         #endregion
@@ -1733,6 +1735,7 @@ namespace BattleShip
             this.IsCellSelected = false;
             this.UpdateBattlefieldColors();
             this.CheckWinCondition();
+            BattleEndTurn_Click(new object(), new RoutedEventArgs());
         }
 
         public void GetCheckerboardCell()
