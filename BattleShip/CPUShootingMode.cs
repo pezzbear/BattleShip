@@ -3,21 +3,34 @@
 //     Company copyright tag.
 // </copyright>
 //-----------------------------------------------------------------------
+
+/// <summary>
+/// CPUs shooting mode.
+/// </summary>
 public enum CPUShootingMode
 {
-    //does a random shot as the first.
+    /// <summary>
+    /// Represents doing a random shot as the first move.
+    /// </summary>
     FirstShot,
 
-    //randomly shooting in a checkerboard until we find a hit.
+    /// <summary>
+    /// Represents shooting in a checkerboard until we find a hit.
+    /// </summary>
     LookingForShip,
 
-    //after getting a hit, randomly shoot around the hit to find the direction.
+    /// <summary>
+    /// After getting a hit, randomly shoot around the hit to find the direction.
+    /// </summary>
     RandomAttack,
 
-    //after determining the direction to be horizontal, check the left and right of the hit until sinking the ship.
+    /// <summary>
+    /// After determining the direction to be horizontal, check the left and right of the hit until sinking the ship.
+    /// </summary>
     HorizontalAttack,
 
-    //after determining the direction to be vertical, check the up and down of the hit until sinking the ship.
+    /// <summary>
+    /// After determining the direction to be vertical, check the up and down of the hit until sinking the ship.
+    /// </summary>
     VerticalAttack
-
 } 

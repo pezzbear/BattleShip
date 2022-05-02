@@ -20,8 +20,14 @@ namespace BattleShip
         /// </summary>
         public string Type;
 
-        public bool isAdvanced = true;
+        /// <summary>
+        /// Setting the advance AI to be true.
+        /// </summary>
+        public bool IsAdvanced = true;
 
+        /// <summary>
+        /// The AIs shooting mode based on first shot.
+        /// </summary>
         public CPUShootingMode ShootingMode = CPUShootingMode.FirstShot;
 
         /// <summary>
