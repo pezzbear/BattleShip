@@ -496,6 +496,15 @@ namespace BattleShip
             Array.Clear(this.currentTurn.Board.ShipGrid, 0, this.battleFieldGridArray.Length);
             this.ResetPlayerShips();
             this.ChangeGameState(GState.ShipPlacement);
+
+            if ((bool)EasyDiffButton.IsChecked)
+            {
+                this.player2.IsAdvanced = false;
+            } 
+            else if ((bool)AdvanceDiffButton.IsChecked)
+            {
+                this.player2.IsAdvanced = true;
+            }
         }
 
         /// <summary>
@@ -1576,6 +1585,7 @@ namespace BattleShip
 
                                 if (!this.CheckForOtherShips(cellToCheck[0] + j, cellToCheck[1]))
                                 {
+                                    #pragma warning disable
                                     ////if the ship goes outside of the battlefield size, check the Horizontal rotation
                                     for (int k = 0; k < this.selectedShip.Length; k++)
                                     {
@@ -1590,7 +1600,7 @@ namespace BattleShip
                                         if (!this.CheckForOtherShips(cellToCheck[0], cellToCheck[1] + k))
                                         {
                                             ////if a ship is in the cells we are checking add the cell we checked to the list
-                                            cellsChecked.Add(PassNewArray(cellToCheck));
+                                            cellsChecked.Add(this.PassNewArray(cellToCheck));
                                             cannotPlaceShip = true;
                                             break;
                                         }
@@ -1606,6 +1616,7 @@ namespace BattleShip
                                         this.selectedShip.Rotation = "Horizontal";
                                     }
                                 }
+                                #pragma warning restore
                             }
 
                             if (!cannotPlaceShip)
@@ -1651,7 +1662,7 @@ namespace BattleShip
         /// <summary>
         /// The method that activates the advanced CPU.
         /// </summary>
-        public void DoAdvanceCPUTurn()
+        private void DoAdvanceCPUTurn()
         {
             Debug.WriteLine(this.currentTurn.ShootingMode);
             //// Determing the cell that we are shooting at 
@@ -1667,19 +1678,19 @@ namespace BattleShip
                     break;
 
                 case CPUShootingMode.LookingForShip:
-                    GetCheckerboardCell();
+                    this.GetCheckerboardCell();
                     break;
 
                 case CPUShootingMode.RandomAttack:
-                    GetCellNextToHit();
+                    this.GetCellNextToHit();
                     break;
 
                 case CPUShootingMode.HorizontalAttack:
-                    GetCellFromHorizontalAttack();
+                    this.GetCellFromHorizontalAttack();
                     break;
 
                 case CPUShootingMode.VerticalAttack:
-                    GetCellFromVerticalAttack();
+                    this.GetCellFromVerticalAttack();
                     break;
             }
 
@@ -1737,7 +1748,7 @@ namespace BattleShip
                         ////Fire in vertical direciton until Sunk
                         if (this.currentEnemy.Board.ShipGrid[this.CellToShoot[0], this.CellToShoot[1]].Health == 0)
                         {
-                            DetermineShootingModeAfterSunk();
+                            this.DetermineShootingModeAfterSunk();
                         }
 
                         break;
@@ -1759,13 +1770,13 @@ namespace BattleShip
             this.IsCellSelected = false;
             this.UpdateBattlefieldColors();
             this.CheckWinCondition();
-            BattleEndTurn_Click(new object(), new RoutedEventArgs());
+            this.BattleEndTurn_Click(new object(), new RoutedEventArgs());
         }
 
         /// <summary>
         /// The Method involved in random checkerboard shoot pattern.
         /// </summary>
-        public void GetCheckerboardCell()
+        private void GetCheckerboardCell()
         {
             this.possibleShots.Clear();
             int[] cell;
@@ -1851,7 +1862,7 @@ namespace BattleShip
         /// <summary>
         /// The Method that gets the cell next to hit for advanced AI.
         /// </summary>
-        public void GetCellNextToHit()
+        private void GetCellNextToHit()
         {
             this.possibleShots.Clear();
             int[] cell = new int[2];
@@ -1952,7 +1963,7 @@ namespace BattleShip
 
             ////Get Direction
             int xx = this.CellToShoot[0] - this.lastCellShot[0];
-            int yy = this.CellToShoot[1] - lastCellShot[0];
+            int yy = this.CellToShoot[1] - this.lastCellShot[0];
 
             if (xx != 0)
             {
@@ -1964,14 +1975,14 @@ namespace BattleShip
                 this.chosenCPUDirection = "Horizontal";
             }
 
-            Debug.WriteLine("CHOSEN DIRECTON: " + chosenCPUDirection);
+            Debug.WriteLine("CHOSEN DIRECTON: " + this.chosenCPUDirection);
             return;
         }
 
         /// <summary>
         /// Gets the grid cell from the horizontal attack.
         /// </summary>
-        public void GetCellFromHorizontalAttack()
+        private void GetCellFromHorizontalAttack()
         {
             this.possibleShots.Clear();
             int[] cell = new int[2];
@@ -2044,7 +2055,7 @@ namespace BattleShip
         /// <summary>
         /// The Method gets the cell from the vertical attack for the advanced AI.
         /// </summary>
-        public void GetCellFromVerticalAttack()
+        private void GetCellFromVerticalAttack()
         {
             this.possibleShots.Clear();
             int[] cell = new int[2];
@@ -2109,23 +2120,23 @@ namespace BattleShip
             Random rand = new Random();
             int choose = rand.Next(0, this.possibleShots.Count);
             Array.Clear(cell, 0, cell.Length);
-            cell = possibleShots[choose];
+            cell = this.possibleShots[choose];
             this.CellToShoot[0] = cell[0];
-            CellToShoot[1] = cell[1];
+            this.CellToShoot[1] = cell[1];
         }
 
         /// <summary>
         /// The Method for advanced AI that determines where to shoot after sinking a ship.
         /// </summary>
-        public void DetermineShootingModeAfterSunk()
+        private void DetermineShootingModeAfterSunk()
         {
             for (int x = 0; x < this.battlefieldSize; x++)
             {
-                for (int y = 0; y < battlefieldSize; y++)
+                for (int y = 0; y < this.battlefieldSize; y++)
                 {
                     if (this.currentTurn.Board.DataGrid[x, y] == GridData.Hit)
                     {
-                        if (!currentEnemy.Board.ShipGrid[x, y].IsSunk)
+                        if (!this.currentEnemy.Board.ShipGrid[x, y].IsSunk)
                         {
                             this.currentTurn.ShootingMode = CPUShootingMode.RandomAttack;
                             Debug.WriteLine("KEEP RANDOMLY ATTACKINg");
@@ -2135,7 +2146,7 @@ namespace BattleShip
                 }
             }
 
-            currentTurn.ShootingMode = CPUShootingMode.LookingForShip;
+            this.currentTurn.ShootingMode = CPUShootingMode.LookingForShip;
             Debug.WriteLine("ALL SHIPS ARE SUNK!!");
             return;
         }

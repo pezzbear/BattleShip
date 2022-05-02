@@ -30,21 +30,34 @@
             <Label x:Name="lb_PvCPU_P1" Content="Player1" FontFamily="Bahnschrift Light" FontSize="36" Canvas.Left="950" Canvas.Top="215"/>
             <Label x:Name="lb_PVP_P2" Content="Player2" FontFamily="Bahnschrift Light" FontSize="36" Canvas.Left="100" Canvas.Top="355"/>
             <Label x:Name="lb_CPUDifficultyTitle" Content="CPU Difficulty" FontFamily="Bahnschrift SemiBold" FontSize="48" Canvas.Left="950" Canvas.Top="358"/>
-            <RadioButton x:Name="EasyDiffButton" Content="Easy" FontSize="16" FontFamily="Bahnschrift Light"  Canvas.Left="950" Canvas.Top="453">
-                <RadioButton.LayoutTransform>
-                    <TransformGroup>
-                        <ScaleTransform ScaleX="2" ScaleY="2"/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </RadioButton.LayoutTransform>
-            </RadioButton>
+            <StackPanel Canvas.Left="950" Canvas.Top="431" Width="350" Height="92" >
+                <RadioButton x:Name="EasyDiffButton" Content="Easy" FontSize="16" FontFamily="Bahnschrift Light"  Canvas.Left="950" Canvas.Top="453" Width="176" Height="28" GroupName="difficulty" IsChecked="True">
+                    <RadioButton.LayoutTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="2" ScaleY="2"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </RadioButton.LayoutTransform>
+                </RadioButton>
+                <RadioButton x:Name="AdvanceDiffButton" FontSize="16" Content="Hard" RenderTransformOrigin="0.5,0.5" Width="175" GroupName="difficulty">
+                    <RadioButton.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="2" ScaleY="2"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </RadioButton.RenderTransform>
+
+                </RadioButton>
+            </StackPanel>
         </Canvas>
 
         <Canvas x:Name="canShipSetup" Visibility="Collapsed" IsVisibleChanged="CanShipSetup_IsVisibleChanged">
             <Label x:Name="lb_CurrentPlayerSetup" Content="Current Turn: Player 1" Canvas.Left="17" Canvas.Top="87" Width="273" Height="41" FontSize="22"/>
-            <Label x:Name="lb_ShipsNotPlaced" Content="Ships not placed: " Canvas.Left="22" Canvas.Top="482" Width="273" Height="41" FontSize="16"/>
+            <Label x:Name="lb_ShipPlacement" Content="Ship Placement" Canvas.Left="156" Canvas.Top="8" Width="353" Height="79" FontSize="48"/>
             <Button x:Name="SetUpBckBtn" Content="Go Back" Height="66" Canvas.Left="12" Width="122" Canvas.Top="8" FontSize="22" Click="SetUpBckBtn_Click"/>
             <Button x:Name="SetUpUndoBtn" Content="Undo" Height="50" Canvas.Left="17" Canvas.Top="372" Width="278" FontSize="22" Click="SetUpUndoBtn_Click"/>
             <Button x:Name="SetUpResetBtn" Content="Reset All" Height="50" Canvas.Left="17" Canvas.Top="427" Width="278" FontSize="22" Click="SetUpResetBtn_Click"/>
@@ -64,6 +77,7 @@
         </Canvas>
 
         <Canvas x:Name="canBattleScreen" Visibility="Collapsed" IsVisibleChanged="CanBattleScreen_IsVisibleChanged">
+            <Label x:Name="lb_Battle" Content="Battleship" Canvas.Left="156" Canvas.Top="2" Width="353" Height="78" FontSize="48" FontFamily="Segoe UI"/>
             <Label x:Name="lb_CurrentPlayer" Content="Current Turn: Player 1" Canvas.Left="17" Canvas.Top="87" Width="273" Height="41" FontSize="22"/>
             <Label x:Name="lb_ShipsToSink" Content="Enemy Ships Left:" Canvas.Left="18" Canvas.Top="141" Width="274" Height="41" FontSize="22"/>
             <Button x:Name="BattleExitBtn" Content="Exit" Height="66" Canvas.Left="12" Width="122" Canvas.Top="8" FontSize="22" Click="BattleExitBtn_Click"/>
