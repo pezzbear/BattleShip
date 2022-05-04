@@ -1696,6 +1696,14 @@ namespace BattleShip
 
             Ship getShip = this.currentEnemy.Board.ShipGrid[this.CellToShoot[0], this.CellToShoot[1]];
 
+            if(getShip != null) 
+            {
+                Debug.WriteLine("CELL HIT: " + getShip.ToString());
+            } else
+            {
+                Debug.WriteLine("CELL HIT: EMPTY");
+            }
+
             this.lastCellShot[0] = this.CellToShoot[0];
             this.lastCellShot[1] = this.CellToShoot[1];
 
@@ -1947,19 +1955,29 @@ namespace BattleShip
             }
 
             ////Choose one of the random spots to shoot at and set CellToShoot.
-            foreach (int[] fuck in this.possibleShots)
+            foreach (int[] s in this.possibleShots)
             {
-                Debug.WriteLine("POSSIBLE SHOTS X: " + fuck[0].ToString() + ", Y: " + fuck[1].ToString());
+                Debug.WriteLine("POSSIBLE SHOTS X: " + s[0].ToString() + ", Y: " + s[1].ToString());
             }
 
-            Random rand = new Random();
-            int choose = rand.Next(0, this.possibleShots.Count);
-            Array.Clear(cell, 0, cell.Length);
-            cell = this.possibleShots[choose];
-            this.CellToShoot[0] = cell[0];
-            this.CellToShoot[1] = cell[1];
-            Debug.WriteLine("CHOSE: " + choose.ToString());
-            Debug.WriteLine("SHOT AT X: " + cell[0].ToString() + ", Y: " + cell[1].ToString());
+            if (possibleShots.Count == 0 )
+            {
+                bool cellIsEmpty = false;
+                while (!cellIsEmpty)
+                {
+                    cellIsEmpty = this.GetRandomCell();
+                }
+            } else
+            {
+                Random rand = new Random();
+                int choose = rand.Next(0, this.possibleShots.Count);
+                Array.Clear(cell, 0, cell.Length);
+                cell = this.possibleShots[choose];
+                this.CellToShoot[0] = cell[0];
+                this.CellToShoot[1] = cell[1];
+                Debug.WriteLine("CHOSE: " + choose.ToString());
+                Debug.WriteLine("SHOT AT X: " + cell[0].ToString() + ", Y: " + cell[1].ToString());
+            }
 
             ////Get Direction
             int xx = this.CellToShoot[0] - this.lastCellShot[0];
@@ -2043,13 +2061,25 @@ namespace BattleShip
                 }
             }
 
-            ////Choose one of the random spots to shoot at and set CellToShoot.
-            Random rand = new Random();
-            int choose = rand.Next(0, this.possibleShots.Count);
-            Array.Clear(cell, 0, cell.Length);
-            cell = this.possibleShots[choose];
-            this.CellToShoot[0] = cell[0];
-            this.CellToShoot[1] = cell[1];
+            if (possibleShots.Count == 0)
+            {
+                bool cellIsEmpty = false;
+                while (!cellIsEmpty)
+                {
+                    cellIsEmpty = this.GetRandomCell();
+                }
+            }
+            else
+            {
+                ////Choose one of the random spots to shoot at and set CellToShoot.
+                Random rand = new Random();
+                Debug.WriteLine("POSSIBLE SHOT COUNT: " + this.possibleShots.Count.ToString());
+                int choose = rand.Next(0, this.possibleShots.Count);
+                Array.Clear(cell, 0, cell.Length);
+                cell = this.possibleShots[choose];
+                this.CellToShoot[0] = cell[0];
+                this.CellToShoot[1] = cell[1];
+            }
         }
 
         /// <summary>
@@ -2116,13 +2146,25 @@ namespace BattleShip
                 }
             }
 
-            ////Choose one of the random spots to shoot at and set CellToShoot.
-            Random rand = new Random();
-            int choose = rand.Next(0, this.possibleShots.Count);
-            Array.Clear(cell, 0, cell.Length);
-            cell = this.possibleShots[choose];
-            this.CellToShoot[0] = cell[0];
-            this.CellToShoot[1] = cell[1];
+            if (possibleShots.Count == 0)
+            {
+                bool cellIsEmpty = false;
+                while (!cellIsEmpty)
+                {
+                    cellIsEmpty = this.GetRandomCell();
+                }
+            }
+            else
+            {
+                ////Choose one of the random spots to shoot at and set CellToShoot.
+                Random rand = new Random();
+                Debug.WriteLine("POSSIBLE SHOT COUNT: " + this.possibleShots.Count.ToString());
+                int choose = rand.Next(0, this.possibleShots.Count);
+                Array.Clear(cell, 0, cell.Length);
+                cell = this.possibleShots[choose];
+                this.CellToShoot[0] = cell[0];
+                this.CellToShoot[1] = cell[1];
+            }
         }
 
         /// <summary>
@@ -2139,7 +2181,7 @@ namespace BattleShip
                         if (!this.currentEnemy.Board.ShipGrid[x, y].IsSunk)
                         {
                             this.currentTurn.ShootingMode = CPUShootingMode.RandomAttack;
-                            Debug.WriteLine("KEEP RANDOMLY ATTACKINg");
+                            Debug.WriteLine("KEEP RANDOMLY ATTACKING");
                             return;
                         }
                     }
