@@ -16,6 +16,11 @@ namespace BattleShip
     public class Player
     {
         /// <summary>
+        /// Here we will store the player's name once they enter it in the setup screen.
+        /// </summary>
+        public string Name;
+
+        /// <summary>
         /// Here we is our type for the player class, this will show if we are dealing with a human player or AI.
         /// </summary>
         public string Type;
@@ -39,10 +44,5 @@ namespace BattleShip
         /// Here we have our board which uses the Battlefield class, this will contain all the information of the board the player has control of.
         /// </summary>
         public Battlefield Board;
-
-        /// <summary>
-        /// Here we will store the player's name once they enter it in the setup screen.
-        /// </summary>
-        public string Name;
     }
 }

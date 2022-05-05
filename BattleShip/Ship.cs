@@ -43,11 +43,6 @@ namespace BattleShip
         public int[] Origin = new int[2];
 
         /// <summary>
-        ///  Color used to show what ship it is
-        /// </summary>
-        public SolidColorBrush ShipColor = new SolidColorBrush();
-
-        /// <summary>
         ///  The following will be used during the setup screen, when placing down your boats you will have the option to rotate said ship before placing them.
         /// </summary>
         public string Rotation = "Horizontal";
@@ -56,6 +51,11 @@ namespace BattleShip
         /// The following will be used during the setup screen, when placing a boat this will detect if the boat was actually placed down on the board.
         /// </summary>
         public bool IsPlaced = false;
+
+        /// <summary>
+        ///  Color used to show what ship it is
+        /// </summary>
+        public SolidColorBrush ShipColor = new SolidColorBrush();
 
         /// <summary>
         /// The following will be used during the setup screen, this keeps track of what type of ship the selected ship classifies as.

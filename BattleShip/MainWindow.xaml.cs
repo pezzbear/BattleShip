@@ -22,6 +22,7 @@ namespace BattleShip
     using System.Windows.Media.Imaging;
     using System.Windows.Navigation;
     using System.Windows.Shapes;
+    using System.IO;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -1050,6 +1051,7 @@ namespace BattleShip
 
             this.UpdateShipHealthListBox(this.player2);
             this.UpdateBattlefieldColors();
+            SaveGame();
         }
 
         /// <summary>
@@ -2192,6 +2194,221 @@ namespace BattleShip
             Debug.WriteLine("ALL SHIPS ARE SUNK!!");
             return;
         }
+        #endregion
+
+        #region Saving And Loading The Game [[-----------------------------------------------------------------------------------------------------------------]]
+
+        public void SaveGame()
+        {
+            //// Get all the text files 
+            string[] gameFiles = Directory.GetFiles(System.IO.Directory.GetCurrentDirectory(), "*.txt", SearchOption.AllDirectories);
+
+            string fileName = "game";
+
+            if (gameFiles.Length == 0)
+            {
+                fileName += "0";
+            } else
+            {
+                fileName += gameFiles.Length.ToString();
+            }
+
+            StreamWriter s = new StreamWriter(fileName + ".txt");
+
+            //// Write all of the game data to the file
+
+            //// Player 1
+            //// Name
+            s.WriteLine(player1.Name);
+
+            //// Type
+            s.WriteLine(player1.Type);
+
+            //// IsAdvanced
+            s.WriteLine(player1.IsAdvanced.ToString());
+
+            //// Shooting Mode
+            s.WriteLine(player1.ShootingMode.ToString());
+
+            //// Ships
+            foreach(Ship sh in player1.CurrentShips)
+            {
+                s.WriteLine(sh.Type.ToString());
+                s.WriteLine(sh.Length.ToString());
+                s.WriteLine(sh.Health.ToString());
+                s.WriteLine(sh.IsSunk.ToString());
+                s.WriteLine(sh.Origin[0].ToString());
+                s.WriteLine(sh.Origin[1].ToString());
+                s.WriteLine(sh.Rotation);
+                s.WriteLine(sh.IsPlaced.ToString());
+            }
+
+            for(int x = 0; x < battlefieldSize; x++)
+            {
+                for(int y = 0; y < battlefieldSize; y++)
+                {
+                    s.WriteLine(player1.Board.DataGrid[x, y].ToString());
+                }
+            }
+
+            //// Player 2
+            //// Name
+            s.WriteLine(player2.Name);
+
+            //// Type
+            s.WriteLine(player2.Type);
+
+            //// IsAdvanced
+            s.WriteLine(player2.IsAdvanced.ToString());
+
+            //// Shooting Mode
+            s.WriteLine(player2.ShootingMode.ToString());
+
+            //// Ships
+            foreach (Ship sh in player2.CurrentShips)
+            {
+                s.WriteLine(sh.Type.ToString());
+                s.WriteLine(sh.Length.ToString());
+                s.WriteLine(sh.Health.ToString());
+                s.WriteLine(sh.IsSunk.ToString());
+                s.WriteLine(sh.Origin[0].ToString());
+                s.WriteLine(sh.Origin[1].ToString());
+                s.WriteLine(sh.Rotation);
+                s.WriteLine(sh.IsPlaced.ToString());
+            }
+
+            for (int x = 0; x < battlefieldSize; x++)
+            {
+                for (int y = 0; y < battlefieldSize; y++)
+                {
+                    s.WriteLine(player2.Board.DataGrid[x, y].ToString());
+                }
+            }
+
+            s.Close();
+        }
+
+        public void LoadGame(string file)
+        {
+            StreamReader s = new StreamReader(file);
+
+            //// Player 1
+            player1.Board = new Battlefield(battlefieldSize);
+
+            //// Name
+            player1.Name = s.ReadLine();
+
+            //// Type
+            player1.Type = s.ReadLine();
+
+            //// IsAdvanced
+            Boolean.TryParse(s.ReadLine(), out player1.IsAdvanced);
+
+            //// Shooting Mode
+            Enum.TryParse(s.ReadLine(), out player1.ShootingMode);
+
+            //// Ships
+            player1.CurrentShips.Clear();
+            for(int i = 0; i < 5; i++)
+            {
+                Ship sh = new Ship();
+                Enum.TryParse(s.ReadLine(), out sh.Type);
+                int.TryParse(s.ReadLine(), out sh.Length);
+                int.TryParse(s.ReadLine(), out sh.Health);
+                Boolean.TryParse(s.ReadLine(), out sh.IsSunk);
+                int.TryParse(s.ReadLine(), out sh.Origin[0]);
+                int.TryParse(s.ReadLine(), out sh.Origin[1]);
+                Boolean.TryParse(s.ReadLine(), out sh.IsPlaced);
+                sh.SetLength();
+                player1.CurrentShips.Add(sh);
+            }
+
+            foreach(Ship ss in player1.CurrentShips)
+            {
+                if (ss.Rotation == "Horizontal")
+                {
+                    for (int j = 0; j < ss.Length; j++)
+                    {
+                        player1.Board.ShipGrid[ss.Origin[0], ss.Origin[1] + j] = ss;
+                    }
+                }
+                else if (ss.Rotation == "Vertical")
+                {
+                    for (int j = 0; j < ss.Length; j++)
+                    {
+                        player1.Board.ShipGrid[ss.Origin[0] + j, ss.Origin[1]] = ss;
+                    }
+                }
+            }
+
+            for (int x = 0; x < battlefieldSize; x++)
+            {
+                for (int y = 0; y < battlefieldSize; y++)
+                {
+                    Enum.TryParse(s.ReadLine(), out player1.Board.DataGrid[x, y]);
+                }
+            }
+
+            //// Player 2
+            player2.Board = new Battlefield(battlefieldSize);
+
+            //// Name
+            player2.Name = s.ReadLine();
+
+            //// Type
+            player2.Type = s.ReadLine();
+
+            //// IsAdvanced
+            Boolean.TryParse(s.ReadLine(), out player2.IsAdvanced);
+
+            //// Shooting Mode
+            Enum.TryParse(s.ReadLine(), out player2.ShootingMode);
+
+            //// Ships
+            player2.CurrentShips.Clear();
+            for (int i = 0; i < 5; i++)
+            {
+                Ship sh = new Ship();
+                Enum.TryParse(s.ReadLine(), out sh.Type);
+                int.TryParse(s.ReadLine(), out sh.Length);
+                int.TryParse(s.ReadLine(), out sh.Health);
+                Boolean.TryParse(s.ReadLine(), out sh.IsSunk);
+                int.TryParse(s.ReadLine(), out sh.Origin[0]);
+                int.TryParse(s.ReadLine(), out sh.Origin[1]);
+                Boolean.TryParse(s.ReadLine(), out sh.IsPlaced);
+                sh.SetLength();
+                player2.CurrentShips.Add(sh);
+            }
+
+            foreach (Ship ss in player2.CurrentShips)
+            {
+                if (ss.Rotation == "Horizontal")
+                {
+                    for (int j = 0; j < ss.Length; j++)
+                    {
+                        player2.Board.ShipGrid[ss.Origin[0], ss.Origin[1] + j] = ss;
+                    }
+                }
+                else if (ss.Rotation == "Vertical")
+                {
+                    for (int j = 0; j < ss.Length; j++)
+                    {
+                        player2.Board.ShipGrid[ss.Origin[0] + j, ss.Origin[1]] = ss;
+                    }
+                }
+            }
+
+            for (int x = 0; x < battlefieldSize; x++)
+            {
+                for (int y = 0; y < battlefieldSize; y++)
+                {
+                    Enum.TryParse(s.ReadLine(), out player2.Board.DataGrid[x, y]);
+                }
+            }
+
+            s.Close();
+        }
+
         #endregion
     }
 }
