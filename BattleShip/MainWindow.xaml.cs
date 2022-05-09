@@ -127,6 +127,11 @@ namespace BattleShip
         private string chosenCPUDirection;
 
         /// <summary>
+        /// Dictionary of save games used for loading.
+        /// </summary>
+        private Dictionary<string, string> SaveGames = new Dictionary<string, string>();
+
+        /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
         public MainWindow()
@@ -2315,11 +2320,11 @@ namespace BattleShip
             s.Close();
         }
 
-        public void LoadGame(string file)
+        public void LoadGame(string path)
         {
             //just functionality of load
 
-            StreamReader s = new StreamReader(file);
+            StreamReader s = new StreamReader(path);
 
             //// Player 1
             player1.Board = new Battlefield(battlefieldSize);
@@ -2347,6 +2352,7 @@ namespace BattleShip
                 Boolean.TryParse(s.ReadLine(), out sh.IsSunk);
                 int.TryParse(s.ReadLine(), out sh.Origin[0]);
                 int.TryParse(s.ReadLine(), out sh.Origin[1]);
+                sh.Rotation = s.ReadLine();
                 Boolean.TryParse(s.ReadLine(), out sh.IsPlaced);
                 sh.SetLength();
                 player1.CurrentShips.Add(sh);
@@ -2368,6 +2374,7 @@ namespace BattleShip
                         player1.Board.ShipGrid[ss.Origin[0] + j, ss.Origin[1]] = ss;
                     }
                 }
+                Debug.WriteLine("Player 1 Ships: " + ss.GetName());
             }
 
             for (int x = 0; x < battlefieldSize; x++)
@@ -2404,6 +2411,7 @@ namespace BattleShip
                 Boolean.TryParse(s.ReadLine(), out sh.IsSunk);
                 int.TryParse(s.ReadLine(), out sh.Origin[0]);
                 int.TryParse(s.ReadLine(), out sh.Origin[1]);
+                sh.Rotation = s.ReadLine();
                 Boolean.TryParse(s.ReadLine(), out sh.IsPlaced);
                 sh.SetLength();
                 player2.CurrentShips.Add(sh);
@@ -2425,6 +2433,7 @@ namespace BattleShip
                         player2.Board.ShipGrid[ss.Origin[0] + j, ss.Origin[1]] = ss;
                     }
                 }
+                Debug.WriteLine("Player 2 Ships: " + ss.GetName());
             }
 
             for (int x = 0; x < battlefieldSize; x++)
@@ -2443,10 +2452,18 @@ namespace BattleShip
         #endregion
 
 
-        #region Load Game Section
+        #region Load Game Buttons
         private void LoadFileBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (LoadFileBox.SelectedItem == null) return;
 
+            string gameToLoad = LoadFileBox.SelectedItem.ToString();
+
+            string gamePath = SaveGames[gameToLoad];
+
+            LoadGame(gamePath);
+
+            this.ChangeGameState(GState.Battle);
         }
 
         private void BackToStartLD_Click(object sender, RoutedEventArgs e)
@@ -2458,9 +2475,12 @@ namespace BattleShip
         {
             LoadFileBtn.IsEnabled = true;
             LoadFileBox.Items.Clear();
+            SaveGames.Clear();
 
             //// Get all the text files 
             string[] gameFiles = Directory.GetFiles(System.IO.Directory.GetCurrentDirectory(), "*.txt", SearchOption.AllDirectories);
+
+            
 
             if (gameFiles.Length == 0)
             {
@@ -2472,9 +2492,11 @@ namespace BattleShip
 
             }
             else
-            {
-                foreach (string game in gameFiles)
+            { 
+                for(int i = 0; i < gameFiles.Length; i++)
                 {
+                    string game = "Game" + i.ToString();
+                    SaveGames.Add(game, gameFiles[i]);
                     LoadFileBox.Items.Add(game);
                 }
             }
