@@ -23,6 +23,7 @@ namespace BattleShip
     using System.Windows.Navigation;
     using System.Windows.Shapes;
     using System.IO;
+    using Microsoft.Win32;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -156,7 +157,12 @@ namespace BattleShip
             /// <summary>
             /// states that the game state is in the Battle Stage
             /// </summary>
-            Battle
+            Battle,
+
+            ///<summary>
+            /// Changes to Load Game State
+            /// </summary>
+            Load
         }
 
         /// <summary>
@@ -188,24 +194,35 @@ namespace BattleShip
                     canShipSetup.Visibility = Visibility.Collapsed;
                     canPlayerSelect.Visibility = Visibility.Collapsed;
                     canBattleScreen.Visibility = Visibility.Collapsed;
+                    LoadCanvas.Visibility = Visibility.Collapsed;
                     break;
                 case GState.PlayerSelect:
                     canStartScreen.Visibility = Visibility.Collapsed;
                     canShipSetup.Visibility = Visibility.Collapsed;
                     canPlayerSelect.Visibility = Visibility.Visible;
                     canBattleScreen.Visibility = Visibility.Collapsed;
+                    LoadCanvas.Visibility = Visibility.Collapsed;
                     break;
                 case GState.ShipPlacement:
                     canStartScreen.Visibility = Visibility.Collapsed;
                     canShipSetup.Visibility = Visibility.Visible;
                     canPlayerSelect.Visibility = Visibility.Collapsed;
                     canBattleScreen.Visibility = Visibility.Collapsed;
+                    LoadCanvas.Visibility = Visibility.Collapsed;
                     break;
                 case GState.Battle:
                     canStartScreen.Visibility = Visibility.Collapsed;
                     canShipSetup.Visibility = Visibility.Collapsed;
                     canPlayerSelect.Visibility = Visibility.Collapsed;
                     canBattleScreen.Visibility = Visibility.Visible;
+                    LoadCanvas.Visibility = Visibility.Collapsed;
+                    break;
+                case GState.Load:
+                    canStartScreen.Visibility = Visibility.Collapsed;
+                    canShipSetup.Visibility = Visibility.Collapsed;
+                    canPlayerSelect.Visibility = Visibility.Collapsed;
+                    canBattleScreen.Visibility = Visibility.Collapsed;
+                    LoadCanvas.Visibility = Visibility.Visible;
                     break;
             }
         }
@@ -420,6 +437,11 @@ namespace BattleShip
         private void Rules_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Rules description", "Battleship Rules");
+        }
+
+        private void LoadGameBtn_Click(object sender, RoutedEventArgs e)
+        {
+            this.ChangeGameState(GState.Load);
         }
 
         #endregion
@@ -1019,6 +1041,12 @@ namespace BattleShip
 
         #region Battle Screen Buttons[[-----------------------------------------------------------------------------------------------------------------]]
 
+        private void SaveGameBtn_Click(object sender, RoutedEventArgs e)
+        {
+            this.SaveGame();
+            this.ChangeGameState(GState.Start);
+        }
+
         /// <summary>
         /// Updates the HP for the ships
         /// </summary>
@@ -1051,7 +1079,6 @@ namespace BattleShip
 
             this.UpdateShipHealthListBox(this.player2);
             this.UpdateBattlefieldColors();
-            SaveGame();
         }
 
         /// <summary>
@@ -2290,6 +2317,8 @@ namespace BattleShip
 
         public void LoadGame(string file)
         {
+            //just functionality of load
+
             StreamReader s = new StreamReader(file);
 
             //// Player 1
@@ -2409,6 +2438,47 @@ namespace BattleShip
             s.Close();
         }
 
+
+
         #endregion
+
+
+        #region Load Game Section
+        private void LoadFileBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BackToStartLD_Click(object sender, RoutedEventArgs e)
+        {
+            this.ChangeGameState(GState.Start);
+        }
+
+        private void LoadCanvas_OnLoad(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            LoadFileBtn.IsEnabled = true;
+            LoadFileBox.Items.Clear();
+
+            //// Get all the text files 
+            string[] gameFiles = Directory.GetFiles(System.IO.Directory.GetCurrentDirectory(), "*.txt", SearchOption.AllDirectories);
+
+            if (gameFiles.Length == 0)
+            {
+                string noItems = "No Game Files Found";
+
+                LoadFileBox.Items.Add(noItems);
+
+                LoadFileBtn.IsEnabled = false;
+
+            }
+            else
+            {
+                foreach (string game in gameFiles)
+                {
+                    LoadFileBox.Items.Add(game);
+                }
+            }
+        }
+#endregion
     }
 }

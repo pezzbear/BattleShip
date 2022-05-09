@@ -11,7 +11,7 @@
         <Canvas x:Name="canStartScreen" Visibility="Collapsed">
             <Button x:Name="btn_Start" Content="Start" HorizontalAlignment="Left" Height="95" Margin="120,520,0,0" VerticalAlignment="Top" Width="500" FontSize="48" FontFamily="Bahnschrift Light" Click="StartButton_Click"/>
             <Button x:Name="btn_Credits" Content="Credits" HorizontalAlignment="Left" Height="95" Margin="806,520,0,0" VerticalAlignment="Top" Width="500" FontSize="48" FontFamily="Bahnschrift Light" Click="CreditsButton_Click"/>
-
+            <Button x:Name="LoadGameBtn" Content="Load Game" Canvas.Left="120" Canvas.Top="398" Height="95" Width="500" FontSize="48" FontFamily ="Bahnschrift SemiBold" Click="LoadGameBtn_Click" />
             <Button x:Name="btn_Exit" Content="Exit" Height="95" Width="500" FontSize="48" FontFamily="Bahnschrift Light" Click="ExitButton_Click" Canvas.Left="470" Canvas.Top="657"/>
             <Label x:Name="lb_BattleshipTitle" Content="Battleship" Height="191" Width="692" FontSize="150" FontFamily="Bahnschrift SemiBold" Canvas.Left="374" Canvas.Top="118"/>
         </Canvas>
@@ -84,6 +84,7 @@
             <Button x:Name="BattleFireBtn" Content="Fire" Height="50" Canvas.Left="17" Canvas.Top="423" Width="278" FontSize="22" Click="BattleFireBtn_Click"/>
             <Button x:Name="BattleSwitchGrids" Content="Show My Ships" Height="50" Canvas.Left="17" Canvas.Top="368" Width="278" FontSize="22" Click="BattleSwitchGrids_Click"/>
             <Button x:Name="BattleEndturn" Content="End Turn" Height="50" Canvas.Left="17" Canvas.Top="478" Width="278" FontSize="22" Click="BattleEndTurn_Click"/>
+            <Button x:Name="SaveGameBtn" Content ="Save Game"  Canvas.Left="18" Canvas.Top="555" Width="278" Height="50" FontSize="22" Click="SaveGameBtn_Click"/>
             <ListBox x:Name="BattleHPListBox" Height="176" Canvas.Left="16" Canvas.Top="187" Width="278" FontSize="22">
                 <ListBoxItem x:Name="CarrierHPItem" Content="Carrier" />
                 <ListBoxItem x:Name="BattleHPItem" Content="BattleShip"/>
@@ -95,6 +96,13 @@
 
             </Grid>
             <Rectangle Name="BattlefieldBlackoutScreen" Visibility ="Collapsed" Height="810" Width="1440" Fill = "Black"/>
+        </Canvas>
+        <Canvas x:Name="LoadCanvas" Visibility="Visible" IsVisibleChanged="LoadCanvas_OnLoad">
+            <Button x:Name="LoadFileBtn" Content="Load Game" Canvas.Left="458" Canvas.Top="498" Height="95" Width="500" FontSize="48" FontFamily ="Bahnschrift SemiBold" Click="LoadFileBtn_Click" />
+            <Button x:Name="BackToStartLD" Content="Back" HorizontalAlignment="Left" Height="50" Margin="10,12,0,0" VerticalAlignment="Top" Width="200" FontSize="30" FontFamily="Bahnschrift Light" Click="BackToStartLD_Click"/>
+            <ListBox x:Name="LoadFileBox" Height="265" Canvas.Left="458" Canvas.Top="190" Width="500" FontSize="22">
+
+            </ListBox>
         </Canvas>
 
     </Canvas>
