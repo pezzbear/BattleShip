@@ -8,8 +8,8 @@ namespace BattleShip
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -22,7 +22,6 @@ namespace BattleShip
     using System.Windows.Media.Imaging;
     using System.Windows.Navigation;
     using System.Windows.Shapes;
-    using System.IO;
     using Microsoft.Win32;
 
     /// <summary>
@@ -129,7 +128,7 @@ namespace BattleShip
         /// <summary>
         /// Dictionary of save games used for loading.
         /// </summary>
-        private Dictionary<string, string> SaveGames = new Dictionary<string, string>();
+        private Dictionary<string, string> saveGames = new Dictionary<string, string>();
 
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
@@ -164,11 +163,242 @@ namespace BattleShip
             /// </summary>
             Battle,
 
-            ///<summary>
+            /// <summary>
             /// Changes to Load Game State
             /// </summary>
             Load
         }
+
+        #region Saving And Loading The Game [[-----------------------------------------------------------------------------------------------------------------]]
+
+        /// <summary>
+        /// Allows for a game to be saved
+        /// </summary>
+        private void SaveGame()
+        {
+            //// Get all the text files 
+            string[] gameFiles = Directory.GetFiles(System.IO.Directory.GetCurrentDirectory(), "*.txt", SearchOption.AllDirectories);
+
+            string fileName = "game";
+
+            if (gameFiles.Length == 0)
+            {
+                fileName += "0";
+            }
+            else
+            {
+                fileName += gameFiles.Length.ToString();
+            }
+
+            StreamWriter s = new StreamWriter(fileName + ".txt");
+
+            //// Write all of the game data to the file
+
+            //// Player 1
+            //// Name
+            s.WriteLine(this.player1.Name);
+
+            //// Type
+            s.WriteLine(this.player1.Type);
+
+            //// IsAdvanced
+            s.WriteLine(this.player1.IsAdvanced.ToString());
+
+            //// Shooting Mode
+            s.WriteLine(this.player1.ShootingMode.ToString());
+
+            //// Ships
+            foreach (Ship sh in this.player1.CurrentShips)
+            {
+                s.WriteLine(sh.Type.ToString());
+                s.WriteLine(sh.Length.ToString());
+                s.WriteLine(sh.Health.ToString());
+                s.WriteLine(sh.IsSunk.ToString());
+                s.WriteLine(sh.Origin[0].ToString());
+                s.WriteLine(sh.Origin[1].ToString());
+                s.WriteLine(sh.Rotation);
+                s.WriteLine(sh.IsPlaced.ToString());
+            }
+
+            for (int x = 0; x < this.battlefieldSize; x++)
+            {
+                for (int y = 0; y < this.battlefieldSize; y++)
+                {
+                    s.WriteLine(this.player1.Board.DataGrid[x, y].ToString());
+                }
+            }
+
+            //// Player 2
+            //// Name
+            s.WriteLine(this.player2.Name);
+
+            //// Type
+            s.WriteLine(this.player2.Type);
+
+            //// IsAdvanced
+            s.WriteLine(this.player2.IsAdvanced.ToString());
+
+            //// Shooting Mode
+            s.WriteLine(this.player2.ShootingMode.ToString());
+
+            //// Ships
+            foreach (Ship sh in this.player2.CurrentShips)
+            {
+                s.WriteLine(sh.Type.ToString());
+                s.WriteLine(sh.Length.ToString());
+                s.WriteLine(sh.Health.ToString());
+                s.WriteLine(sh.IsSunk.ToString());
+                s.WriteLine(sh.Origin[0].ToString());
+                s.WriteLine(sh.Origin[1].ToString());
+                s.WriteLine(sh.Rotation);
+                s.WriteLine(sh.IsPlaced.ToString());
+            }
+
+            for (int x = 0; x < this.battlefieldSize; x++)
+            {
+                for (int y = 0; y < this.battlefieldSize; y++)
+                {
+                    s.WriteLine(this.player2.Board.DataGrid[x, y].ToString());
+                }
+            }
+
+            s.Close();
+        }
+
+        /// <summary>
+        /// Allows the player to load a game from their saves.
+        /// </summary>
+        /// <param name="path">Path String</param>
+        private void LoadGame(string path)
+        {
+            ////just functionality of load
+
+            StreamReader s = new StreamReader(path);
+
+            //// Player 1
+            this.player1.Board = new Battlefield(this.battlefieldSize);
+
+            //// Name
+            this.player1.Name = s.ReadLine();
+
+            //// Type
+            this.player1.Type = s.ReadLine();
+
+            //// IsAdvanced
+            bool.TryParse(s.ReadLine(), out this.player1.IsAdvanced);
+
+            //// Shooting Mode
+            Enum.TryParse(s.ReadLine(), out this.player1.ShootingMode);
+
+            //// Ships
+            this.player1.CurrentShips.Clear();
+            for (int i = 0; i < 5; i++)
+            {
+                Ship sh = new Ship();
+                Enum.TryParse(s.ReadLine(), out sh.Type);
+                int.TryParse(s.ReadLine(), out sh.Length);
+                int.TryParse(s.ReadLine(), out sh.Health);
+                bool.TryParse(s.ReadLine(), out sh.IsSunk);
+                int.TryParse(s.ReadLine(), out sh.Origin[0]);
+                int.TryParse(s.ReadLine(), out sh.Origin[1]);
+                sh.Rotation = s.ReadLine();
+                bool.TryParse(s.ReadLine(), out sh.IsPlaced);
+                sh.SetLength();
+                this.player1.CurrentShips.Add(sh);
+            }
+
+            foreach (Ship ss in this.player1.CurrentShips)
+            {
+                if (ss.Rotation == "Horizontal")
+                {
+                    for (int j = 0; j < ss.Length; j++)
+                    {
+                        this.player1.Board.ShipGrid[ss.Origin[0], ss.Origin[1] + j] = ss;
+                    }
+                }
+                else if (ss.Rotation == "Vertical")
+                {
+                    for (int j = 0; j < ss.Length; j++)
+                    {
+                        this.player1.Board.ShipGrid[ss.Origin[0] + j, ss.Origin[1]] = ss;
+                    }
+                }
+
+                Debug.WriteLine("Player 1 Ships: " + ss.GetName());
+            }
+
+            for (int x = 0; x < this.battlefieldSize; x++)
+            {
+                for (int y = 0; y < this.battlefieldSize; y++)
+                {
+                    Enum.TryParse(s.ReadLine(), out this.player1.Board.DataGrid[x, y]);
+                }
+            }
+
+            //// Player 2
+            this.player2.Board = new Battlefield(this.battlefieldSize);
+
+            //// Name
+            this.player2.Name = s.ReadLine();
+
+            //// Type
+            this.player2.Type = s.ReadLine();
+
+            //// IsAdvanced
+            bool.TryParse(s.ReadLine(), out this.player2.IsAdvanced);
+
+            //// Shooting Mode
+            Enum.TryParse(s.ReadLine(), out this.player2.ShootingMode);
+
+            //// Ships
+            this.player2.CurrentShips.Clear();
+            for (int i = 0; i < 5; i++)
+            {
+                Ship sh = new Ship();
+                Enum.TryParse(s.ReadLine(), out sh.Type);
+                int.TryParse(s.ReadLine(), out sh.Length);
+                int.TryParse(s.ReadLine(), out sh.Health);
+                bool.TryParse(s.ReadLine(), out sh.IsSunk);
+                int.TryParse(s.ReadLine(), out sh.Origin[0]);
+                int.TryParse(s.ReadLine(), out sh.Origin[1]);
+                sh.Rotation = s.ReadLine();
+                bool.TryParse(s.ReadLine(), out sh.IsPlaced);
+                sh.SetLength();
+                this.player2.CurrentShips.Add(sh);
+            }
+
+            foreach (Ship ss in this.player2.CurrentShips)
+            {
+                if (ss.Rotation == "Horizontal")
+                {
+                    for (int j = 0; j < ss.Length; j++)
+                    {
+                        this.player2.Board.ShipGrid[ss.Origin[0], ss.Origin[1] + j] = ss;
+                    }
+                }
+                else if (ss.Rotation == "Vertical")
+                {
+                    for (int j = 0; j < ss.Length; j++)
+                    {
+                        this.player2.Board.ShipGrid[ss.Origin[0] + j, ss.Origin[1]] = ss;
+                    }
+                }
+
+                Debug.WriteLine("Player 2 Ships: " + ss.GetName());
+            }
+
+            for (int x = 0; x < this.battlefieldSize; x++)
+            {
+                for (int y = 0; y < this.battlefieldSize; y++)
+                {
+                    Enum.TryParse(s.ReadLine(), out this.player2.Board.DataGrid[x, y]);
+                }
+            }
+
+            s.Close();
+        }
+
+        #endregion
 
         /// <summary>
         /// the following allows for color to be properly converted using string colorHex
@@ -444,6 +674,11 @@ namespace BattleShip
             MessageBox.Show("Rules description", "Battleship Rules");
         }
 
+        /// <summary>
+        /// LoadGame Button click event
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Routed event</param>
         private void LoadGameBtn_Click(object sender, RoutedEventArgs e)
         {
             this.ChangeGameState(GState.Load);
@@ -1046,6 +1281,11 @@ namespace BattleShip
 
         #region Battle Screen Buttons[[-----------------------------------------------------------------------------------------------------------------]]
 
+        /// <summary>
+        /// the Save Game Button Click Event
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Routed event</param>
         private void SaveGameBtn_Click(object sender, RoutedEventArgs e)
         {
             this.SaveGame();
@@ -1730,10 +1970,11 @@ namespace BattleShip
 
             Ship getShip = this.currentEnemy.Board.ShipGrid[this.CellToShoot[0], this.CellToShoot[1]];
 
-            if(getShip != null) 
+            if (getShip != null) 
             {
                 Debug.WriteLine("CELL HIT: " + getShip.ToString());
-            } else
+            }
+            else
             {
                 Debug.WriteLine("CELL HIT: EMPTY");
             }
@@ -1994,14 +2235,15 @@ namespace BattleShip
                 Debug.WriteLine("POSSIBLE SHOTS X: " + s[0].ToString() + ", Y: " + s[1].ToString());
             }
 
-            if (possibleShots.Count == 0 )
+            if (this.possibleShots.Count == 0)
             {
                 bool cellIsEmpty = false;
                 while (!cellIsEmpty)
                 {
                     cellIsEmpty = this.GetRandomCell();
                 }
-            } else
+            }
+            else
             {
                 Random rand = new Random();
                 int choose = rand.Next(0, this.possibleShots.Count);
@@ -2095,7 +2337,7 @@ namespace BattleShip
                 }
             }
 
-            if (possibleShots.Count == 0)
+            if (this.possibleShots.Count == 0)
             {
                 bool cellIsEmpty = false;
                 while (!cellIsEmpty)
@@ -2180,7 +2422,7 @@ namespace BattleShip
                 }
             }
 
-            if (possibleShots.Count == 0)
+            if (this.possibleShots.Count == 0)
             {
                 bool cellIsEmpty = false;
                 while (!cellIsEmpty)
@@ -2228,259 +2470,52 @@ namespace BattleShip
         }
         #endregion
 
-        #region Saving And Loading The Game [[-----------------------------------------------------------------------------------------------------------------]]
-
-        public void SaveGame()
-        {
-            //// Get all the text files 
-            string[] gameFiles = Directory.GetFiles(System.IO.Directory.GetCurrentDirectory(), "*.txt", SearchOption.AllDirectories);
-
-            string fileName = "game";
-
-            if (gameFiles.Length == 0)
-            {
-                fileName += "0";
-            } else
-            {
-                fileName += gameFiles.Length.ToString();
-            }
-
-            StreamWriter s = new StreamWriter(fileName + ".txt");
-
-            //// Write all of the game data to the file
-
-            //// Player 1
-            //// Name
-            s.WriteLine(player1.Name);
-
-            //// Type
-            s.WriteLine(player1.Type);
-
-            //// IsAdvanced
-            s.WriteLine(player1.IsAdvanced.ToString());
-
-            //// Shooting Mode
-            s.WriteLine(player1.ShootingMode.ToString());
-
-            //// Ships
-            foreach(Ship sh in player1.CurrentShips)
-            {
-                s.WriteLine(sh.Type.ToString());
-                s.WriteLine(sh.Length.ToString());
-                s.WriteLine(sh.Health.ToString());
-                s.WriteLine(sh.IsSunk.ToString());
-                s.WriteLine(sh.Origin[0].ToString());
-                s.WriteLine(sh.Origin[1].ToString());
-                s.WriteLine(sh.Rotation);
-                s.WriteLine(sh.IsPlaced.ToString());
-            }
-
-            for(int x = 0; x < battlefieldSize; x++)
-            {
-                for(int y = 0; y < battlefieldSize; y++)
-                {
-                    s.WriteLine(player1.Board.DataGrid[x, y].ToString());
-                }
-            }
-
-            //// Player 2
-            //// Name
-            s.WriteLine(player2.Name);
-
-            //// Type
-            s.WriteLine(player2.Type);
-
-            //// IsAdvanced
-            s.WriteLine(player2.IsAdvanced.ToString());
-
-            //// Shooting Mode
-            s.WriteLine(player2.ShootingMode.ToString());
-
-            //// Ships
-            foreach (Ship sh in player2.CurrentShips)
-            {
-                s.WriteLine(sh.Type.ToString());
-                s.WriteLine(sh.Length.ToString());
-                s.WriteLine(sh.Health.ToString());
-                s.WriteLine(sh.IsSunk.ToString());
-                s.WriteLine(sh.Origin[0].ToString());
-                s.WriteLine(sh.Origin[1].ToString());
-                s.WriteLine(sh.Rotation);
-                s.WriteLine(sh.IsPlaced.ToString());
-            }
-
-            for (int x = 0; x < battlefieldSize; x++)
-            {
-                for (int y = 0; y < battlefieldSize; y++)
-                {
-                    s.WriteLine(player2.Board.DataGrid[x, y].ToString());
-                }
-            }
-
-            s.Close();
-        }
-
-        public void LoadGame(string path)
-        {
-            //just functionality of load
-
-            StreamReader s = new StreamReader(path);
-
-            //// Player 1
-            player1.Board = new Battlefield(battlefieldSize);
-
-            //// Name
-            player1.Name = s.ReadLine();
-
-            //// Type
-            player1.Type = s.ReadLine();
-
-            //// IsAdvanced
-            Boolean.TryParse(s.ReadLine(), out player1.IsAdvanced);
-
-            //// Shooting Mode
-            Enum.TryParse(s.ReadLine(), out player1.ShootingMode);
-
-            //// Ships
-            player1.CurrentShips.Clear();
-            for(int i = 0; i < 5; i++)
-            {
-                Ship sh = new Ship();
-                Enum.TryParse(s.ReadLine(), out sh.Type);
-                int.TryParse(s.ReadLine(), out sh.Length);
-                int.TryParse(s.ReadLine(), out sh.Health);
-                Boolean.TryParse(s.ReadLine(), out sh.IsSunk);
-                int.TryParse(s.ReadLine(), out sh.Origin[0]);
-                int.TryParse(s.ReadLine(), out sh.Origin[1]);
-                sh.Rotation = s.ReadLine();
-                Boolean.TryParse(s.ReadLine(), out sh.IsPlaced);
-                sh.SetLength();
-                player1.CurrentShips.Add(sh);
-            }
-
-            foreach(Ship ss in player1.CurrentShips)
-            {
-                if (ss.Rotation == "Horizontal")
-                {
-                    for (int j = 0; j < ss.Length; j++)
-                    {
-                        player1.Board.ShipGrid[ss.Origin[0], ss.Origin[1] + j] = ss;
-                    }
-                }
-                else if (ss.Rotation == "Vertical")
-                {
-                    for (int j = 0; j < ss.Length; j++)
-                    {
-                        player1.Board.ShipGrid[ss.Origin[0] + j, ss.Origin[1]] = ss;
-                    }
-                }
-                Debug.WriteLine("Player 1 Ships: " + ss.GetName());
-            }
-
-            for (int x = 0; x < battlefieldSize; x++)
-            {
-                for (int y = 0; y < battlefieldSize; y++)
-                {
-                    Enum.TryParse(s.ReadLine(), out player1.Board.DataGrid[x, y]);
-                }
-            }
-
-            //// Player 2
-            player2.Board = new Battlefield(battlefieldSize);
-
-            //// Name
-            player2.Name = s.ReadLine();
-
-            //// Type
-            player2.Type = s.ReadLine();
-
-            //// IsAdvanced
-            Boolean.TryParse(s.ReadLine(), out player2.IsAdvanced);
-
-            //// Shooting Mode
-            Enum.TryParse(s.ReadLine(), out player2.ShootingMode);
-
-            //// Ships
-            player2.CurrentShips.Clear();
-            for (int i = 0; i < 5; i++)
-            {
-                Ship sh = new Ship();
-                Enum.TryParse(s.ReadLine(), out sh.Type);
-                int.TryParse(s.ReadLine(), out sh.Length);
-                int.TryParse(s.ReadLine(), out sh.Health);
-                Boolean.TryParse(s.ReadLine(), out sh.IsSunk);
-                int.TryParse(s.ReadLine(), out sh.Origin[0]);
-                int.TryParse(s.ReadLine(), out sh.Origin[1]);
-                sh.Rotation = s.ReadLine();
-                Boolean.TryParse(s.ReadLine(), out sh.IsPlaced);
-                sh.SetLength();
-                player2.CurrentShips.Add(sh);
-            }
-
-            foreach (Ship ss in player2.CurrentShips)
-            {
-                if (ss.Rotation == "Horizontal")
-                {
-                    for (int j = 0; j < ss.Length; j++)
-                    {
-                        player2.Board.ShipGrid[ss.Origin[0], ss.Origin[1] + j] = ss;
-                    }
-                }
-                else if (ss.Rotation == "Vertical")
-                {
-                    for (int j = 0; j < ss.Length; j++)
-                    {
-                        player2.Board.ShipGrid[ss.Origin[0] + j, ss.Origin[1]] = ss;
-                    }
-                }
-                Debug.WriteLine("Player 2 Ships: " + ss.GetName());
-            }
-
-            for (int x = 0; x < battlefieldSize; x++)
-            {
-                for (int y = 0; y < battlefieldSize; y++)
-                {
-                    Enum.TryParse(s.ReadLine(), out player2.Board.DataGrid[x, y]);
-                }
-            }
-
-            s.Close();
-        }
-
-
-
-        #endregion
-
-
         #region Load Game Buttons
+
+        /// <summary>
+        /// the Load File Click Event
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Routed event</param>
         private void LoadFileBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (LoadFileBox.SelectedItem == null) return;
+            if (LoadFileBtn.SelectedItem == null)
+            {
+                return;
+            }
 
             string gameToLoad = LoadFileBox.SelectedItem.ToString();
 
-            string gamePath = SaveGames[gameToLoad];
+            string gamePath = this.saveGames[gameToLoad];
 
-            LoadGame(gamePath);
+            this.LoadGame(gamePath);
 
             this.ChangeGameState(GState.Battle);
         }
 
+        /// <summary>
+        /// the Back To Start Click Event
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Routed event</param>
         private void BackToStartLD_Click(object sender, RoutedEventArgs e)
         {
             this.ChangeGameState(GState.Start);
         }
 
+        /// <summary>
+        /// the LoadCanvas OnLoad Event
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Routed event</param>
         private void LoadCanvas_OnLoad(object sender, DependencyPropertyChangedEventArgs e)
         {
             LoadFileBtn.IsEnabled = true;
             LoadFileBox.Items.Clear();
-            SaveGames.Clear();
+            this.saveGames.Clear();
 
             //// Get all the text files 
             string[] gameFiles = Directory.GetFiles(System.IO.Directory.GetCurrentDirectory(), "*.txt", SearchOption.AllDirectories);
-
-            
 
             if (gameFiles.Length == 0)
             {
@@ -2489,14 +2524,13 @@ namespace BattleShip
                 LoadFileBox.Items.Add(noItems);
 
                 LoadFileBtn.IsEnabled = false;
-
             }
             else
             { 
-                for(int i = 0; i < gameFiles.Length; i++)
+                for (int i = 0; i < gameFiles.Length; i++)
                 {
                     string game = "Game" + i.ToString();
-                    SaveGames.Add(game, gameFiles[i]);
+                    this.saveGames.Add(game, gameFiles[i]);
                     LoadFileBox.Items.Add(game);
                 }
             }
