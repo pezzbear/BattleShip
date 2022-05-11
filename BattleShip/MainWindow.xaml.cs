@@ -790,14 +790,17 @@ namespace BattleShip
         /// <param name="e">Routed event</param>
         private void CanShipSetup_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            ShipSetupListBox.Items.Clear();
-            foreach (Ship getShip in this.player1.CurrentShips)
-            {
-                ShipSetupListBox.Items.Add(getShip.GetName());
-            }
+            if (this.gameState == GState.ShipPlacement)
+            { 
+                ShipSetupListBox.Items.Clear();
+                foreach (Ship getShip in this.player1.CurrentShips)
+                {
+                    ShipSetupListBox.Items.Add(getShip.GetName());
+                }
 
-            this.SetupGrid(this.grid_ShipSetup);
-            this.selectedShip = null;
+                this.SetupGrid(this.grid_ShipSetup);
+                this.selectedShip = null;
+            }
         }
 
         /// <summary>
@@ -1317,13 +1320,16 @@ namespace BattleShip
         /// <param name="e">Routed event</param>
         private void CanBattleScreen_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            this.SetupGrid(this.grid_Battlefield);
+            if (this.gameState == GState.Battle) 
+            { 
+                this.SetupGrid(this.grid_Battlefield);
 
-            this.currentTurn = this.player1;
-            this.currentEnemy = this.player2;
+                this.currentTurn = this.player1;
+                this.currentEnemy = this.player2;
 
-            this.UpdateShipHealthListBox(this.player2);
-            this.UpdateBattlefieldColors();
+                this.UpdateShipHealthListBox(this.player2);
+                this.UpdateBattlefieldColors();
+            }
         }
 
         /// <summary>
@@ -2479,7 +2485,7 @@ namespace BattleShip
         /// <param name="e">Routed event</param>
         private void LoadFileBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (LoadFileBtn.SelectedItem == null)
+            if (LoadFileBox.SelectedItem == null)
             {
                 return;
             }

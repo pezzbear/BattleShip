@@ -8,7 +8,7 @@
         Title="MainWindow" Height="810" Width="1440" Loaded="MainCanvas_OnLoad">
     <Canvas Background="#FFC0CBFF">
         <Button x:Name="btn_RulesButton" Content="?" Height="90" Width="90" FontFamily="Bahnschrift Light" FontSize="72" Click="Rules_Click" Canvas.Top="694" Canvas.Left="10"/>
-        <Canvas x:Name="canStartScreen" Visibility="Collapsed">
+        <Canvas x:Name="canStartScreen" Visibility="Visible">
             <Button x:Name="btn_Start" Content="Start" HorizontalAlignment="Left" Height="95" Margin="120,520,0,0" VerticalAlignment="Top" Width="500" FontSize="48" FontFamily="Bahnschrift Light" Click="StartButton_Click"/>
             <Button x:Name="btn_Credits" Content="Credits" HorizontalAlignment="Left" Height="95" Margin="806,520,0,0" VerticalAlignment="Top" Width="500" FontSize="48" FontFamily="Bahnschrift Light" Click="CreditsButton_Click"/>
             <Button x:Name="LoadGameBtn" Content="Load Game" Canvas.Left="120" Canvas.Top="398" Height="95" Width="500" FontSize="48" FontFamily ="Bahnschrift SemiBold" Click="LoadGameBtn_Click" />
@@ -16,7 +16,7 @@
             <Label x:Name="lb_BattleshipTitle" Content="Battleship" Height="191" Width="692" FontSize="150" FontFamily="Bahnschrift SemiBold" Canvas.Left="374" Canvas.Top="118"/>
         </Canvas>
 
-        <Canvas x:Name="canPlayerSelect" Visibility="Collapsed">
+        <Canvas x:Name="canPlayerSelect" Visibility="Visible">
             <Button x:Name="btn_StartPvP" Content="Start Pvp" Height="80" Width="350" FontSize="40" FontFamily="Bahnschrift Light" Click="StartPvp_Click" Canvas.Left="100" Canvas.Top="528"/>
             <Button x:Name="btn_StartPvCPU" Content="Start PvCPU" Height="80" Width="350" FontSize="40" FontFamily="Bahnschrift Light" Click="StartPvpVsCPU_Click" Canvas.Left="950" Canvas.Top="528"/>
             <Button x:Name="btn_BackToStart" Content="Back" HorizontalAlignment="Left" Height="50" Margin="10,12,0,0" VerticalAlignment="Top" Width="200" FontSize="30" FontFamily="Bahnschrift Light" Click="BackButton_Click"/>
@@ -55,7 +55,7 @@
             </StackPanel>
         </Canvas>
 
-        <Canvas x:Name="canShipSetup" Visibility="Collapsed" IsVisibleChanged="CanShipSetup_IsVisibleChanged">
+        <Canvas x:Name="canShipSetup" Visibility="Visible" IsVisibleChanged="CanShipSetup_IsVisibleChanged">
             <Label x:Name="lb_CurrentPlayerSetup" Content="Current Turn: Player 1" Canvas.Left="17" Canvas.Top="87" Width="273" Height="41" FontSize="22"/>
             <Label x:Name="lb_ShipPlacement" Content="Ship Placement" Canvas.Left="156" Canvas.Top="8" Width="353" Height="79" FontSize="48"/>
             <Button x:Name="SetUpBckBtn" Content="Go Back" Height="66" Canvas.Left="12" Width="122" Canvas.Top="8" FontSize="22" Click="SetUpBckBtn_Click"/>
@@ -76,7 +76,7 @@
             <Rectangle Name="BlackoutScreen" Visibility ="Collapsed" Height="810" Width="1440" Fill = "Black"/>
         </Canvas>
 
-        <Canvas x:Name="canBattleScreen" Visibility="Collapsed" IsVisibleChanged="CanBattleScreen_IsVisibleChanged">
+        <Canvas x:Name="canBattleScreen" Visibility="Visible" IsVisibleChanged="CanBattleScreen_IsVisibleChanged">
             <Label x:Name="lb_Battle" Content="Battleship" Canvas.Left="156" Canvas.Top="2" Width="353" Height="78" FontSize="48" FontFamily="Segoe UI"/>
             <Label x:Name="lb_CurrentPlayer" Content="Current Turn: Player 1" Canvas.Left="17" Canvas.Top="87" Width="273" Height="41" FontSize="22"/>
             <Label x:Name="lb_ShipsToSink" Content="Enemy Ships Left:" Canvas.Left="18" Canvas.Top="141" Width="274" Height="41" FontSize="22"/>
