@@ -61,11 +61,6 @@ namespace BattleShip
         };
 
         /// <summary>
-        /// Size of the battlefield.
-        /// </summary>
-        private int battlefieldSize = 10;
-
-        /// <summary>
         /// Array of Rectangles used to change the colors of the xaml Grid (Setup ship grid and the battlefield grid)
         /// </summary>
         private Rectangle[,] battleFieldGridArray;
@@ -79,11 +74,6 @@ namespace BattleShip
         /// Player 2
         /// </summary>
         private Player player2 = new Player();
-
-        /// <summary>
-        /// Starting ship
-        /// </summary>
-        private Ship[] startingShips = new Ship[5];
 
         /// <summary>
         /// Current Player Turn
@@ -130,6 +120,27 @@ namespace BattleShip
         /// </summary>
         private Dictionary<string, string> saveGames = new Dictionary<string, string>();
 
+        #region Game Settings 
+        /// <summary>
+        /// Size of the battlefield.
+        /// </summary>
+        private int battlefieldWidth = 10;
+
+        private int battlefieldHeight = 10;
+
+        private GMode gameMode = GMode.Normal;
+
+        private int numberOfShips = 5;
+
+        /// <summary>
+        /// Starting ship
+        /// </summary>
+        private Ship[] startingShips;
+
+        private int numberOfBombs = 4;
+
+        #endregion
+
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
@@ -166,239 +177,18 @@ namespace BattleShip
             /// <summary>
             /// Changes to Load Game State
             /// </summary>
-            Load
+            Load,
+            
+            Settings,
         }
 
-        #region Saving And Loading The Game [[-----------------------------------------------------------------------------------------------------------------]]
-
-        /// <summary>
-        /// Allows for a game to be saved
-        /// </summary>
-        private void SaveGame()
+        private enum GMode
         {
-            //// Get all the text files 
-            string[] gameFiles = Directory.GetFiles(System.IO.Directory.GetCurrentDirectory(), "*.txt", SearchOption.AllDirectories);
-
-            string fileName = "game";
-
-            if (gameFiles.Length == 0)
-            {
-                fileName += "0";
-            }
-            else
-            {
-                fileName += gameFiles.Length.ToString();
-            }
-
-            StreamWriter s = new StreamWriter(fileName + ".txt");
-
-            //// Write all of the game data to the file
-
-            //// Player 1
-            //// Name
-            s.WriteLine(this.player1.Name);
-
-            //// Type
-            s.WriteLine(this.player1.Type);
-
-            //// IsAdvanced
-            s.WriteLine(this.player1.IsAdvanced.ToString());
-
-            //// Shooting Mode
-            s.WriteLine(this.player1.ShootingMode.ToString());
-
-            //// Ships
-            foreach (Ship sh in this.player1.CurrentShips)
-            {
-                s.WriteLine(sh.Type.ToString());
-                s.WriteLine(sh.Length.ToString());
-                s.WriteLine(sh.Health.ToString());
-                s.WriteLine(sh.IsSunk.ToString());
-                s.WriteLine(sh.Origin[0].ToString());
-                s.WriteLine(sh.Origin[1].ToString());
-                s.WriteLine(sh.Rotation);
-                s.WriteLine(sh.IsPlaced.ToString());
-            }
-
-            for (int x = 0; x < this.battlefieldSize; x++)
-            {
-                for (int y = 0; y < this.battlefieldSize; y++)
-                {
-                    s.WriteLine(this.player1.Board.DataGrid[x, y].ToString());
-                }
-            }
-
-            //// Player 2
-            //// Name
-            s.WriteLine(this.player2.Name);
-
-            //// Type
-            s.WriteLine(this.player2.Type);
-
-            //// IsAdvanced
-            s.WriteLine(this.player2.IsAdvanced.ToString());
-
-            //// Shooting Mode
-            s.WriteLine(this.player2.ShootingMode.ToString());
-
-            //// Ships
-            foreach (Ship sh in this.player2.CurrentShips)
-            {
-                s.WriteLine(sh.Type.ToString());
-                s.WriteLine(sh.Length.ToString());
-                s.WriteLine(sh.Health.ToString());
-                s.WriteLine(sh.IsSunk.ToString());
-                s.WriteLine(sh.Origin[0].ToString());
-                s.WriteLine(sh.Origin[1].ToString());
-                s.WriteLine(sh.Rotation);
-                s.WriteLine(sh.IsPlaced.ToString());
-            }
-
-            for (int x = 0; x < this.battlefieldSize; x++)
-            {
-                for (int y = 0; y < this.battlefieldSize; y++)
-                {
-                    s.WriteLine(this.player2.Board.DataGrid[x, y].ToString());
-                }
-            }
-
-            s.Close();
+            Normal,
+            Blitz,
+            HitsPerShip,
+            Bombs
         }
-
-        /// <summary>
-        /// Allows the player to load a game from their saves.
-        /// </summary>
-        /// <param name="path">Path String</param>
-        private void LoadGame(string path)
-        {
-            ////just functionality of load
-
-            StreamReader s = new StreamReader(path);
-
-            //// Player 1
-            this.player1.Board = new Battlefield(this.battlefieldSize);
-
-            //// Name
-            this.player1.Name = s.ReadLine();
-
-            //// Type
-            this.player1.Type = s.ReadLine();
-
-            //// IsAdvanced
-            bool.TryParse(s.ReadLine(), out this.player1.IsAdvanced);
-
-            //// Shooting Mode
-            Enum.TryParse(s.ReadLine(), out this.player1.ShootingMode);
-
-            //// Ships
-            this.player1.CurrentShips.Clear();
-            for (int i = 0; i < 5; i++)
-            {
-                Ship sh = new Ship();
-                Enum.TryParse(s.ReadLine(), out sh.Type);
-                int.TryParse(s.ReadLine(), out sh.Length);
-                int.TryParse(s.ReadLine(), out sh.Health);
-                bool.TryParse(s.ReadLine(), out sh.IsSunk);
-                int.TryParse(s.ReadLine(), out sh.Origin[0]);
-                int.TryParse(s.ReadLine(), out sh.Origin[1]);
-                sh.Rotation = s.ReadLine();
-                bool.TryParse(s.ReadLine(), out sh.IsPlaced);
-                sh.SetLength();
-                this.player1.CurrentShips.Add(sh);
-            }
-
-            foreach (Ship ss in this.player1.CurrentShips)
-            {
-                if (ss.Rotation == "Horizontal")
-                {
-                    for (int j = 0; j < ss.Length; j++)
-                    {
-                        this.player1.Board.ShipGrid[ss.Origin[0], ss.Origin[1] + j] = ss;
-                    }
-                }
-                else if (ss.Rotation == "Vertical")
-                {
-                    for (int j = 0; j < ss.Length; j++)
-                    {
-                        this.player1.Board.ShipGrid[ss.Origin[0] + j, ss.Origin[1]] = ss;
-                    }
-                }
-
-                Debug.WriteLine("Player 1 Ships: " + ss.GetName());
-            }
-
-            for (int x = 0; x < this.battlefieldSize; x++)
-            {
-                for (int y = 0; y < this.battlefieldSize; y++)
-                {
-                    Enum.TryParse(s.ReadLine(), out this.player1.Board.DataGrid[x, y]);
-                }
-            }
-
-            //// Player 2
-            this.player2.Board = new Battlefield(this.battlefieldSize);
-
-            //// Name
-            this.player2.Name = s.ReadLine();
-
-            //// Type
-            this.player2.Type = s.ReadLine();
-
-            //// IsAdvanced
-            bool.TryParse(s.ReadLine(), out this.player2.IsAdvanced);
-
-            //// Shooting Mode
-            Enum.TryParse(s.ReadLine(), out this.player2.ShootingMode);
-
-            //// Ships
-            this.player2.CurrentShips.Clear();
-            for (int i = 0; i < 5; i++)
-            {
-                Ship sh = new Ship();
-                Enum.TryParse(s.ReadLine(), out sh.Type);
-                int.TryParse(s.ReadLine(), out sh.Length);
-                int.TryParse(s.ReadLine(), out sh.Health);
-                bool.TryParse(s.ReadLine(), out sh.IsSunk);
-                int.TryParse(s.ReadLine(), out sh.Origin[0]);
-                int.TryParse(s.ReadLine(), out sh.Origin[1]);
-                sh.Rotation = s.ReadLine();
-                bool.TryParse(s.ReadLine(), out sh.IsPlaced);
-                sh.SetLength();
-                this.player2.CurrentShips.Add(sh);
-            }
-
-            foreach (Ship ss in this.player2.CurrentShips)
-            {
-                if (ss.Rotation == "Horizontal")
-                {
-                    for (int j = 0; j < ss.Length; j++)
-                    {
-                        this.player2.Board.ShipGrid[ss.Origin[0], ss.Origin[1] + j] = ss;
-                    }
-                }
-                else if (ss.Rotation == "Vertical")
-                {
-                    for (int j = 0; j < ss.Length; j++)
-                    {
-                        this.player2.Board.ShipGrid[ss.Origin[0] + j, ss.Origin[1]] = ss;
-                    }
-                }
-
-                Debug.WriteLine("Player 2 Ships: " + ss.GetName());
-            }
-
-            for (int x = 0; x < this.battlefieldSize; x++)
-            {
-                for (int y = 0; y < this.battlefieldSize; y++)
-                {
-                    Enum.TryParse(s.ReadLine(), out this.player2.Board.DataGrid[x, y]);
-                }
-            }
-
-            s.Close();
-        }
-
-        #endregion
 
         /// <summary>
         /// the following allows for color to be properly converted using string colorHex
@@ -430,6 +220,7 @@ namespace BattleShip
                     canPlayerSelect.Visibility = Visibility.Collapsed;
                     canBattleScreen.Visibility = Visibility.Collapsed;
                     LoadCanvas.Visibility = Visibility.Collapsed;
+                    SettingsCanvas.Visibility = Visibility.Collapsed;
                     break;
                 case GState.PlayerSelect:
                     canStartScreen.Visibility = Visibility.Collapsed;
@@ -437,6 +228,7 @@ namespace BattleShip
                     canPlayerSelect.Visibility = Visibility.Visible;
                     canBattleScreen.Visibility = Visibility.Collapsed;
                     LoadCanvas.Visibility = Visibility.Collapsed;
+                    SettingsCanvas.Visibility = Visibility.Collapsed;
                     break;
                 case GState.ShipPlacement:
                     canStartScreen.Visibility = Visibility.Collapsed;
@@ -444,6 +236,7 @@ namespace BattleShip
                     canPlayerSelect.Visibility = Visibility.Collapsed;
                     canBattleScreen.Visibility = Visibility.Collapsed;
                     LoadCanvas.Visibility = Visibility.Collapsed;
+                    SettingsCanvas.Visibility = Visibility.Collapsed;
                     break;
                 case GState.Battle:
                     canStartScreen.Visibility = Visibility.Collapsed;
@@ -451,6 +244,7 @@ namespace BattleShip
                     canPlayerSelect.Visibility = Visibility.Collapsed;
                     canBattleScreen.Visibility = Visibility.Visible;
                     LoadCanvas.Visibility = Visibility.Collapsed;
+                    SettingsCanvas.Visibility = Visibility.Collapsed;
                     break;
                 case GState.Load:
                     canStartScreen.Visibility = Visibility.Collapsed;
@@ -458,7 +252,18 @@ namespace BattleShip
                     canPlayerSelect.Visibility = Visibility.Collapsed;
                     canBattleScreen.Visibility = Visibility.Collapsed;
                     LoadCanvas.Visibility = Visibility.Visible;
+                    SettingsCanvas.Visibility = Visibility.Collapsed;
                     break;
+                case GState.Settings:
+                    canStartScreen.Visibility = Visibility.Collapsed;
+                    canShipSetup.Visibility = Visibility.Collapsed;
+                    canPlayerSelect.Visibility = Visibility.Collapsed;
+                    canBattleScreen.Visibility = Visibility.Collapsed;
+                    LoadCanvas.Visibility = Visibility.Collapsed;
+                    SettingsCanvas.Visibility = Visibility.Visible;
+                    break;
+
+
             }
         }
 
@@ -467,23 +272,46 @@ namespace BattleShip
         /// </summary>
         private void LoadShips()
         {
-            // <summary>
-            // This is temporary and will be changed when we implement the settings screen
-            // </summary>
+            startingShips = new Ship[numberOfShips];
             Ship newShip;
-            for (int i = 0; i < this.startingShips.Length; i++)
+            switch(numberOfShips)
             {
-                newShip = new Ship();
-                newShip.Type = (Ship.ShipType)i;
-                newShip.SetLength();
-                this.player1.CurrentShips.Add(newShip);
+                case 3:
+                    break;
+                case 5:
+                    for (int i = 0; i < this.startingShips.Length; i++)
+                    {
+                        newShip = new Ship();
+                        newShip.Type = (Ship.ShipType)i;
+                        newShip.SetLength();
+                        this.player1.CurrentShips.Add(newShip);
 
-                newShip = new Ship();
-                newShip.Type = (Ship.ShipType)i;
-                newShip.SetLength();
-                this.player2.CurrentShips.Add(newShip);
-            }
+                        newShip = new Ship();
+                        newShip.Type = (Ship.ShipType)i;
+                        newShip.SetLength();
+                        this.player2.CurrentShips.Add(newShip);
+                    }
+                    break;
+                case 7:
+                    break;
+
+                default:
+                    startingShips = new Ship[numberOfShips];
+                    for (int i = 0; i < 5; i++)
+                    {
+                        newShip = new Ship();
+                        newShip.Type = (Ship.ShipType)i;
+                        newShip.SetLength();
+                        this.player1.CurrentShips.Add(newShip);
+
+                        newShip = new Ship();
+                        newShip.Type = (Ship.ShipType)i;
+                        newShip.SetLength();
+                        this.player2.CurrentShips.Add(newShip);
+                    }
+                    break;
         }
+    }
 
         /// <summary>
         /// This method will set up the grid. 
@@ -499,25 +327,28 @@ namespace BattleShip
             double cellSize = 55;
             GridLength gSize = new GridLength(cellSize);
 
-            for (int i = 0; i < this.battlefieldSize; i++)
+            for (int i = 0; i < this.battlefieldWidth; i++)
             {
-                ColumnDefinition colDef = new ColumnDefinition();
-                colDef.Width = gSize;
-                grid.ColumnDefinitions.Add(colDef);
-
                 RowDefinition rowDef = new RowDefinition();
                 rowDef.Height = gSize;
                 grid.RowDefinitions.Add(rowDef);
             }
+            for (int i = 0; i < this.battlefieldHeight; i++)
+            {
+                ColumnDefinition colDef = new ColumnDefinition();
+                colDef.Width = gSize;
+                grid.ColumnDefinitions.Add(colDef);
+            }
 
-            grid.Height = cellSize * this.battlefieldSize;
-            grid.Width = cellSize * this.battlefieldSize;
+
+            grid.Height = cellSize * this.battlefieldWidth;
+            grid.Width = cellSize * this.battlefieldHeight;
 
             if (grid == this.grid_ShipSetup)
             {
-                for (int x = 0; x < this.battlefieldSize; x++)
+                for (int x = 0; x < this.battlefieldWidth; x++)
                 {
-                    for (int y = 0; y < this.battlefieldSize; y++)
+                    for (int y = 0; y < this.battlefieldHeight; y++)
                     {
                         Rectangle rect = new Rectangle();
                         rect.Name = this.alphArray[x] + y.ToString();
@@ -535,9 +366,9 @@ namespace BattleShip
             }
             else if (grid == this.grid_Battlefield)
             {
-                for (int x = 0; x < this.battlefieldSize; x++)
+                for (int x = 0; x < this.battlefieldWidth; x++)
                 {
-                    for (int y = 0; y < this.battlefieldSize; y++)
+                    for (int y = 0; y < this.battlefieldHeight; y++)
                     {
                         Rectangle rect = new Rectangle();
                         rect.Name = this.alphArray[x] + y.ToString();
@@ -561,9 +392,9 @@ namespace BattleShip
         {
             if (canShipSetup.Visibility == Visibility.Visible)
             {
-                for (int x = 0; x < this.battlefieldSize; x++)
+                for (int x = 0; x < this.battlefieldWidth; x++)
                 {
-                    for (int y = 0; y < this.battlefieldSize; y++)
+                    for (int y = 0; y < this.battlefieldHeight; y++)
                     {
                         Ship getShip = this.currentTurn.Board.ShipGrid[x, y];
                         if (getShip != null)
@@ -575,9 +406,9 @@ namespace BattleShip
             }
             else if (canBattleScreen.Visibility == Visibility.Visible)
             {
-                for (int x = 0; x < this.battlefieldSize; x++)
+                for (int x = 0; x < this.battlefieldWidth; x++)
                 {
-                    for (int y = 0; y < this.battlefieldSize; y++)
+                    for (int y = 0; y < this.battlefieldHeight; y++)
                     {
                         GridData getData = this.currentTurn.Board.DataGrid[x, y];
                         switch (getData)
@@ -628,10 +459,10 @@ namespace BattleShip
         private void MainCanvas_OnLoad(object sender, RoutedEventArgs e)
         {
             this.ChangeGameState(GState.Start);
-            this.battleFieldGridArray = new Rectangle[this.battlefieldSize, this.battlefieldSize];
+            this.battleFieldGridArray = new Rectangle[this.battlefieldWidth, this.battlefieldHeight];
         }
 
-        #region Start Screen Buttons [[-----------------------------------------------------------------------------------------------------------------]]
+        #region Start Screen Buttons [[--------------------------------------------------------------------------------------------------------
 
         /// <summary>
         /// the StartButton_Click Event which activates the ChangeGameState to the GState PlayerSelect
@@ -684,9 +515,19 @@ namespace BattleShip
             this.ChangeGameState(GState.Load);
         }
 
+        /// <summary>
+        /// Method to get the Settings Panel out
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Routed event</param>
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            this.ChangeGameState(GState.Settings);
+        }
+
         #endregion
 
-        #region Player Select Screen Buttons [[-----------------------------------------------------------------------------------------------------------------]]
+        #region Player Select Screen Buttons [[------------------------------------------------------------------------------------------------
 
         /// <summary>
         /// The Back Button Click Event
@@ -714,7 +555,7 @@ namespace BattleShip
             this.player1.Name = txtPlayerOneName.Text;
             this.player1.Type = "Player";
 
-            this.player1.Board = new Battlefield(this.battlefieldSize);
+            this.player1.Board = new Battlefield(this.battlefieldWidth, this.battlefieldHeight);
 
             if (txtPlayerTwoName.Text == string.Empty)
             {
@@ -725,7 +566,7 @@ namespace BattleShip
             this.player2.Name = txtPlayerTwoName.Text;
             this.player2.Type = "Player";
 
-            this.player2.Board = new Battlefield(this.battlefieldSize);
+            this.player2.Board = new Battlefield(this.battlefieldWidth, this.battlefieldHeight);
 
             this.currentTurn = this.player1;
             Array.Clear(this.currentTurn.Board.ShipGrid, 0, this.battleFieldGridArray.Length);
@@ -749,11 +590,11 @@ namespace BattleShip
             this.player1.Name = txtPlayerOneName_Vs_AI.Text;
 
             this.player1.Type = "Player";
-            this.player1.Board = new Battlefield(this.battlefieldSize);
+            this.player1.Board = new Battlefield(this.battlefieldWidth, this.battlefieldHeight);
 
             this.player2.Name = "BATTLEFIELD_BOT_V2.0";
             this.player2.Type = "CPU";
-            this.player2.Board = new Battlefield(this.battlefieldSize);
+            this.player2.Board = new Battlefield(this.battlefieldWidth, this.battlefieldHeight);
 
             this.currentTurn = this.player1;
             Array.Clear(this.currentTurn.Board.ShipGrid, 0, this.battleFieldGridArray.Length);
@@ -770,18 +611,9 @@ namespace BattleShip
             }
         }
 
-        /// <summary>
-        /// Method to get the Settings Panel out
-        /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="e">Routed event</param>
-        private void Settings_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
         #endregion
 
-        #region Ship Placement Screen Buttons [[-----------------------------------------------------------------------------------------------------------------]]
+        #region Ship Placement Screen Buttons [[-----------------------------------------------------------------------------------------------
 
         /// <summary>
         /// Method to make ShipSetup Visible
@@ -848,9 +680,9 @@ namespace BattleShip
                     ShipSetupListBox.Items.Add(getShip.GetName());
                 }
 
-                for (int x = 0; x < this.battlefieldSize; x++)
+                for (int x = 0; x < this.battlefieldWidth; x++)
                 {
-                    for (int y = 0; y < this.battlefieldSize; y++)
+                    for (int y = 0; y < this.battlefieldHeight; y++)
                     {
                         this.battleFieldGridArray[x, y].Fill = this.GetColor("#79dced");
                     }
@@ -868,9 +700,9 @@ namespace BattleShip
 
                 this.lastShipPlacedList.Clear();
 
-                for (int x = 0; x < this.battlefieldSize; x++)
+                for (int x = 0; x < this.battlefieldWidth; x++)
                 {
-                    for (int y = 0; y < this.battlefieldSize; y++)
+                    for (int y = 0; y < this.battlefieldHeight; y++)
                     {
                         this.battleFieldGridArray[x, y].Fill = this.GetColor("#79dced");
                     }
@@ -956,9 +788,9 @@ namespace BattleShip
 
             this.lastShipPlacedList.Clear();
 
-            for (int x = 0; x < this.battlefieldSize; x++)
+            for (int x = 0; x < this.battlefieldWidth; x++)
             {
-                for (int y = 0; y < this.battlefieldSize; y++)
+                for (int y = 0; y < this.battlefieldHeight; y++)
                 {
                     this.battleFieldGridArray[x, y].Fill = this.GetColor("#79dced");
                 }
@@ -1001,9 +833,9 @@ namespace BattleShip
                         ShipSetupListBox.Items.Add(getShip.GetName());
                     }
 
-                    for (int x = 0; x < this.battlefieldSize; x++)
+                    for (int x = 0; x < this.battlefieldWidth; x++)
                     {
-                        for (int y = 0; y < this.battlefieldSize; y++)
+                        for (int y = 0; y < this.battlefieldHeight; y++)
                         {
                             this.battleFieldGridArray[x, y].Fill = this.GetColor("#79dced");
                         }
@@ -1027,7 +859,7 @@ namespace BattleShip
 
         #endregion
 
-        #region Ship Placement Grid Functionality [[-----------------------------------------------------------------------------------------------------------------]]
+        #region Ship Placement Grid Functionality [[-------------------------------------------------------------------------------------------
 
         /// <summary>
         /// a boolean to check for the positions of all the ships and store said data
@@ -1085,7 +917,7 @@ namespace BattleShip
             {
                 for (int j = 1; j < this.selectedShip.Length; j++)
                 {
-                    if ((y + j) < this.battlefieldSize)
+                    if ((y + j) < this.battlefieldWidth)
                     {
                         Rectangle shipRect = this.battleFieldGridArray[x, y + j];
                         shipRect.Fill = this.GetColor("#79dced");
@@ -1097,7 +929,7 @@ namespace BattleShip
             {
                 for (int j = 1; j < this.selectedShip.Length; j++)
                 {
-                    if ((x + j) < this.battlefieldSize)
+                    if ((x + j) < this.battlefieldHeight)
                     {
                         Rectangle shipRect = this.battleFieldGridArray[x + j, y];
                         shipRect.Fill = this.GetColor("#79dced");
@@ -1161,10 +993,10 @@ namespace BattleShip
                 for (int j = 0; j < this.selectedShip.Length; j++)
                 {
                     int newY = 0;
-                    if ((y + j) >= this.battlefieldSize)
+                    if ((y + j) >= this.battlefieldWidth)
                     {
                         brush = this.GetColor("#ff0800");
-                        newY = this.battlefieldSize - 1;
+                        newY = this.battlefieldWidth - 1;
                         this.canPlaceShip = false;
                     }
                     else
@@ -1189,10 +1021,10 @@ namespace BattleShip
                 for (int j = 0; j < this.selectedShip.Length; j++)
                 {
                     int newX = 0;
-                    if ((x + j) >= this.battlefieldSize)
+                    if ((x + j) >= this.battlefieldHeight)
                     {
                         brush = this.GetColor("#ff0800");
-                        newX = this.battlefieldSize - 1;
+                        newX = this.battlefieldHeight - 1;
                         this.canPlaceShip = false;
                     }
                     else
@@ -1282,7 +1114,7 @@ namespace BattleShip
 
         #endregion
 
-        #region Battle Screen Buttons[[-----------------------------------------------------------------------------------------------------------------]]
+        #region Battle Screen Buttons[[--------------------------------------------------------------------------------------------------------
 
         /// <summary>
         /// the Save Game Button Click Event
@@ -1501,7 +1333,7 @@ namespace BattleShip
 
         #endregion
 
-        #region Battle Field Functionality [[-----------------------------------------------------------------------------------------------------------------]]
+        #region Battle Field Functionality [[--------------------------------------------------------------------------------------------------
 
         /// <summary>
         /// Checks when the mouse is over a grid square in battle
@@ -1602,8 +1434,7 @@ namespace BattleShip
 
         #endregion
 
-        #region CPU Functionality [[-----------------------------------------------------------------------------------------------------------------]]
-
+        #region CPU Functionality [[-----------------------------------------------------------------------------------------------------------
         /// <summary>
         /// Passes a new array.
         /// </summary>
@@ -1663,8 +1494,8 @@ namespace BattleShip
             Random rand = new Random();
             ////choose a random cell x and y to check, loop through the dataGrid and make sure the cells are empty
 
-            this.CellToShoot[0] = rand.Next(0, this.battlefieldSize - 1);
-            this.CellToShoot[1] = rand.Next(0, this.battlefieldSize - 1);
+            this.CellToShoot[0] = rand.Next(0, this.battlefieldWidth - 1);
+            this.CellToShoot[1] = rand.Next(0, this.battlefieldHeight - 1);
             if (this.currentTurn.Board.DataGrid[this.CellToShoot[0], this.CellToShoot[1]] == GridData.Empty)
             {
                 return true;
@@ -1709,8 +1540,8 @@ namespace BattleShip
                         ////choose a random cell x and y to check, loop through the cellsChecked list and make sure the cells havent already been checked.
                         while (!isNotInList)
                         {
-                            cellToCheck[0] = rand.Next(0, this.battlefieldSize);
-                            cellToCheck[1] = rand.Next(0, this.battlefieldSize);
+                            cellToCheck[0] = rand.Next(0, this.battlefieldWidth);
+                            cellToCheck[1] = rand.Next(0, this.battlefieldHeight);
                             Debug.WriteLine(cellToCheck[0].ToString() + " - " + cellToCheck[1]);
                             if (cellsChecked.Count != 0)
                             {
@@ -1749,12 +1580,12 @@ namespace BattleShip
                         {
                             for (int j = 0; j < this.selectedShip.Length; j++)
                             {
-                                if ((cellToCheck[1] + j) >= this.battlefieldSize)
+                                if ((cellToCheck[1] + j) >= this.battlefieldWidth)
                                 {
                                     ////if the ship goes outside of the battlefield size, check the vertical rotation
                                     for (int k = 0; k < this.selectedShip.Length; k++)
                                     {
-                                        if ((cellToCheck[0] + k) >= this.battlefieldSize)
+                                        if ((cellToCheck[0] + k) >= this.battlefieldHeight)
                                         {
                                             ////if the vertical rotaion is ALSO outside of the battlefield size, add the cell to the cellsChecked List.
                                             
@@ -1789,7 +1620,7 @@ namespace BattleShip
                                     ////if the ship goes outside of the battlefield size, check the vertical rotation
                                     for (int k = 0; k < this.selectedShip.Length; k++)
                                     {
-                                        if ((cellToCheck[0] + k) >= this.battlefieldSize)
+                                        if ((cellToCheck[0] + k) >= this.battlefieldHeight)
                                         {
                                             ////if the vertical rotaion is ALSO outside of the battlefield size, add the cell to the cellsChecked List.
                                             cellsChecked.Add(this.PassNewArray(cellToCheck));
@@ -1829,12 +1660,12 @@ namespace BattleShip
                         {
                             for (int j = 0; j < this.selectedShip.Length; j++)
                             {
-                                if ((cellToCheck[0] + j) >= this.battlefieldSize)
+                                if ((cellToCheck[0] + j) >= this.battlefieldHeight)
                                 {
                                     ////if the ship goes outside of the battlefield size, check the Horizontal rotation
                                     for (int k = 0; k < this.selectedShip.Length; k++)
                                     {
-                                        if ((cellToCheck[1] + k) >= this.battlefieldSize)
+                                        if ((cellToCheck[1] + k) >= this.battlefieldWidth)
                                         {
                                             ////if the vertical rotaion is ALSO outside of the battlefield size, add the cell to the cellsChecked List.
                                             cellsChecked.Add(this.PassNewArray(cellToCheck));
@@ -1869,7 +1700,7 @@ namespace BattleShip
                                     ////if the ship goes outside of the battlefield size, check the Horizontal rotation
                                     for (int k = 0; k < this.selectedShip.Length; k++)
                                     {
-                                        if ((cellToCheck[1] + k) >= this.battlefieldSize)
+                                        if ((cellToCheck[1] + k) >= this.battlefieldWidth)
                                         {
                                             ////if the vertical rotaion is ALSO outside of the battlefield size, add the cell to the cellsChecked List.
                                             cellsChecked.Add(this.PassNewArray(cellToCheck));
@@ -1938,7 +1769,7 @@ namespace BattleShip
 
         #endregion
 
-        #region Advance CPU Functionality [[-----------------------------------------------------------------------------------------------------------------]]
+        #region Advance CPU Functionality [[---------------------------------------------------------------------------------------------------
         /// <summary>
         /// The method that activates the advanced CPU.
         /// </summary>
@@ -2083,7 +1914,7 @@ namespace BattleShip
             }
 
             ////Add the Top Right
-            if ((this.lastCellShot[0] - 1) != -1 && (this.lastCellShot[1] + 1) != this.battlefieldSize)
+            if ((this.lastCellShot[0] - 1) != -1 && (this.lastCellShot[1] + 1) != this.battlefieldHeight)
             {
                 cell = new int[2];
                 cell[0] = this.lastCellShot[0] - 1;
@@ -2095,7 +1926,7 @@ namespace BattleShip
             }
 
             ////Add the Bottom Left
-            if ((this.lastCellShot[0] + 1) != this.battlefieldSize && (this.lastCellShot[1] - 1) != -1)
+            if ((this.lastCellShot[0] + 1) != this.battlefieldHeight && (this.lastCellShot[1] - 1) != -1)
             {
                 cell = new int[2];
                 cell[0] = this.lastCellShot[0] + 1;
@@ -2107,7 +1938,7 @@ namespace BattleShip
             }
 
             ////Add the Bottom Right
-            if ((this.lastCellShot[0] + 1) != this.battlefieldSize && (this.lastCellShot[1] + 1) != this.battlefieldSize)
+            if ((this.lastCellShot[0] + 1) != this.battlefieldHeight && (this.lastCellShot[1] + 1) != this.battlefieldWidth)
             {
                 cell = new int[2];
                 cell[0] = this.lastCellShot[0] + 1;
@@ -2156,9 +1987,9 @@ namespace BattleShip
             this.possibleShots.Clear();
             int[] cell = new int[2];
 
-            for (int x = 0; x < this.battlefieldSize; x++)
+            for (int x = 0; x < this.battlefieldWidth; x++)
             {
-                for (int y = 0; y < this.battlefieldSize; y++)
+                for (int y = 0; y < this.battlefieldHeight; y++)
                 {
                     if (this.currentTurn.Board.DataGrid[x, y] == GridData.Hit)
                     {
@@ -2184,7 +2015,7 @@ namespace BattleShip
 
             ////Find the possible shots we can choose from
             ////Add the Right
-            if ((cell[1] + 1) != this.battlefieldSize)
+            if ((cell[1] + 1) != this.battlefieldWidth)
             {
                 Array.Clear(newCell1, 0, newCell1.Length);
                 newCell1[0] = cell[0];
@@ -2223,7 +2054,7 @@ namespace BattleShip
             }
 
             ////Add the Bottom
-            if ((cell[0] + 1) != this.battlefieldSize)
+            if ((cell[0] + 1) != this.battlefieldHeight)
             {
                 Array.Clear(newCell4, 0, newCell4.Length);
                 newCell4[0] = cell[0] + 1;
@@ -2287,9 +2118,9 @@ namespace BattleShip
             this.possibleShots.Clear();
             int[] cell = new int[2];
 
-            for (int x = 0; x < this.battlefieldSize; x++)
+            for (int x = 0; x < this.battlefieldWidth; x++)
             {
-                for (int y = 0; y < this.battlefieldSize; y++)
+                for (int y = 0; y < this.battlefieldHeight; y++)
                 {
                     if (this.currentTurn.Board.DataGrid[x, y] == GridData.Hit)
                     {
@@ -2304,7 +2135,7 @@ namespace BattleShip
 
                             ////Find the possible shots we can choose from
                             ////Add the Right
-                            if (cell[1] + 1 != this.battlefieldSize)
+                            if (cell[1] + 1 != this.battlefieldWidth)
                             {
                                 newCell1[0] = cell[0];
                                 newCell1[1] = cell[1] + 1;
@@ -2372,9 +2203,9 @@ namespace BattleShip
             this.possibleShots.Clear();
             int[] cell = new int[2];
 
-            for (int x = 0; x < this.battlefieldSize; x++)
+            for (int x = 0; x < this.battlefieldWidth; x++)
             {
-                for (int y = 0; y < this.battlefieldSize; y++)
+                for (int y = 0; y < this.battlefieldHeight; y++)
                 {
                     if (this.currentTurn.Board.DataGrid[x, y] == GridData.Hit)
                     {
@@ -2400,7 +2231,7 @@ namespace BattleShip
                             }
 
                             ////Add the Bottom
-                            if (cell[0] + 1 != this.battlefieldSize)
+                            if (cell[0] + 1 != this.battlefieldHeight)
                             {
                                 newCell2[0] = cell[0] + 1;
                                 newCell2[1] = cell[1];
@@ -2454,9 +2285,9 @@ namespace BattleShip
         /// </summary>
         private void DetermineShootingModeAfterSunk()
         {
-            for (int x = 0; x < this.battlefieldSize; x++)
+            for (int x = 0; x < this.battlefieldWidth; x++)
             {
-                for (int y = 0; y < this.battlefieldSize; y++)
+                for (int y = 0; y < this.battlefieldHeight; y++)
                 {
                     if (this.currentTurn.Board.DataGrid[x, y] == GridData.Hit)
                     {
@@ -2476,7 +2307,238 @@ namespace BattleShip
         }
         #endregion
 
-        #region Load Game Buttons
+        #region Saving And Loading The Game [[-----------------------------------------------------------------------------------------------------------------]]
+
+        /// <summary>
+        /// Allows for a game to be saved
+        /// </summary>
+        private void SaveGame()
+        {
+            //// Get all the text files 
+            string[] gameFiles = Directory.GetFiles(System.IO.Directory.GetCurrentDirectory(), "*.txt", SearchOption.AllDirectories);
+
+            string fileName = "game";
+
+            if (gameFiles.Length == 0)
+            {
+                fileName += "0";
+            }
+            else
+            {
+                fileName += gameFiles.Length.ToString();
+            }
+
+            StreamWriter s = new StreamWriter(fileName + ".txt");
+
+            //// Write all of the game data to the file
+
+            //// Player 1
+            //// Name
+            s.WriteLine(this.player1.Name);
+
+            //// Type
+            s.WriteLine(this.player1.Type);
+
+            //// IsAdvanced
+            s.WriteLine(this.player1.IsAdvanced.ToString());
+
+            //// Shooting Mode
+            s.WriteLine(this.player1.ShootingMode.ToString());
+
+            //// Ships
+            foreach (Ship sh in this.player1.CurrentShips)
+            {
+                s.WriteLine(sh.Type.ToString());
+                s.WriteLine(sh.Length.ToString());
+                s.WriteLine(sh.Health.ToString());
+                s.WriteLine(sh.IsSunk.ToString());
+                s.WriteLine(sh.Origin[0].ToString());
+                s.WriteLine(sh.Origin[1].ToString());
+                s.WriteLine(sh.Rotation);
+                s.WriteLine(sh.IsPlaced.ToString());
+            }
+
+            for (int x = 0; x < this.battlefieldWidth; x++)
+            {
+                for (int y = 0; y < this.battlefieldWidth; y++)
+                {
+                    s.WriteLine(this.player1.Board.DataGrid[x, y].ToString());
+                }
+            }
+
+            //// Player 2
+            //// Name
+            s.WriteLine(this.player2.Name);
+
+            //// Type
+            s.WriteLine(this.player2.Type);
+
+            //// IsAdvanced
+            s.WriteLine(this.player2.IsAdvanced.ToString());
+
+            //// Shooting Mode
+            s.WriteLine(this.player2.ShootingMode.ToString());
+
+            //// Ships
+            foreach (Ship sh in this.player2.CurrentShips)
+            {
+                s.WriteLine(sh.Type.ToString());
+                s.WriteLine(sh.Length.ToString());
+                s.WriteLine(sh.Health.ToString());
+                s.WriteLine(sh.IsSunk.ToString());
+                s.WriteLine(sh.Origin[0].ToString());
+                s.WriteLine(sh.Origin[1].ToString());
+                s.WriteLine(sh.Rotation);
+                s.WriteLine(sh.IsPlaced.ToString());
+            }
+
+            for (int x = 0; x < this.battlefieldWidth; x++)
+            {
+                for (int y = 0; y < this.battlefieldHeight; y++)
+                {
+                    s.WriteLine(this.player2.Board.DataGrid[x, y].ToString());
+                }
+            }
+
+            s.Close();
+        }
+
+        /// <summary>
+        /// Allows the player to load a game from their saves.
+        /// </summary>
+        /// <param name="path">Path String</param>
+        private void LoadGame(string path)
+        {
+            ////just functionality of load
+
+            StreamReader s = new StreamReader(path);
+
+            //// Player 1
+            this.player1.Board = new Battlefield(this.battlefieldWidth, this.battlefieldHeight);
+
+            //// Name
+            this.player1.Name = s.ReadLine();
+
+            //// Type
+            this.player1.Type = s.ReadLine();
+
+            //// IsAdvanced
+            bool.TryParse(s.ReadLine(), out this.player1.IsAdvanced);
+
+            //// Shooting Mode
+            Enum.TryParse(s.ReadLine(), out this.player1.ShootingMode);
+
+            //// Ships
+            this.player1.CurrentShips.Clear();
+            for (int i = 0; i < 5; i++)
+            {
+                Ship sh = new Ship();
+                Enum.TryParse(s.ReadLine(), out sh.Type);
+                int.TryParse(s.ReadLine(), out sh.Length);
+                int.TryParse(s.ReadLine(), out sh.Health);
+                bool.TryParse(s.ReadLine(), out sh.IsSunk);
+                int.TryParse(s.ReadLine(), out sh.Origin[0]);
+                int.TryParse(s.ReadLine(), out sh.Origin[1]);
+                sh.Rotation = s.ReadLine();
+                bool.TryParse(s.ReadLine(), out sh.IsPlaced);
+                sh.SetLength();
+                this.player1.CurrentShips.Add(sh);
+            }
+
+            foreach (Ship ss in this.player1.CurrentShips)
+            {
+                if (ss.Rotation == "Horizontal")
+                {
+                    for (int j = 0; j < ss.Length; j++)
+                    {
+                        this.player1.Board.ShipGrid[ss.Origin[0], ss.Origin[1] + j] = ss;
+                    }
+                }
+                else if (ss.Rotation == "Vertical")
+                {
+                    for (int j = 0; j < ss.Length; j++)
+                    {
+                        this.player1.Board.ShipGrid[ss.Origin[0] + j, ss.Origin[1]] = ss;
+                    }
+                }
+
+                Debug.WriteLine("Player 1 Ships: " + ss.GetName());
+            }
+
+            for (int x = 0; x < this.battlefieldWidth; x++)
+            {
+                for (int y = 0; y < this.battlefieldHeight; y++)
+                {
+                    Enum.TryParse(s.ReadLine(), out this.player1.Board.DataGrid[x, y]);
+                }
+            }
+
+            //// Player 2
+            this.player2.Board = new Battlefield(this.battlefieldWidth, this.battlefieldHeight);
+
+            //// Name
+            this.player2.Name = s.ReadLine();
+
+            //// Type
+            this.player2.Type = s.ReadLine();
+
+            //// IsAdvanced
+            bool.TryParse(s.ReadLine(), out this.player2.IsAdvanced);
+
+            //// Shooting Mode
+            Enum.TryParse(s.ReadLine(), out this.player2.ShootingMode);
+
+            //// Ships
+            this.player2.CurrentShips.Clear();
+            for (int i = 0; i < 5; i++)
+            {
+                Ship sh = new Ship();
+                Enum.TryParse(s.ReadLine(), out sh.Type);
+                int.TryParse(s.ReadLine(), out sh.Length);
+                int.TryParse(s.ReadLine(), out sh.Health);
+                bool.TryParse(s.ReadLine(), out sh.IsSunk);
+                int.TryParse(s.ReadLine(), out sh.Origin[0]);
+                int.TryParse(s.ReadLine(), out sh.Origin[1]);
+                sh.Rotation = s.ReadLine();
+                bool.TryParse(s.ReadLine(), out sh.IsPlaced);
+                sh.SetLength();
+                this.player2.CurrentShips.Add(sh);
+            }
+
+            foreach (Ship ss in this.player2.CurrentShips)
+            {
+                if (ss.Rotation == "Horizontal")
+                {
+                    for (int j = 0; j < ss.Length; j++)
+                    {
+                        this.player2.Board.ShipGrid[ss.Origin[0], ss.Origin[1] + j] = ss;
+                    }
+                }
+                else if (ss.Rotation == "Vertical")
+                {
+                    for (int j = 0; j < ss.Length; j++)
+                    {
+                        this.player2.Board.ShipGrid[ss.Origin[0] + j, ss.Origin[1]] = ss;
+                    }
+                }
+
+                Debug.WriteLine("Player 2 Ships: " + ss.GetName());
+            }
+
+            for (int x = 0; x < this.battlefieldWidth; x++)
+            {
+                for (int y = 0; y < this.battlefieldHeight; y++)
+                {
+                    Enum.TryParse(s.ReadLine(), out this.player2.Board.DataGrid[x, y]);
+                }
+            }
+
+            s.Close();
+        }
+
+        #endregion
+
+        #region Load Game Buttons [[-----------------------------------------------------------------------------------------------------------
 
         /// <summary>
         /// the Load File Click Event
@@ -2541,6 +2603,182 @@ namespace BattleShip
                 }
             }
         }
-#endregion
+        #endregion
+
+        #region Settings [[--------------------------------------------------------------------------------------------------------------------
+
+        private string GetNumbersFromString(string _string)
+        {
+            string s = "";
+            foreach (char c in _string)
+            {
+                if (Char.IsDigit(c))
+                {
+                    s += c;
+                }
+            }
+            return s;
+        }
+
+        private void SettingsCanvas_OnLoad(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ////Load previously chosen properties into the right buttons 
+            string SettingsFile = "gamesettings.txt";
+
+            string directory = System.IO.Directory.GetCurrentDirectory();
+            string filePath = System.IO.Path.Combine(directory, SettingsFile);
+
+            if (File.Exists(filePath))
+            {
+                ////Apply Settings To The Controls
+                StreamReader s = new StreamReader(filePath);
+
+                string _width = s.ReadLine();
+                foreach(object o in GridWidthComboBox.Items)
+                {
+                    int.TryParse(GetNumbersFromString(o.ToString()), out int i);
+                    if(i.ToString() == _width)
+                    {
+                        GridWidthComboBox.SelectedItem = o;
+                        break;
+                    }
+                }
+
+                string _height = s.ReadLine();
+                foreach (object o in GridHeightComboBox.Items)
+                {
+                    int.TryParse(GetNumbersFromString(o.ToString()), out int i);
+                    if (i.ToString() == _height)
+                    {
+                        GridHeightComboBox.SelectedItem = o;
+                        break;
+                    }
+                }
+
+                Enum.TryParse(s.ReadLine(), out gameMode);
+                
+                switch(gameMode)
+                {
+                    case GMode.Normal:
+                        Rb_Normal.IsChecked = true;
+                        Rb_Blitz.IsChecked = false;
+                        Rb_HitsPerShips.IsChecked = false;
+                        Rb_Bombs.IsChecked = false;
+                        break;
+                    case GMode.Blitz:
+                        Rb_Normal.IsChecked = false;
+                        Rb_Blitz.IsChecked = true;
+                        Rb_HitsPerShips.IsChecked = false;
+                        Rb_Bombs.IsChecked = false;
+                        break;
+                    case GMode.HitsPerShip:
+                        Rb_Normal.IsChecked = false;
+                        Rb_Blitz.IsChecked = false;
+                        Rb_HitsPerShips.IsChecked = true;
+                        Rb_Bombs.IsChecked = false;
+                        break;
+                    case GMode.Bombs:
+                        Rb_Normal.IsChecked = false;
+                        Rb_Blitz.IsChecked = false;
+                        Rb_HitsPerShips.IsChecked = false;
+                        Rb_Bombs.IsChecked = true;
+                        break;
+                }
+
+                string _numOfShips = s.ReadLine();
+                foreach (object o in FleetSizeComboBox.Items)
+                {
+                    int.TryParse(GetNumbersFromString(o.ToString()), out int i);
+                    if (i.ToString() == _numOfShips)
+                    {
+                        FleetSizeComboBox.SelectedItem = o;
+                        break;
+                    }
+                }
+
+                string _numOfBombs = s.ReadLine();
+                foreach (object o in NumberOfBombsComboBox.Items)
+                {
+                    int.TryParse(GetNumbersFromString(o.ToString()), out int i);
+                    if (i.ToString() == _numOfBombs)
+                    {
+                        NumberOfBombsComboBox.SelectedItem = o;
+                        break;
+                    }
+                }
+                s.Close();
+            }
+
+        }
+
+        private void SettingsApplyButton_Click(object sender, RoutedEventArgs e)
+        {
+            ////Apply all of the settings to the respective properties
+            int.TryParse(GetNumbersFromString(GridWidthComboBox.SelectedItem.ToString()), out battlefieldWidth);
+
+            int.TryParse(GetNumbersFromString(GridHeightComboBox.SelectedItem.ToString()), out battlefieldHeight);
+            
+            if((bool)Rb_Normal.IsChecked)
+            {
+                gameMode = GMode.Normal;
+            }
+            if ((bool)Rb_Blitz.IsChecked)
+            {
+                gameMode = GMode.Blitz;
+            }
+            if ((bool)Rb_HitsPerShips.IsChecked)
+            {
+                gameMode = GMode.HitsPerShip;
+            }
+            if ((bool)Rb_Bombs.IsChecked)
+            {
+                gameMode = GMode.Bombs;
+            }
+
+            int.TryParse(GetNumbersFromString(FleetSizeComboBox.SelectedItem.ToString()), out numberOfShips);
+
+            int.TryParse(GetNumbersFromString(NumberOfBombsComboBox.SelectedItem.ToString()), out numberOfBombs);
+
+            //// Save Settings into a settings file
+            string SettingsFile = "gamesettings.txt";
+            StreamWriter s = new StreamWriter(SettingsFile);
+
+            s.WriteLine(battlefieldWidth.ToString()); ;
+            s.WriteLine(battlefieldHeight.ToString());
+            s.WriteLine(gameMode.ToString());
+            s.WriteLine(numberOfShips.ToString());
+            s.WriteLine(numberOfBombs.ToString());
+
+            s.Close();
+
+            this.ChangeGameState(GState.Start);
+        }
+
+        private void SettingsResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            ////Reset all settings back to original state
+            GridWidthComboBox.SelectedIndex = 3;
+            GridHeightComboBox.SelectedIndex = 3;
+            FleetSizeComboBox.SelectedIndex = 1;
+            Rb_Normal.IsChecked = true;
+            Rb_Blitz.IsChecked = false;
+            Rb_HitsPerShips.IsChecked = false;
+            Rb_Bombs.IsChecked = false;
+            NumberOfBombsComboBox.SelectedIndex = 3;
+        }
+
+        private void Rb_Bombs_Checked(object sender, RoutedEventArgs e)
+        {
+            NumberOfBombsComboBox.IsEnabled = true;
+        }
+
+        private void Rb_Bombs_UnChecked(object sender, RoutedEventArgs e)
+        {
+            NumberOfBombsComboBox.IsEnabled = false;
+        }
+
+        #endregion
+
+
     }
 }

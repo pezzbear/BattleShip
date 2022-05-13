@@ -8,19 +8,19 @@
         Title="MainWindow" Height="810" Width="1440" Loaded="MainCanvas_OnLoad">
     <Canvas Background="#FFC0CBFF">
         <Button x:Name="btn_RulesButton" Content="?" Height="90" Width="90" FontFamily="Bahnschrift Light" FontSize="72" Click="Rules_Click" Canvas.Top="694" Canvas.Left="10"/>
-        <Canvas x:Name="canStartScreen" Visibility="Visible">
+        <Canvas x:Name="canStartScreen" Visibility="Collapsed">
             <Button x:Name="btn_Start" Content="Start" HorizontalAlignment="Left" Height="95" Margin="120,520,0,0" VerticalAlignment="Top" Width="500" FontSize="48" FontFamily="Bahnschrift Light" Click="StartButton_Click"/>
+            <Button x:Name="btn_Settings" Content="⚙" Height="90" Width="90" FontSize="40" FontFamily="Bahnschrift Light" Click="Settings_Click" Canvas.Left="121" Canvas.Top="694"/>
             <Button x:Name="btn_Credits" Content="Credits" HorizontalAlignment="Left" Height="95" Margin="806,520,0,0" VerticalAlignment="Top" Width="500" FontSize="48" FontFamily="Bahnschrift Light" Click="CreditsButton_Click"/>
             <Button x:Name="LoadGameBtn" Content="Load Game" Canvas.Left="120" Canvas.Top="398" Height="95" Width="500" FontSize="48" FontFamily ="Bahnschrift SemiBold" Click="LoadGameBtn_Click" />
             <Button x:Name="btn_Exit" Content="Exit" Height="95" Width="500" FontSize="48" FontFamily="Bahnschrift Light" Click="ExitButton_Click" Canvas.Left="470" Canvas.Top="657"/>
             <Label x:Name="lb_BattleshipTitle" Content="Battleship" Height="191" Width="692" FontSize="150" FontFamily="Bahnschrift SemiBold" Canvas.Left="374" Canvas.Top="118"/>
         </Canvas>
 
-        <Canvas x:Name="canPlayerSelect" Visibility="Visible">
+        <Canvas x:Name="canPlayerSelect" Visibility="Collapsed">
             <Button x:Name="btn_StartPvP" Content="Start Pvp" Height="80" Width="350" FontSize="40" FontFamily="Bahnschrift Light" Click="StartPvp_Click" Canvas.Left="100" Canvas.Top="528"/>
             <Button x:Name="btn_StartPvCPU" Content="Start PvCPU" Height="80" Width="350" FontSize="40" FontFamily="Bahnschrift Light" Click="StartPvpVsCPU_Click" Canvas.Left="950" Canvas.Top="528"/>
             <Button x:Name="btn_BackToStart" Content="Back" HorizontalAlignment="Left" Height="50" Margin="10,12,0,0" VerticalAlignment="Top" Width="200" FontSize="30" FontFamily="Bahnschrift Light" Click="BackButton_Click"/>
-            <Button x:Name="btn_Settings" Content="⚙" Height="90" Width="90" FontSize="40" FontFamily="Bahnschrift Light" Click="Settings_Click" Canvas.Left="121" Canvas.Top="694"/>
             <TextBox x:Name="txtPlayerOneName" Text="Enter name." TextWrapping="Wrap" Width="350" Height="74" FontFamily="Bahnschrift Light" FontSize="35" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Canvas.Left="100" Canvas.Top="268"/>
             <TextBox x:Name="txtPlayerTwoName" Text="Enter name." TextWrapping="Wrap" Width="350" Height="75" FontFamily="Bahnschrift Light" FontSize="35" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Canvas.Left="100" Canvas.Top="402"/>
             <TextBox x:Name="txtPlayerOneName_Vs_AI" Text="Enter name." TextWrapping="Wrap" Width="350" Height="75" FontFamily="Bahnschrift Light" FontSize="35" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Canvas.Left="950" Canvas.Top="273"/>
@@ -55,7 +55,7 @@
             </StackPanel>
         </Canvas>
 
-        <Canvas x:Name="canShipSetup" Visibility="Visible" IsVisibleChanged="CanShipSetup_IsVisibleChanged">
+        <Canvas x:Name="canShipSetup" Visibility="Collapsed" IsVisibleChanged="CanShipSetup_IsVisibleChanged">
             <Label x:Name="lb_CurrentPlayerSetup" Content="Current Turn: Player 1" Canvas.Left="17" Canvas.Top="87" Width="273" Height="41" FontSize="22"/>
             <Label x:Name="lb_ShipPlacement" Content="Ship Placement" Canvas.Left="156" Canvas.Top="8" Width="353" Height="79" FontSize="48"/>
             <Button x:Name="SetUpBckBtn" Content="Go Back" Height="66" Canvas.Left="12" Width="122" Canvas.Top="8" FontSize="22" Click="SetUpBckBtn_Click"/>
@@ -76,7 +76,7 @@
             <Rectangle Name="BlackoutScreen" Visibility ="Collapsed" Height="810" Width="1440" Fill = "Black"/>
         </Canvas>
 
-        <Canvas x:Name="canBattleScreen" Visibility="Visible" IsVisibleChanged="CanBattleScreen_IsVisibleChanged">
+        <Canvas x:Name="canBattleScreen" Visibility="Collapsed" IsVisibleChanged="CanBattleScreen_IsVisibleChanged">
             <Label x:Name="lb_Battle" Content="Battleship" Canvas.Left="156" Canvas.Top="2" Width="353" Height="78" FontSize="48" FontFamily="Segoe UI"/>
             <Label x:Name="lb_CurrentPlayer" Content="Current Turn: Player 1" Canvas.Left="17" Canvas.Top="87" Width="273" Height="41" FontSize="22"/>
             <Label x:Name="lb_ShipsToSink" Content="Enemy Ships Left:" Canvas.Left="18" Canvas.Top="141" Width="274" Height="41" FontSize="22"/>
@@ -97,12 +97,114 @@
             </Grid>
             <Rectangle Name="BattlefieldBlackoutScreen" Visibility ="Collapsed" Height="810" Width="1440" Fill = "Black"/>
         </Canvas>
-        <Canvas x:Name="LoadCanvas" Visibility="Visible" IsVisibleChanged="LoadCanvas_OnLoad">
+
+        <Canvas x:Name="LoadCanvas" Visibility="Collapsed" IsVisibleChanged="LoadCanvas_OnLoad">
             <Button x:Name="LoadFileBtn" Content="Load Game" Canvas.Left="458" Canvas.Top="498" Height="95" Width="500" FontSize="48" FontFamily ="Bahnschrift SemiBold" Click="LoadFileBtn_Click" />
             <Button x:Name="BackToStartLD" Content="Back" HorizontalAlignment="Left" Height="50" Margin="10,12,0,0" VerticalAlignment="Top" Width="200" FontSize="30" FontFamily="Bahnschrift Light" Click="BackToStartLD_Click"/>
             <ListBox x:Name="LoadFileBox" Height="265" Canvas.Left="458" Canvas.Top="190" Width="500" FontSize="22">
 
             </ListBox>
+        </Canvas>
+
+        <Canvas x:Name="SettingsCanvas" Visibility="Visible" IsVisibleChanged="SettingsCanvas_OnLoad">
+            <Label x:Name="lb_Settings" Content="Settings" Canvas.Left="608" Canvas.Top="-2" Width="194" Height="78" FontSize="48" FontFamily="Segoe UI"/>
+            <Button x:Name="SettingsApplyButton" Content="Apply" Height="50" Margin="10,12,0,0" Width="200" FontSize="30" FontFamily="Bahnschrift Light" Click="SettingsApplyButton_Click" Canvas.Left="733" Canvas.Top="582"/>
+            <Button x:Name="SettingsResetButton" Content="Reset" Height="50" Margin="10,12,0,0" Width="200" FontSize="30" FontFamily="Bahnschrift Light" Click="SettingsResetButton_Click" Canvas.Left="473" Canvas.Top="585"/>
+            <Rectangle Height="386" Width="562" Canvas.Left="118" Canvas.Top="127" Stroke="Black"></Rectangle>
+            <Label x:Name="lb_startup" Content="Startup Settings" Canvas.Left="138" Canvas.Top="127" Width="348" Height="78" FontSize="48" FontFamily="Segoe UI"/>
+
+            <Label x:Name="lb_FleetSize" Content="Fleet Size: " Height="66" Width="154" Canvas.Left="138" Canvas.Top="204" FontSize="32"></Label>
+            <ComboBox x:Name="FleetSizeComboBox" Canvas.Left="292" Canvas.Top="210" Height="44" Width="362" FontSize="28" SelectedIndex="1" >
+                <ComboBoxItem Content="3 Cruisers"/>
+                <ComboBoxItem Content="Normal Battleship (5 ships)"/>
+                <ComboBoxItem Content="7 Ships"/>
+            </ComboBox>
+
+            <Label x:Name="lb_width" Content="Grid Width: " FontSize="32" Canvas.Left="138" Canvas.Top="274"></Label>
+            <ComboBox x:Name="GridWidthComboBox" Canvas.Left="318" Canvas.Top="274" Height="54" Width="70" SelectedIndex="3" FontSize="28">
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+                <ComboBoxItem Content="13"/>
+                <ComboBoxItem Content="14"/>
+                <ComboBoxItem Content="15"/>
+            </ComboBox>
+
+            <Label x:Name="lb_height" Content="Grid Height: " FontSize="32" Canvas.Left="138" Canvas.Top="346"></Label>
+            <ComboBox x:Name="GridHeightComboBox" Canvas.Left="318" Canvas.Top="346" Height="54" Width="70" SelectedIndex="3" FontSize="28">
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+                <ComboBoxItem Content="13"/>
+                <ComboBoxItem Content="14"/>
+                <ComboBoxItem Content="15"/>
+            </ComboBox>
+
+            <Label x:Name="lb_Play" Content="Gameplay Settings" Canvas.Left="768" Canvas.Top="127" Width="410" Height="78" FontSize="48" FontFamily="Segoe UI"/>
+            <Rectangle Height="386" Width="560" Canvas.Left="744" Canvas.Top="127" Stroke="Black"></Rectangle>
+            <Label x:Name="lb_Normal" Content="Normal Mode: " Height="66" Width="212" Canvas.Left="776" Canvas.Top="214" FontSize="32"></Label>
+            <Label x:Name="lb_Blitz" Content="Blitz Mode: " Height="66" Width="176" Canvas.Left="776" Canvas.Top="262" FontSize="32"></Label>
+            <Label x:Name="lb_Shipz" Content="Hits-Per-Ships Mode: " Height="66" Width="314" Canvas.Left="776" Canvas.Top="315" FontSize="32"></Label>
+            <Label x:Name="lb_Bombz" Content="Bombs Mode: " Height="66" Width="314" Canvas.Left="776" Canvas.Top="368" FontSize="32"></Label>
+            <StackPanel x:Name="Sp_GameplaySettings" Height="187" Width="424" Canvas.Left="768" Canvas.Top="247">
+                <RadioButton x:Name="Rb_Normal" RenderTransformOrigin="0.5,0.5" Height="18" Width="15" GroupName="gameplaySettings" IsChecked="True">
+                    <RadioButton.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="2" ScaleY="2"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform X="120" Y="-10"/>
+                        </TransformGroup>
+                    </RadioButton.RenderTransform>
+                </RadioButton>
+
+                <RadioButton x:Name="Rb_Blitz" RenderTransformOrigin="0.5,0.5" Height="18" Width="15" GroupName="gameplaySettings">
+                    <RadioButton.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="2" ScaleY="2"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform X="120" Y="20"/>
+                        </TransformGroup>
+                    </RadioButton.RenderTransform>
+                </RadioButton>
+                <RadioButton x:Name="Rb_HitsPerShips" RenderTransformOrigin="0.5,0.5" Height="18" Width="15" GroupName="gameplaySettings">
+                    <RadioButton.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="2" ScaleY="2"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform X="120" Y="55"/>
+                        </TransformGroup>
+                    </RadioButton.RenderTransform>
+                </RadioButton>
+
+                <RadioButton x:Name="Rb_Bombs" RenderTransformOrigin="0.5,0.5" Height="18" Width="15" GroupName="gameplaySettings" Checked="Rb_Bombs_Checked" Unchecked="Rb_Bombs_UnChecked">
+                    <RadioButton.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="2" ScaleY="2"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform X="120" Y="90"/>
+                        </TransformGroup>
+                    </RadioButton.RenderTransform>
+                </RadioButton>
+            </StackPanel>
+
+            <Label x:Name="lb_NumberOfbombs" Content="Number Of Bombs: " Height="66" Width="314" Canvas.Left="776" Canvas.Top="423" FontSize="32"></Label>
+            <ComboBox x:Name="NumberOfBombsComboBox" Canvas.Left="1090" Canvas.Top="429" Height="44" Width="52" SelectedIndex="3" FontSize="28" IsEnabled="False">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+            </ComboBox>
         </Canvas>
 
     </Canvas>

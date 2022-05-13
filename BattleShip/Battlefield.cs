@@ -18,7 +18,9 @@ namespace BattleShip
         /// <summary>
         /// Size of the battlefield grid
         /// </summary>
-        public int Size;
+        public int Width;
+
+        public int Height;
 
         /// <summary>
         /// A 2d array of enum values that will be used to track what's happening during gameplay.
@@ -34,11 +36,12 @@ namespace BattleShip
         /// Initializes a new instance of the Battlefield class.
         /// </summary>
         /// <param name="size_">Size of the Battlefield</param>
-        public Battlefield(int size_)
+        public Battlefield(int width_, int height_)
         {
-            this.Size = size_;
-            this.DataGrid = new GridData[this.Size, this.Size];
-            this.ShipGrid = new Ship[this.Size, this.Size];
+            this.Width = width_;
+            this.Height = height_;
+            this.DataGrid = new GridData[this.Width, this.Height];
+            this.ShipGrid = new Ship[this.Width, this.Height];
         }
     }
 }
