@@ -126,10 +126,19 @@ namespace BattleShip
         /// </summary>
         private int battlefieldWidth = 10;
 
+        /// <summary>
+        /// Size of field.
+        /// </summary>
         private int battlefieldHeight = 10;
 
+        /// <summary>
+        /// Checks special mode.
+        /// </summary>
         private GMode gameMode = GMode.Normal;
 
+        /// <summary>
+        /// Checks number of ships.
+        /// </summary>
         private int numberOfShips = 5;
 
         /// <summary>
@@ -137,6 +146,9 @@ namespace BattleShip
         /// </summary>
         private Ship[] startingShips;
 
+        /// <summary>
+        /// Num of bombs.
+        /// </summary>
         private int numberOfBombs = 4;
 
         #endregion
@@ -182,6 +194,9 @@ namespace BattleShip
             Settings,
         }
 
+        /// <summary>
+        /// Check what special modes are activated.
+        /// </summary>
         private enum GMode
         {
             Normal,
@@ -262,8 +277,6 @@ namespace BattleShip
                     LoadCanvas.Visibility = Visibility.Collapsed;
                     SettingsCanvas.Visibility = Visibility.Visible;
                     break;
-
-
             }
         }
 
@@ -272,9 +285,9 @@ namespace BattleShip
         /// </summary>
         private void LoadShips()
         {
-            startingShips = new Ship[numberOfShips];
+            this.startingShips = new Ship[this.numberOfShips];
             Ship newShip;
-            switch(numberOfShips)
+            switch (this.numberOfShips)
             {
                 case 3:
                     break;
@@ -291,12 +304,13 @@ namespace BattleShip
                         newShip.SetLength();
                         this.player2.CurrentShips.Add(newShip);
                     }
+
                     break;
                 case 7:
                     break;
 
                 default:
-                    startingShips = new Ship[numberOfShips];
+                    this.startingShips = new Ship[this.numberOfShips];
                     for (int i = 0; i < 5; i++)
                     {
                         newShip = new Ship();
@@ -309,6 +323,7 @@ namespace BattleShip
                         newShip.SetLength();
                         this.player2.CurrentShips.Add(newShip);
                     }
+
                     break;
         }
     }
@@ -333,13 +348,13 @@ namespace BattleShip
                 rowDef.Height = gSize;
                 grid.RowDefinitions.Add(rowDef);
             }
+
             for (int i = 0; i < this.battlefieldHeight; i++)
             {
                 ColumnDefinition colDef = new ColumnDefinition();
                 colDef.Width = gSize;
                 grid.ColumnDefinitions.Add(colDef);
             }
-
 
             grid.Height = cellSize * this.battlefieldWidth;
             grid.Width = cellSize * this.battlefieldHeight;
@@ -2607,57 +2622,67 @@ namespace BattleShip
 
         #region Settings [[--------------------------------------------------------------------------------------------------------------------
 
-        private string GetNumbersFromString(string _string)
+        /// <summary>
+        /// the GetNumbersFromString event
+        /// </summary>
+        /// <param name="stringS">Sender object</param>
+        private string GetNumbersFromString(string stringS)
         {
-            string s = "";
-            foreach (char c in _string)
+            string s = string.Empty;
+            foreach (char c in stringS)
             {
-                if (Char.IsDigit(c))
+                if (char.IsDigit(c))
                 {
                     s += c;
                 }
             }
+
             return s;
         }
 
+        /// <summary>
+        /// the SettingCanvas OnLoad Event
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Routed event</param>
         private void SettingsCanvas_OnLoad(object sender, DependencyPropertyChangedEventArgs e)
         {
             ////Load previously chosen properties into the right buttons 
-            string SettingsFile = "gamesettings.txt";
+            string settingsFile = "gamesettings.txt";
 
             string directory = System.IO.Directory.GetCurrentDirectory();
-            string filePath = System.IO.Path.Combine(directory, SettingsFile);
+            string filePath = System.IO.Path.Combine(directory, settingsFile);
 
             if (File.Exists(filePath))
             {
                 ////Apply Settings To The Controls
                 StreamReader s = new StreamReader(filePath);
 
-                string _width = s.ReadLine();
-                foreach(object o in GridWidthComboBox.Items)
+                string width = s.ReadLine();
+                foreach (object o in GridWidthComboBox.Items)
                 {
-                    int.TryParse(GetNumbersFromString(o.ToString()), out int i);
-                    if(i.ToString() == _width)
+                    int.TryParse(this.GetNumbersFromString(o.ToString()), out int i);
+                    if (i.ToString() == width)
                     {
                         GridWidthComboBox.SelectedItem = o;
                         break;
                     }
                 }
 
-                string _height = s.ReadLine();
+                string height = s.ReadLine();
                 foreach (object o in GridHeightComboBox.Items)
                 {
-                    int.TryParse(GetNumbersFromString(o.ToString()), out int i);
-                    if (i.ToString() == _height)
+                    int.TryParse(this.GetNumbersFromString(o.ToString()), out int i);
+                    if (i.ToString() == height)
                     {
                         GridHeightComboBox.SelectedItem = o;
                         break;
                     }
                 }
 
-                Enum.TryParse(s.ReadLine(), out gameMode);
+                Enum.TryParse(s.ReadLine(), out this.gameMode);
                 
-                switch(gameMode)
+                switch (this.gameMode)
                 {
                     case GMode.Normal:
                         Rb_Normal.IsChecked = true;
@@ -2685,69 +2710,72 @@ namespace BattleShip
                         break;
                 }
 
-                string _numOfShips = s.ReadLine();
+                string numOfShips_ = s.ReadLine();
                 foreach (object o in FleetSizeComboBox.Items)
                 {
-                    int.TryParse(GetNumbersFromString(o.ToString()), out int i);
-                    if (i.ToString() == _numOfShips)
+                    int.TryParse(this.GetNumbersFromString(o.ToString()), out int i);
+                    if (i.ToString() == numOfShips_)
                     {
                         FleetSizeComboBox.SelectedItem = o;
                         break;
                     }
                 }
 
-                string _numOfBombs = s.ReadLine();
+                string numOfBombs_ = s.ReadLine();
                 foreach (object o in NumberOfBombsComboBox.Items)
                 {
-                    int.TryParse(GetNumbersFromString(o.ToString()), out int i);
-                    if (i.ToString() == _numOfBombs)
+                    int.TryParse(this.GetNumbersFromString(o.ToString()), out int i);
+                    if (i.ToString() == numOfBombs_)
                     {
                         NumberOfBombsComboBox.SelectedItem = o;
                         break;
                     }
                 }
+
                 s.Close();
             }
-
         }
 
         private void SettingsApplyButton_Click(object sender, RoutedEventArgs e)
         {
             ////Apply all of the settings to the respective properties
-            int.TryParse(GetNumbersFromString(GridWidthComboBox.SelectedItem.ToString()), out battlefieldWidth);
+            int.TryParse(this.GetNumbersFromString(GridWidthComboBox.SelectedItem.ToString()), out this.battlefieldWidth);
 
-            int.TryParse(GetNumbersFromString(GridHeightComboBox.SelectedItem.ToString()), out battlefieldHeight);
+            int.TryParse(this.GetNumbersFromString(GridHeightComboBox.SelectedItem.ToString()), out this.battlefieldHeight);
             
-            if((bool)Rb_Normal.IsChecked)
+            if ((bool)Rb_Normal.IsChecked)
             {
-                gameMode = GMode.Normal;
+                this.gameMode = GMode.Normal;
             }
+
             if ((bool)Rb_Blitz.IsChecked)
             {
-                gameMode = GMode.Blitz;
+                this.gameMode = GMode.Blitz;
             }
+
             if ((bool)Rb_HitsPerShips.IsChecked)
             {
-                gameMode = GMode.HitsPerShip;
+                this.gameMode = GMode.HitsPerShip;
             }
+
             if ((bool)Rb_Bombs.IsChecked)
             {
-                gameMode = GMode.Bombs;
+                this.gameMode = GMode.Bombs;
             }
 
-            int.TryParse(GetNumbersFromString(FleetSizeComboBox.SelectedItem.ToString()), out numberOfShips);
+            int.TryParse(this.GetNumbersFromString(FleetSizeComboBox.SelectedItem.ToString()), out this.numberOfShips);
 
-            int.TryParse(GetNumbersFromString(NumberOfBombsComboBox.SelectedItem.ToString()), out numberOfBombs);
+            int.TryParse(this.GetNumbersFromString(NumberOfBombsComboBox.SelectedItem.ToString()), out this.numberOfBombs);
 
             //// Save Settings into a settings file
-            string SettingsFile = "gamesettings.txt";
-            StreamWriter s = new StreamWriter(SettingsFile);
+            string settingsFile = "gamesettings.txt";
+            StreamWriter s = new StreamWriter(settingsFile);
 
-            s.WriteLine(battlefieldWidth.ToString()); ;
-            s.WriteLine(battlefieldHeight.ToString());
-            s.WriteLine(gameMode.ToString());
-            s.WriteLine(numberOfShips.ToString());
-            s.WriteLine(numberOfBombs.ToString());
+            s.WriteLine(this.battlefieldWidth.ToString());
+            s.WriteLine(this.battlefieldHeight.ToString());
+            s.WriteLine(this.gameMode.ToString());
+            s.WriteLine(this.numberOfShips.ToString());
+            s.WriteLine(this.numberOfBombs.ToString());
 
             s.Close();
 
@@ -2778,7 +2806,5 @@ namespace BattleShip
         }
 
         #endregion
-
-
     }
 }

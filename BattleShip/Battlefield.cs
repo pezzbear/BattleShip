@@ -20,6 +20,9 @@ namespace BattleShip
         /// </summary>
         public int Width;
 
+        /// <summary>
+        /// Size of grid.
+        /// </summary>
         public int Height;
 
         /// <summary>
