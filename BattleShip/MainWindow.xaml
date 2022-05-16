@@ -82,7 +82,6 @@
             <Label x:Name="lb_ShipsToSink" Content="Enemy Ships Left:" Canvas.Left="18" Canvas.Top="141" Width="274" Height="41" FontSize="22"/>
             <Button x:Name="BattleExitBtn" Content="Exit" Height="66" Canvas.Left="12" Width="122" Canvas.Top="8" FontSize="22" Click="BattleExitBtn_Click"/>
             <Button x:Name="BattleFireBtn" Content="Fire" Height="50" Canvas.Left="17" Canvas.Top="423" Width="278" FontSize="22" Click="BattleFireBtn_Click"/>
-            <Button x:Name="BattleSwitchGrids" Content="Show My Ships" Height="50" Canvas.Left="17" Canvas.Top="368" Width="278" FontSize="22" Click="BattleSwitchGrids_Click"/>
             <Button x:Name="BattleEndturn" Content="End Turn" Height="50" Canvas.Left="17" Canvas.Top="478" Width="278" FontSize="22" Click="BattleEndTurn_Click"/>
             <Button x:Name="SaveGameBtn" Content ="Save Game"  Canvas.Left="18" Canvas.Top="555" Width="278" Height="50" FontSize="22" Click="SaveGameBtn_Click"/>
             <ListBox x:Name="BattleHPListBox" Height="176" Canvas.Left="16" Canvas.Top="187" Width="278" FontSize="22">

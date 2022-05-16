@@ -38,7 +38,8 @@ namespace BattleShip
         /// <summary>
         /// Initializes a new instance of the Battlefield class.
         /// </summary>
-        /// <param name="size_">Size of the Battlefield</param>
+        /// <param name="width_">Width of the Battlefield</param>
+        /// /// <param name="height_">Height of the Battlefield</param>
         public Battlefield(int width_, int height_)
         {
             this.Width = width_;

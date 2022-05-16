@@ -58,34 +58,13 @@ namespace BattleShip
         public SolidColorBrush ShipColor = new SolidColorBrush();
 
         /// <summary>
-        /// The following will be used during the setup screen, this keeps track of what type of ship the selected ship classifies as.
+        /// Initializes a new instance of the Ship class.
         /// </summary>
-        public enum ShipType 
+        /// <param name="type">Type of ship</param>
+        public Ship(ShipType type)
         {
-            /// <summary>
-            /// holds the type known as "Carrier"
-            /// </summary>
-            carrier,
-
-            /// <summary>
-            /// holds the ship type known as "Battleship".
-            /// </summary>
-            battleship,
-
-            /// <summary>
-            /// holds the ship type known as "Cruiser"
-            /// </summary>
-            cruiser,
-
-            /// <summary>
-            /// holds the ship type known as "Submarine"
-            /// </summary>
-            submarine,
-
-            /// <summary>
-            /// holds the ship type known as "Destroyer"
-            /// </summary>
-            destroyer
+            this.Type = type;
+            this.SetLength();
         }
 
         /// <summary>
@@ -95,6 +74,10 @@ namespace BattleShip
         {
             switch (this.Type)
             {
+                case ShipType.warship:
+                    this.Length = 6;
+                    this.ShipColor.Color = Color.FromRgb(45, 13, 79);
+                    break;
                 case ShipType.carrier:
                     this.Length = 5;
                     this.ShipColor.Color = Color.FromRgb(237, 99, 255);
@@ -115,6 +98,10 @@ namespace BattleShip
                     this.Length = 2;
                     this.ShipColor.Color = Color.FromRgb(3, 1, 112);
                     break;
+                case ShipType.scout:
+                    this.Length = 2;
+                    this.ShipColor.Color = Color.FromRgb(168, 50, 82);
+                    break;
             } 
 
             this.Health = this.Length;
@@ -128,6 +115,10 @@ namespace BattleShip
         {
             switch (this.Type) 
             {
+                case ShipType.scout:
+                    return "Scout";
+                case ShipType.warship:
+                    return "Warship";
                 case ShipType.carrier:
                     return "Carrier";
                 case ShipType.battleship:
