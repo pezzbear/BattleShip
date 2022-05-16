@@ -521,7 +521,7 @@ namespace BattleShip
         private void MainCanvas_OnLoad(object sender, RoutedEventArgs e)
         {
             this.ChangeGameState(GState.Start);
-            this.battleFieldGridArray = new Rectangle[this.battlefieldHeight, this.battlefieldWidth];
+            
         }
 
         #region Start Screen Buttons [[--------------------------------------------------------------------------------------------------------
@@ -2874,6 +2874,7 @@ namespace BattleShip
 
             s.Close();
 
+            this.battleFieldGridArray = new Rectangle[this.battlefieldHeight, this.battlefieldWidth];
             this.ChangeGameState(GState.Start);
         }
 
